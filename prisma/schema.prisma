@@ -1,0 +1,536 @@
+// import {} from 'uuid'
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Asset {
+  isDeleted Boolean @default(false)
+  id        Int     @id @default(autoincrement())
+  gold      Int
+  crystal   Int
+  themes    Int[]
+  user      AppUser?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Ban {
+  isDeleted Boolean @default(false)
+  id        Int     @id @default(autoincrement())
+  userId    Int     @unique
+  user      AppUser @relation(fields: [userId], references: [id])
+  time      DateTime
+  permanent String
+  reason    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Device {
+  isDeleted Boolean @default(false)
+  id        Int     @id @default(autoincrement())
+  userId    Int
+  user      AppUser @relation(fields: [userId], references: [id])
+  ip        String
+  time      DateTime
+  location  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Game {
+  isDeleted Boolean @default(false)
+  id                Int       @id @default(autoincrement())
+  name              String
+  tag               String
+  genre             String
+  gameInfo          GameInfo[]
+  defaultLanguageId Int
+  defaultLanguage   Language  @relation(fields: [defaultLanguageId], references: [id])
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+}
+
+model GameInfo {
+  isDeleted    Boolean  @default(false)
+  id           Int      @id @default(autoincrement())
+  played       Int
+  stage        String
+  completed    Int
+  isNew        Boolean
+  hotPoint     Float
+  recoverEmail String
+  ban          String
+  gameId       Int
+  game         Game     @relation(fields: [gameId], references: [id])
+  languageId   Int
+  languages    Language  @relation(fields: [languageId], references: [id])
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model Language {
+  isDeleted           Boolean      @default(false)
+  id                  Int          @id @default(autoincrement())
+  name                String
+  code                String
+  flag                String
+  desc                String?
+  gameInfo            GameInfo[]
+  appUser             AppUser[]
+  paragraphs          Paragraph[]
+  gameDefaultLanguage Game[]
+  novelDefaultLanguage Novel[]
+  setting             Setting[]
+  typeStyle           TypeStyle[]
+  word                Word[]
+  wordRate            WordRate[]
+  score               Score[]
+  createdAt           DateTime     @default(now())
+  updatedAt           DateTime     @updatedAt
+}
+
+model Novel {
+  isDeleted         Boolean    @default(false)
+  id                Int        @id @default(autoincrement())
+  defaultLanguageId Int
+  defaultLanguage   Language   @relation(fields: [defaultLanguageId], references: [id])
+  userId            Int
+  user              AppUser    @relation(fields: [userId], references: [id])
+  level             String?
+  name              String?
+  rate              Float?
+  rateTime          Int?
+  price             String?
+  unit              String?
+  status            String     @default("On going")
+  isPrivate         Boolean    @default(false)
+  tag               String?
+  desc              String?
+  paragraphs        Paragraph[]
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+  like Like[]
+  favorite Favorite[]
+  report Report[]
+  comment Comment[]
+}
+
+model Paragraph {
+  isDeleted  Boolean   @default(false)
+  id         Int       @id @default(autoincrement())
+  languageId Int
+  language   Language  @relation(fields: [languageId], references: [id])
+  header     String
+  content    String
+  desc       String    @default("")
+  chapter    String?
+  rate       Float     @default(0)
+  rateTime   Int       @default(0)
+  prev       String?
+  next       String?
+  isPrivate  Boolean   @default(false)
+  completed  Int       @default(0)
+  userId     Int
+  user       AppUser   @relation(fields: [userId], references: [id])
+  novelId    Int?
+  novel      Novel?    @relation(fields: [novelId], references: [id])
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  like Like[]
+  favorite Favorite[]
+  historys      History[]
+  report Report[]
+  comment Comment[] 
+}
+
+model Profile {
+  isDeleted   Boolean  @default(false)
+  id          Int      @id @default(autoincrement())
+  born        Int
+  gender      Boolean
+  firstName   String
+  lastName    String
+  displayName String?
+  nation      String
+  avatar      String?
+  role        String?
+  user        AppUser?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model History {
+  isDeleted Boolean @default(false)
+  id Int @id @default(autoincrement())
+  userId       Int
+  user         AppUser  @relation(fields: [userId], references: [id])
+  paragraphId       Int?
+  paragraph         Paragraph?  @relation(fields: [paragraphId], references: [id])
+  trainingId       Int?
+  training         Training?  @relation(fields: [trainingId], references: [id])
+  time DateTime[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Training {
+  isDeleted Boolean @default(false)
+  id Int @id @default(autoincrement())
+  title String
+  content String?
+  qill Json?
+  index String?
+  parentId  Int?     // Đây là khóa ngoại tham chiếu đến chính bảng Item
+  parent    Training?    @relation("ItemToItem", fields: [parentId], references: [id])
+  children  Training[]   @relation("ItemToItem")
+  historys      History[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Rank {
+  isDeleted    Boolean  @default(false)
+  id           Int      @id @default(autoincrement())
+  userId       Int
+  user         AppUser  @relation(fields: [userId], references: [id])
+  game         Int
+  rank         Int?
+  score        Float
+  time         String
+  recoverEmail String
+  desc         String   @default("")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Rate {
+  isDeleted Boolean  @default(false)
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      AppUser  @relation(fields: [userId], references: [id])
+  type      String
+  targetId  Int
+  rate      Float
+  desc      String   @default("")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Report {
+  isDeleted Boolean  @default(false)
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      AppUser  @relation(fields: [userId], references: [id])
+  reportType String
+  desc      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  novelId  Int?
+  novel     Novel?    @relation(fields: [novelId], references: [id])
+  paragraphId  Int?
+  paragraph     Paragraph?    @relation(fields: [paragraphId], references: [id])
+  themeId Int?
+  theme     Theme?    @relation(fields: [themeId], references: [id])
+}
+
+model Score {
+  isDeleted Boolean  @default(false)
+  id        Int      @id @default(autoincrement())
+  userId    Int?
+  user      AppUser? @relation(fields: [userId], references: [id])
+  rank      String?
+  languageId Int?
+  language   Language?  @relation(fields: [languageId], references: [id])
+  type      String
+  targetId  Int?
+  wpm       Float
+  cpm       Float
+  score     Float
+  wAccuracy Float
+  cAccuracy Float
+  time      Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Setting {
+  isDeleted   Boolean   @default(false)
+  id          Int       @id @default(autoincrement())
+  user        AppUser?
+  languageId  Int
+  language    Language  @relation(fields: [languageId], references: [id])
+  themes      Int[]
+  typeStyleId Int
+  typeStyle   TypeStyle @relation(fields: [typeStyleId], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model SpecialRule {
+  isDeleted   Boolean   @default(false)
+  id          Int       @id @default(autoincrement())
+  typeStyleId Int
+  typeStyle   TypeStyle @relation(fields: [typeStyleId], references: [id])
+  input       String
+  output      String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Store {
+  isDeleted Boolean  @default(false)
+  id        Int      @id @default(autoincrement())
+  themeId   Int
+  themes    Int
+  price     Int
+  unit      String
+  desc      String
+  rate      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Theme {
+  isDeleted Boolean  @default(false)
+  id        Int      @id @default(autoincrement())
+  type      String
+  src       String
+  style     String
+  desc      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  like Like[]
+  favorite Favorite[]
+  report Report[]
+  comment Comment[]
+}
+
+model TypeStyle {
+  isDeleted   Boolean   @default(false)
+  id          Int       @id @default(autoincrement())
+  languageId  Int
+  language    Language  @relation(fields: [languageId], references: [id])
+  setting     Setting[]
+  specialRule SpecialRule[]
+  code        String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Word {
+  isDeleted   Boolean   @default(false)
+  id          Int       @id @default(autoincrement())
+  languageId  Int
+  language    Language  @relation(fields: [languageId], references: [id])
+  level       String
+  type        String
+  words       String
+  desc        String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model WordRate {
+  isDeleted   Boolean   @default(false)
+  id          Int       @id @default(autoincrement())
+  languageId  Int
+  language    Language  @relation(fields: [languageId], references: [id])
+  rate        String
+  level       String
+  desc        String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model AppUser {
+  isDeleted     Boolean   @default(false)
+  id            Int       @id @default(autoincrement())
+  username      String?
+  password      String?
+  scope         String    @default("S1")
+  access_token  String?
+  refresh_token String?
+  recoverEmail  String?
+  ban           Ban?
+  like          Like[]
+  favorite      Favorite[]
+  novels        Novel[]
+  paragraph     Paragraph[]
+  score         Score[]
+  rank          Rank[]
+  rate          Rate[]
+  report        Report[]
+  userId        String       @unique
+  user          User      @relation(fields: [userId], references: [id])
+  profileId     Int?      @unique
+  profile       Profile?  @relation(fields: [profileId], references: [id])
+  settingId     Int?      @unique
+  setting       Setting?  @relation(fields: [settingId], references: [id])
+  assetId       Int?      @unique
+  asset         Asset?    @relation(fields: [assetId], references: [id])
+  languageId    Int?      @unique
+  language      Language? @relation(fields: [languageId], references: [id])
+  devices       Device[]
+  historys      History[]
+  comments Comment[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Like {
+  isDeleted Boolean  @default(false)
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      AppUser  @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  novelId  Int?
+  novel     Novel?    @relation(fields: [novelId], references: [id])
+  paragraphId  Int?
+  paragraph     Paragraph?    @relation(fields: [paragraphId], references: [id])
+  themeId Int?
+  theme     Theme?    @relation(fields: [themeId], references: [id])
+}
+
+model Favorite {
+  isDeleted Boolean  @default(false)
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      AppUser  @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  novelId  Int?
+  novel     Novel?    @relation(fields: [novelId], references: [id])
+  paragraphId  Int?
+  paragraph     Paragraph?    @relation(fields: [paragraphId], references: [id])
+  themeId Int?
+  theme     Theme?    @relation(fields: [themeId], references: [id])
+}
+
+model Comment {
+  isDeleted Boolean @default(false)
+  id Int @id @default(autoincrement())
+  userId      Int
+  user      AppUser @relation(fields:[userId], references: [id])
+  paragraphId      Int?
+  paragraph      Paragraph? @relation(fields:[paragraphId], references: [id])
+  novelId      Int?
+  novel      Novel? @relation(fields:[novelId], references: [id])
+  themeId      Int?
+  theme      Theme? @relation(fields:[themeId], references: [id])
+
+  title String
+  content String?
+  qill Json?
+  index String?
+  parentId  Int?     // Đây là khóa ngoại tham chiếu đến chính bảng Item
+  parent    Comment?    @relation("CommentToComment", fields: [parentId], references: [id])
+  children  Comment[]   @relation("CommentToComment")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  password      String?
+  emailVerified DateTime?
+  image         String?
+  AppUser       AppUser?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  accounts      Account[]
+  sessions      Session[]
+}
+
+model Account {
+  id                 String  @id @default(cuid())
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?
+  access_token       String?
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?
+  session_state      String?
+  user               User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  @@unique([provider, providerAccountId])
+}
+
+// model User {
+//   userId            String @id @default(uuid())
+//   name          String?
+//   email         String?   @unique
+//   emailVerified DateTime?
+//   image         String?
+//   accounts      Account[]
+//   sessions      Session[]
+//   Authenticator Authenticator[]
+//   appUser       AppUser?
+//   createdAt     DateTime  @default(now())
+//   updatedAt     DateTime  @updatedAt
+// }
+
+// model Account {
+//   id                String @unique @id @default(uuid())
+//   userId            String
+//   type              String
+//   provider          String
+//   providerAccountId String
+//   refresh_token     String?
+//   access_token      String?
+//   expires_at        Int?
+//   token_type        String?
+//   scope             String?
+//   id_token          String?
+//   session_state     String?
+//   createdAt         DateTime @default(now())
+//   updatedAt         DateTime @updatedAt
+//   user              User     @relation(fields: [userId], references: [userId], onDelete: Cascade)
+//   @@unique([provider, providerAccountId])
+// }
+
+model Session {
+   id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  updatedAt    DateTime @updatedAt
+}
+
+model VerificationToken {
+  id         Int      @id @default(autoincrement())
+  identifier String
+  token      String
+  expires    DateTime
+  @@unique([identifier, token])
+}
+
+// model Authenticator {
+//   credentialID         String  @id @default(uuid())
+//   userId               String
+//   providerAccountId    String
+//   credentialPublicKey  String
+//   counter              Int
+//   credentialDeviceType String
+//   credentialBackedUp   Boolean
+//   transports           String?
+//   user                 User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+//   @@unique([userId, credentialID])
+// }

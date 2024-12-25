@@ -1,4 +1,6 @@
+import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { LuWorm } from "react-icons/lu";
 
 export default function Home() {
   return (
@@ -95,6 +97,10 @@ export default function Home() {
           />
           Go to nextjs.org →
         </a>
+        <div className="text-red-500">mài dà hú</div>
+        <Button variant={"outline"}>Mài dà há</Button>
+
+        <LuWorm />
       </footer>
     </div>
   );
