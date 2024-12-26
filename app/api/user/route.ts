@@ -1,11 +1,11 @@
 import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
-import { NextApiRequest } from "next";
+import { NextRequest } from "next";
 import { GetDTO } from "./dto";
 
 const prisma = new PrismaClient();
 
-export async function GET(req: NextApiRequest) {
+export async function GET(req: NextRequest) {
   const {
     orderColumn = "createdAt",
     orderType = "desc",
@@ -16,7 +16,7 @@ export async function GET(req: NextApiRequest) {
   }: GetDTO = req.query;
 
   try {
-    const list = await prisma.userInfo.findMany({
+    const list = await prisma.appUser.findMany({
       where: {
         AND: [
           {
@@ -45,19 +45,41 @@ export async function GET(req: NextApiRequest) {
 }
 
 export async function POST(request: Request) {
-  const requestBody = await request.json(); //body từ request
+  const requestBody = await request.json();
+  console.log("requestBody :>> ", requestBody);
+  const { user } = requestBody; //body từ request
+  const { id: userId } = user;
+  console.log("userId :>> ", userId);
 
-  const newItem = await prisma.userInfo.create({
-    data: requestBody,
+  const appUser = await prisma.appUser.findUnique({
+    where: { userId },
+    include: {
+      asset: true,
+      setting: true,
+      user: true,
+    },
   });
-  return NextResponse.json(newItem);
+
+  console.log("appUser :>> ", appUser);
+
+  if (appUser) {
+    return NextResponse.json(appUser);
+    // prisma.appUser.update({ where: { id: appUser.id }, data: { userId } });
+  } else {
+    console.log(1);
+    const newAppUser = await prisma.appUser.create({
+      data: { userId },
+    });
+    console.log(2);
+    return NextResponse.json(newAppUser);
+  }
 }
 
-export async function DELETE(req: NextApiRequest) {
+export async function DELETE(req: NextRequest) {
   const { id } = req.query;
 
   try {
-    await prisma.userInfo.delete({
+    await prisma.appUser.delete({
       where: { id: Number(id) },
     });
     return NextResponse.json({ message: "Post deleted successfully" });

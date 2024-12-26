@@ -1,11 +1,14 @@
 import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
-import { NextApiRequest } from "next";
+import { NextRequest } from "next";
 import { GetDTO } from "./dto";
+import { makeQuery } from "../utils";
 
 const prisma = new PrismaClient();
 
-export async function GET(req: NextApiRequest) {
+export async function GET(req: NextRequest) {
+  const query = makeQuery(req?.url || "");
+  console.log("query :>> ", query);
   const {
     orderColumn = "createdAt",
     orderType = "desc",
@@ -13,7 +16,7 @@ export async function GET(req: NextApiRequest) {
     skip = 0,
     search = "",
     ...filters
-  }: GetDTO = req.query;
+  }: GetDTO = query;
 
   try {
     const list = await prisma.language.findMany({
@@ -21,8 +24,8 @@ export async function GET(req: NextApiRequest) {
         AND: [
           {
             OR: [
-              { title: { contains: search, mode: "insensitive" } },
-              { content: { contains: search, mode: "insensitive" } },
+              { name: { contains: search, mode: "insensitive" } },
+              { code: { contains: search, mode: "insensitive" } },
             ],
           },
           filters,
@@ -51,20 +54,4 @@ export async function POST(request: Request) {
     data: requestBody,
   });
   return NextResponse.json(newItem);
-}
-
-export async function DELETE(req: NextApiRequest) {
-  const { id } = req.query;
-
-  try {
-    await prisma.language.delete({
-      where: { id: Number(id) },
-    });
-    return NextResponse.json({ message: "Post deleted successfully" });
-  } catch (error) {
-    return NextResponse.json(
-      { message: "Failed to delete post", error },
-      { status: 500 }
-    );
-  }
 }

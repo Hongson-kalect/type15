@@ -1,14 +1,14 @@
 import { PrismaClient } from "@prisma/client";
-import { NextApiRequest } from "next";
+import { NextRequest } from "next";
 import { NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
 
 export async function GET(
-  req: NextApiRequest,
-  { params }: { params: { id: string } }
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const id = Number(params.id);
+  const { id } = await params;
   try {
     const item = await prisma.language.findUnique({
       where: { id: Number(id) },
@@ -28,11 +28,13 @@ export async function GET(
 }
 
 export async function PUT(
-  req: NextApiRequest,
-  { params }: { params: { id: string } }
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const id = Number(params.id);
-  const { ...data } = req.body;
+  const { id } = await params;
+  const { ...data } = await req.json();
+
+  console.log("id,data :>> ", id, data);
 
   try {
     const updatedPost = await prisma.language.update({
@@ -47,3 +49,22 @@ export async function PUT(
     );
   }
 }
+
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params;
+  try {
+    await prisma.language.delete({
+      where: { id: Number(id) },
+    });
+    return NextResponse.json({ message: "Post deleted successfully" });
+  } catch (error) {
+    return NextResponse.json(
+      { message: "Failed to delete post", error },
+      { status: 500 }
+    );
+  }
+}
+

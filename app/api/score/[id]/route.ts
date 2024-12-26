@@ -1,14 +1,14 @@
 import { PrismaClient } from "@prisma/client";
-import { NextApiRequest } from "next";
+import { NextRequest } from "next";
 import { NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
 
 export async function GET(
-  req: NextApiRequest,
-  { params }: { params: { id: string } }
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const id = Number(params.id);
+  const { id } = await params;
   try {
     const item = await prisma.score.findUnique({
       where: { id: Number(id) },
@@ -28,11 +28,11 @@ export async function GET(
 }
 
 export async function PUT(
-  req: NextApiRequest,
-  { params }: { params: { id: string } }
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const id = Number(params.id);
-  const { ...data } = req.body;
+  const { id } = await params;
+  const { ...data } = await req.json();
 
   try {
     const updatedPost = await prisma.score.update({

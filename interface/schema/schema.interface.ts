@@ -1,7 +1,8 @@
 export interface IAppUser {
   isDeleted: boolean;
-  id: string;
+  id: number;
   language?: ILanguage;
+  languageId?: number;
   username?: string;
   password?: string;
   scope: string;
@@ -18,11 +19,11 @@ export interface IAppUser {
   report: Report[];
   userId: string;
   user: IUser;
-  profileId?: string;
+  profileId?: number;
   profile?: IProfile;
-  settingId?: string;
+  settingId?: number;
   setting?: ISetting;
-  assetId?: string;
+  assetId?: number;
   asset?: IAsset;
   devices: IDevice[];
   createdAt: Date;
@@ -93,7 +94,7 @@ export interface IAuthenticator {
 
 export interface IAsset {
   isDeleted: boolean;
-  id: string;
+  id: number;
   gold: number;
   crystal: number;
   themes: string[];
@@ -104,7 +105,7 @@ export interface IAsset {
 
 export interface IBan {
   isDeleted: boolean;
-  id: string;
+  id: number;
   userId: string;
   user: IAppUser;
   time: Date;
@@ -116,7 +117,7 @@ export interface IBan {
 
 export interface IDevice {
   isDeleted: boolean;
-  id: string;
+  id: number;
   userId: string;
   user: IAppUser;
   ip: string;
@@ -128,7 +129,7 @@ export interface IDevice {
 
 export interface IFavorite {
   isDeleted: boolean;
-  id: string;
+  id: number;
   userId: string;
   user: IAppUser;
   type: string;
@@ -139,12 +140,12 @@ export interface IFavorite {
 
 export interface IGame {
   isDeleted: boolean;
-  id: string;
+  id: number;
   name: string;
   tag: string;
   genre: string;
   gameInfo: IGameInfo[];
-  defaultLanguageId: string;
+  defaultLanguageId: number;
   defaultLanguage: ILanguage;
   createdAt: Date;
   updatedAt: Date;
@@ -152,7 +153,7 @@ export interface IGame {
 
 export interface IGameInfo {
   isDeleted: boolean;
-  id: string;
+  id: number;
   played: number;
   stage: string;
   completed: number;
@@ -169,30 +170,30 @@ export interface IGameInfo {
 }
 
 export interface ILanguage {
-  isDeleted: boolean;
-  id: string;
+  isDeleted?: boolean;
+  id?: number;
   name: string;
   code: string;
   flag: string;
   desc?: string;
-  gameInfo: IGameInfo[];
-  paragraphs: IParagraph[];
-  gameDefaultLanguage: IGame[];
-  novelDefaultLanguage: INovel[];
-  setting: ISetting[];
-  typeStyle: ITypeStyle[];
-  word: IWord[];
-  wordRate: IWordRate[];
-  createdAt: Date;
-  updatedAt: Date;
+  gameInfo?: IGameInfo[];
+  paragraphs?: IParagraph[];
+  gameDefaultLanguage?: IGame[];
+  novelDefaultLanguage?: INovel[];
+  setting?: ISetting[];
+  typeStyle?: ITypeStyle[];
+  word?: IWord[];
+  wordRate?: IWordRate[];
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface INovel {
   isDeleted: boolean;
-  id: string;
+  id: number;
   defaultLanguageId: string;
   defaultLanguage: ILanguage;
-  userId: string;
+  userId: number;
   user: IAppUser;
   level?: string;
   name?: string;
@@ -210,8 +211,8 @@ export interface INovel {
 
 export interface IParagraph {
   isDeleted: boolean;
-  id: string;
-  languageId: string;
+  id: number;
+  languageId: number;
   language: ILanguage;
   header: string;
   content: string;
@@ -223,9 +224,9 @@ export interface IParagraph {
   next?: string;
   isPrivate: boolean;
   completed: number;
-  userId: string;
+  userId: number;
   user: IAppUser;
-  novelId: string;
+  novelId: number;
   novel: INovel;
   createdAt: Date;
   updatedAt: Date;
@@ -250,12 +251,17 @@ export interface IProfile {
 export interface IReport {
   isDeleted: boolean;
   id: string;
-  userId: string;
+  userId: number;
   user: IAppUser;
-  type: string;
-  targetId: string;
   reportType: string;
   desc: string;
+
+  novelId: string;
+  novel: INovel;
+  paragraphId?: number;
+  paragraph?: IParagraph;
+  themeId?: number;
+  theme?: ITheme;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -263,10 +269,10 @@ export interface IReport {
 export interface IScore {
   isDeleted: boolean;
   id: string;
-  userId: string;
+  userId: number;
   user: IAppUser;
   type: string;
-  targetId: string;
+  targetId: number;
   wps: number;
   cps: number;
   score: number;
@@ -279,12 +285,12 @@ export interface IScore {
 
 export interface ISetting {
   isDeleted: boolean;
-  id: string;
+  id: number;
   user: IAppUser;
-  languageId: string;
+  languageId: number;
   language: ILanguage;
   themes: string[];
-  typeStyleId: string;
+  typeStyleId: number;
   typeStyle: ITypeStyle;
   createdAt: Date;
   updatedAt: Date;
@@ -292,8 +298,8 @@ export interface ISetting {
 
 export interface IStore {
   isDeleted: boolean;
-  id: string;
-  themeId: string;
+  id: number;
+  themeId: number;
   themes: string;
   price: number;
   unit: string;
@@ -305,7 +311,7 @@ export interface IStore {
 
 export interface ITheme {
   isDeleted: boolean;
-  id: string;
+  id: number;
   type: string;
   src: string;
   style: string;
@@ -316,8 +322,8 @@ export interface ITheme {
 
 export interface ITypeStyle {
   isDeleted: boolean;
-  id: string;
-  languageId: string;
+  id: number;
+  languageId: number;
   language: ILanguage;
   setting: ISetting[];
   specialRule: ISpecialRule[];
@@ -328,8 +334,8 @@ export interface ITypeStyle {
 
 export interface ISpecialRule {
   isDeleted: boolean;
-  id: string;
-  typeStyleId: string;
+  id: number;
+  typeStyleId: number;
   typeStyle: ITypeStyle;
   input: string;
   output: string;
@@ -339,8 +345,8 @@ export interface ISpecialRule {
 
 export interface IWord {
   isDeleted: boolean;
-  id: string;
-  languageId: string;
+  id: number;
+  languageId: number;
   language: ILanguage;
   level: string;
   type: string;
@@ -352,8 +358,8 @@ export interface IWord {
 
 export interface IWordRate {
   isDeleted: boolean;
-  id: string;
-  languageId: string;
+  id: number;
+  languageId: number;
   language: ILanguage;
   rate: string;
   level: string;

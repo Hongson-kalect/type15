@@ -1,11 +1,11 @@
 import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
-import { NextApiRequest } from "next";
+import { NextRequest } from "next";
 import { GetDTO } from "./dto";
 
 const prisma = new PrismaClient();
 
-export async function GET(req: NextApiRequest) {
+export async function GET(req: NextRequest) {
   const {
     orderColumn = "createdAt",
     orderType = "desc",
@@ -53,7 +53,7 @@ export async function POST(request: Request) {
   return NextResponse.json(newItem);
 }
 
-export async function DELETE(req: NextApiRequest) {
+export async function DELETE(req: NextRequest) {
   const { id } = req.query;
 
   try {

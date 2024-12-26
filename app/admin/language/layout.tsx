@@ -1,3 +1,4 @@
+import AdminLayout from "@/layout/admin";
 import * as React from "react";
 
 export interface IDefaultLayoutProps {
@@ -5,5 +6,5 @@ export interface IDefaultLayoutProps {
 }
 
 export default function DefaultLayout(props: IDefaultLayoutProps) {
-  return props.children;
+  return <AdminLayout>{props.children}</AdminLayout>; // props.children;
 }

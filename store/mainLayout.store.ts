@@ -1,7 +1,7 @@
-import { IAppUser, ILanguage } from "@/schema/interface";
+import { IAppUser, ILanguage } from "@/interface/schema/schema.interface";
 import { create } from "zustand";
 
-export const mainStore = create<{
+export const mainLayoutStore = create<{
   userInfo: IAppUser | null;
   userLanguage: ILanguage | null;
   languages: ILanguage[] | null;
