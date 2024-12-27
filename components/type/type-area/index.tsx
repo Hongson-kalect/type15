@@ -5,6 +5,8 @@ import { KeyResultType, ResultType, ScoreType } from "@/interface/type/typing";
 import { mainLayoutStore } from "@/store/mainLayout.store";
 import * as React from "react";
 import { calcuResult } from "../util";
+import { addScore, addSpeedTestScore } from "@/services/type.service";
+import { useMutation, UseQueryResult } from "@tanstack/react-query";
 // import { GrPowerReset } from "react-icons/gr";
 // import { caculScore, getWord, pushScore } from "./_utils";
 // import { Header } from "./Header";
@@ -29,6 +31,7 @@ export interface ITypeAreaProps {
   setIsFinish: (value: boolean) => void;
   isReset: boolean;
   setIsReset: (value: boolean) => void;
+  page?: "training" | "speed-test" | "paragraph";
 }
 
 export default function TypeArea({
@@ -41,6 +44,7 @@ export default function TypeArea({
   setIsFinish,
   isReset,
   setIsReset,
+  page,
 }: ITypeAreaProps) {
   const { userInfo } = mainLayoutStore();
 
@@ -68,6 +72,19 @@ export default function TypeArea({
   const [isNextWord, setIsNextWord] = React.useState(false);
   const intervalRef = React.useRef<NodeJS.Timeout | null>(null);
   const inputRef = React.useRef<HTMLTextAreaElement | null>(null);
+
+  const {
+    data: addScore,
+    error,
+    isLoading,
+  } = useMutation(addScore, {
+    onSuccess: (data) => {
+      onSucess;
+    },
+    onError: (error) => {
+      onError;
+    },
+  });
 
   const startTyping = () => {
     setIsTyping(true);
@@ -107,24 +124,22 @@ export default function TypeArea({
       clearInterval(intervalRef.current);
     }
 
-    setResult(
-      calcuResult({
-        correctArray: paragraphsArray.slice(0, wordIndex),
-        userInputArray: userInputArr,
-        failedCount: deletedCount,
-        time: timeType === "countDown" ? initTime : time,
-      })
-    );
+    const result = calcuResult({
+      correctArray: paragraphsArray.slice(0, wordIndex),
+      userInputArray: userInputArr,
+      failedCount: deletedCount,
+      time: timeType === "countDown" ? initTime : time,
+    });
+
+    setResult(result);
     ///////////Ở đây aaaaaaaaaaaaaaaaaaaaaaaa
 
     //only push score when user is logged in change if need
     if (userInfo?.id && Number(userInfo?.id) && userInfo?.language?.id) {
       console.log("clmm cái này ở đou");
-      await pushScore(
-        result,
-        Number(userInfo.id),
-        Number(userInfo.language?.id)
-      );
+      await addSpeedTestScore({
+        score: result.score,
+      });
       await rankQuery.refetch();
     }
     setIsFinish(true);
@@ -136,7 +151,7 @@ export default function TypeArea({
     setTime(timeType === "countDown" ? initTime : 0);
     setTypingWord("");
     setParagraphs(initPara || "");
-    setUserInput("");
+    setUserInputArr([]);
     setWordIndex(0);
     setIsTyping(false);
     setIsFinish(false);
