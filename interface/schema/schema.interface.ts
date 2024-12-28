@@ -273,8 +273,8 @@ export interface IScore {
   user: IAppUser;
   type: string;
   targetId: number;
-  wps: number;
-  cps: number;
+  wpm: number;
+  cpm: number;
   score: number;
   wAccuracy: number;
   time: number;

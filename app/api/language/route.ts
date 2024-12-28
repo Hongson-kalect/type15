@@ -8,7 +8,6 @@ const prisma = new PrismaClient();
 
 export async function GET(req: NextRequest) {
   const query = makeQuery(req?.url || "");
-  console.log("query :>> ", query);
   const {
     orderColumn = "createdAt",
     orderType = "desc",

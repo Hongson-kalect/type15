@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
 import { NextRequest } from "next";
 import { GetDTO } from "./dto";
+import { makeQuery } from "../utils";
 
 const prisma = new PrismaClient();
 
@@ -13,10 +14,10 @@ export async function GET(req: NextRequest) {
     skip = 0,
     search = "",
     ...filters
-  }: GetDTO = req.query;
+  }: GetDTO = makeQuery(req?.url || "");
 
   try {
-    const list = await prisma.repost.findMany({
+    const list = await prisma.report.findMany({
       where: {
         AND: [
           {
@@ -47,17 +48,17 @@ export async function GET(req: NextRequest) {
 export async function POST(request: Request) {
   const requestBody = await request.json(); //body từ request
 
-  const newItem = await prisma.repost.create({
+  const newItem = await prisma.report.create({
     data: requestBody,
   });
   return NextResponse.json(newItem);
 }
 
 export async function DELETE(req: NextRequest) {
-  const { id } = req.query;
+  const { id } = makeQuery(req?.url || "");
 
   try {
-    await prisma.repost.delete({
+    await prisma.report.delete({
       where: { id: Number(id) },
     });
     return NextResponse.json({ message: "Post deleted successfully" });

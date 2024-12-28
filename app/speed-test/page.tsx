@@ -1,34 +1,27 @@
 "use client";
 import * as React from "react";
-import { Rank } from "./components/Ranking";
-import { Result } from "./components/Result";
-import TypeArea from "./components/TypeArea";
-import { IRank, IResult } from "./types";
 import { useQuery } from "@tanstack/react-query";
-import { getSpeedTestRank } from "./components/Ranking/_utils";
-import { KeyResultType } from "../training/ui/types";
+import { ResultDetailType } from "@/interface/type/typing";
+import TypeArea from "@/components/type/type-area";
+import { Result } from "@/components/type/type-result";
+import { TypeRank } from "@/components/type/type-rank";
+import { getScores } from "@/services/type.service";
+import { IScore } from "@/interface/schema/schema.interface";
 
 const SpeedTest = () => {
   const [isShowScore, setIsShowScore] = React.useState(false);
   const [resetType, setResetType] = React.useState(false);
-  const [result, setResult] = React.useState<IResult>({
-    wordTyped: 0,
-    charTyped: 0,
-    wordCorrect: 0,
-    charCorrect: 0,
-    wordError: 0,
-    charError: 0,
-    wpm: 0,
-    cpm: 0,
-    wAccuracy: 0,
-    cAccuracy: 0,
-    score: null,
-  });
-  const [keyResult, setKeyResult] = React.useState<KeyResultType[]>([]);
+  const [resultDetail, setResultDetail] = React.useState<ResultDetailType>(
+    () => ({
+      keyResult: [],
+      score: undefined,
+      result: undefined,
+    })
+  );
 
-  const rankQuery = useQuery<IRank[]>({
-    queryKey: ["rank"],
-    queryFn: () => getSpeedTestRank(),
+  const rankQuery = useQuery<IScore[]>({
+    queryKey: ["scores"],
+    queryFn: async () => await getScores({ page: "speed-test" }),
   });
 
   return (
@@ -38,14 +31,13 @@ const SpeedTest = () => {
         rankQuery={rankQuery}
         isReset={resetType}
         setIsReset={setResetType}
-        setResult={setResult}
+        setResult={setResultDetail}
         isFinish={isShowScore}
         setIsFinish={setIsShowScore}
-        setKeyResult={setKeyResult}
       />
 
       <div className="duration-200 pt-8" id="type-result">
-        {result.score !== null ? (
+        {resultDetail.score !== null ? (
           <div
             className={` rounded-lg ${
               !isShowScore
@@ -54,8 +46,7 @@ const SpeedTest = () => {
             }`}
           >
             <Result
-              result={result}
-              keyResult={keyResult}
+              resultDetail={resultDetail}
               reset={() => setResetType(true)}
             />
           </div>
@@ -63,7 +54,11 @@ const SpeedTest = () => {
       </div>
 
       <div className="" id="type-rank">
-        <Rank result={result} ranks={rankQuery.data || []} />
+        <TypeRank
+          ranks={rankQuery.data}
+          resultDetail={resultDetail}
+          page="speed-test"
+        />
       </div>
     </div>
   );

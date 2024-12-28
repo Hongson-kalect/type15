@@ -22,3 +22,9 @@ export type ResultType = {
   totalChars: number;
   time: number;
 };
+
+export type ResultDetailType = {
+  score?: ScoreType;
+  result?: ResultType;
+  keyResult?: KeyResultType[];
+};

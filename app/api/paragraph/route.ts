@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
 import { NextRequest } from "next";
 import { GetDTO } from "./dto";
+import { makeQuery } from "../utils";
 
 const prisma = new PrismaClient();
 
@@ -13,7 +14,7 @@ export async function GET(req: NextRequest) {
     skip = 0,
     search = "",
     ...filters
-  }: GetDTO = req.query;
+  }: GetDTO = makeQuery(req?.url || "");
 
   try {
     const list = await prisma.paragraph.findMany({
@@ -54,7 +55,7 @@ export async function POST(request: Request) {
 }
 
 export async function DELETE(req: NextRequest) {
-  const { id } = req.query;
+  const { id } = makeQuery(req?.url || "");
 
   try {
     await prisma.paragraph.delete({

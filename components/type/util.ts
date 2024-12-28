@@ -1,143 +1,5 @@
 import { KeyResultType } from "@/interface/type/typing";
 
-// export const calculateKeyResults = ({
-//   paraArr,
-//   userInputArr,
-//   setKeyResult,
-// }: {
-//   paraArr: string[];
-//   userInputArr: string[];
-//   setKeyResult: React.Dispatch<React.SetStateAction<KeyResultType[]>>;
-// }) => {
-//   let correctChar = 0,
-//     correctWord = 0,
-//     failChar = 0,
-//     failWord = 0;
-
-//   const tempResult: KeyResultType[] = [];
-
-//   paraArr.forEach((word, index) => {
-//     word.split("").forEach((char, charIndex) => {
-//       let keyIndex = tempResult.find((key) => key.char === char);
-//       if (!keyIndex) {
-//         keyIndex = { char, total: 0, accuracy: 0 };
-//         tempResult.push(keyIndex);
-//       }
-
-//       keyIndex.total += 1;
-//       if (userInputArr?.[index]?.[charIndex] === char) {
-//         keyIndex.accuracy += 1;
-//       }
-//     });
-//     if (userInputArr?.[index] === word) {
-//       correctChar += word.length;
-//       correctWord += 1;
-//     } else {
-//       failChar += word.length;
-//       failWord += 1;
-//     }
-//   });
-
-//   setKeyResult(
-//     tempResult
-//       .sort((a, b) => a.char.localeCompare(b.char))
-//       .sort((a, b) => b.total - a.total)
-//   );
-
-//   return {
-//     keyResult: tempResult,
-//     result: {
-//       correctChar,
-//       correctWord,
-//       failChar,
-//       failWord,
-//     },
-//     correctChar,
-//     correctWord,
-//     failChar,
-//     failWord,
-//   };
-// };
-
-// export const caculScore = ({
-//   failCount,
-//   wordIndex,
-//   paragraphsArray,
-//   userInputArray,
-//   initTime,
-// }: {
-//   failCount: number;
-//   wordIndex: number;
-//   paragraphsArray: string[];
-//   userInputArray: string[];
-//   initTime: number;
-// }) => {
-//   const initResult: IResult = {
-//     wordTyped: 0,
-//     charTyped: 0,
-//     wordCorrect: 0,
-//     charCorrect: 0,
-//     wordError: 0,
-//     charError: 0,
-//     wpm: 0,
-//     cpm: 0,
-//     wAccuracy: 0,
-//     cAccuracy: 0,
-//     score: 0,
-//   };
-
-//   initResult.charError = wordIndex ? failCount : 0;
-
-//   const correctWords = paragraphsArray.slice(0, wordIndex);
-//   userInputArray.pop(); //remove last space
-//   initResult.wordTyped = wordIndex;
-//   userInputArray.map((typedWord, index) => {
-//     const correctWord = correctWords[index];
-//     const isCorrect = typedWord === correctWord;
-
-//     if (isCorrect) {
-//       initResult.wordCorrect += 1;
-//       initResult.charCorrect += correctWord.length;
-//     } else {
-//       initResult.wordError += 1;
-//       for (
-//         let i = 0;
-//         i < Math.max(correctWord?.length, typedWord?.length);
-//         i++
-//       ) {
-//         if (correctWord[i] !== typedWord[i]) {
-//           initResult.charError += 1;
-//         } else {
-//           initResult.charCorrect += 1;
-//         }
-//       }
-//     }
-//   });
-
-//   initResult.wordTyped = userInputArray.length;
-//   initResult.charTyped = wordIndex ? userInputArray.join("").length : 0;
-
-//   initResult.wpm = Math.floor(initResult.wordCorrect / (initTime / 60));
-//   initResult.cpm = Math.floor((initResult.charCorrect / initTime) * 60);
-//   initResult.wAccuracy = initResult.wordTyped
-//     ? Math.floor((initResult.wordCorrect / initResult.wordTyped) * 10000) / 100
-//     : 0;
-//   initResult.cAccuracy = initResult.charTyped
-//     ? Math.floor((initResult.charCorrect / initResult.charTyped) * 10000) / 100
-//     : 0;
-//   initResult.score =
-//     Math.floor(
-//       Math.sqrt(
-//         (initResult.wordCorrect *
-//           initResult.charCorrect *
-//           initResult.wAccuracy *
-//           initResult.cAccuracy) /
-//           (initTime || 1)
-//       )
-//     ) / 10;
-//   return initResult;
-// };
-
 type CalcuResultProps = {
   correctArray: string[];
   userInputArray: string[];
@@ -232,4 +94,520 @@ export const calcuResult = ({
     },
     keyResult: keyResult,
   };
+};
+
+
+export const getWord = () => {
+  const type = "basic"; //basic normal extreme master
+  //type này sẽ lấy từ settings
+  // wordRate and words should be fetched from server
+
+  let addWord = "";
+  while (addWord.split(" ").length < 30) {
+    const gacha = Math.floor(Math.random() * 100);
+    let wordType = "";
+    const selectedWordType = Object.entries(wordRate[type]).find(
+      ([key, value]) => {
+        return value >= gacha;
+      }
+    );
+
+    if (selectedWordType) wordType = selectedWordType[0];
+
+    const wordLib = words.vi?.[wordType] || [];
+
+    const wordIndex = Math.floor(Math.random() * wordLib.length);
+
+    if (wordType === "baseSpe" || wordType === "advanceSpe")
+      addWord += wordLib[wordIndex];
+    else {
+      addWord += " " + wordLib[wordIndex];
+    }
+  }
+
+  return addWord.trim();
+};
+
+export const words = {
+  vi: {
+    easy: [
+      "bàn",
+      "đèn",
+      "ghế",
+      "nhà",
+      "cửa",
+      "sách",
+      "bút",
+      "trời",
+      "nước",
+      "cơm",
+      "áo",
+      "mắt",
+      "tay",
+      "chân",
+      "hoa",
+      "cây",
+      "đất",
+      "xe",
+      "biển",
+      "điện",
+      "chăn",
+      "gối",
+      "mèo",
+      "chó",
+      "con",
+      "ông",
+      "bà",
+      "bố",
+      "mẹ",
+      "bé",
+      "trẻ",
+      "trứng",
+      "cá",
+      "gà",
+      "thóc",
+      "lúa",
+      "mía",
+      "chuối",
+      "cam",
+      "quýt",
+      "xoài",
+      "đào",
+      "mận",
+      "dưa",
+      "khoai",
+      "ngô",
+      "hạt",
+      "cau",
+      "trầu",
+      "chợ",
+      "phố",
+      "đường",
+      "làng",
+      "xóm",
+      "bến",
+      "cầu",
+      "thuyền",
+      "tàu",
+      "nhạc",
+      "hát",
+      "kịch",
+      "sân",
+      "khấu",
+      "trường",
+      "lớp",
+      "bảng",
+      "phấn",
+      "gương",
+      "kính",
+      "dao",
+      "kéo",
+      "thớt",
+      "nồi",
+      "chảo",
+      "giày",
+      "dép",
+      "quần",
+      "tất",
+      "áo",
+      "mũ",
+      "nón",
+      "dây",
+      "thắt",
+      "lưng",
+      "điện",
+      "máy",
+      "tính",
+      "bàn",
+      "phím",
+      "chuột",
+      "màn",
+      "hình",
+      "ti",
+      "vi",
+      "tủ",
+      "bếp",
+      "quạt",
+      "điều",
+      "hòa",
+    ],
+    easys: [
+      "bàn ghế",
+      "đèn pin",
+      "nhà bếp",
+      "cửa sổ",
+      "sách vở",
+      "bút chì",
+      "trời xanh",
+      "nước ngọt",
+      "cơm tấm",
+      "áo dài",
+      "mắt kính",
+      "tay nắm",
+      "chân bàn",
+      "hoa hồng",
+      "cây cối",
+      "đất cát",
+      "xe đạp",
+      "biển cả",
+      "điện thoại",
+      "chăn mền",
+      "gối ôm",
+      "mèo con",
+      "chó con",
+      "con trai",
+      "ông nội",
+      "bà ngoại",
+      "bố mẹ",
+      "bé gái",
+      "trẻ con",
+      "trứng gà",
+      "cá chép",
+      "gà trống",
+      "thóc lúa",
+      "lúa mạch",
+      "mía đường",
+      "chuối tiêu",
+      "cam sành",
+      "quýt ngọt",
+      "xoài cát",
+      "đào tiên",
+      "mận hậu",
+      "dưa gang",
+      "khoai tây",
+      "ngô ngọt",
+      "hạt điều",
+      "cau trầu",
+      "chợ đêm",
+      "phố cổ",
+      "đường phố",
+      "làng quê",
+      "xóm nhỏ",
+      "bến cảng",
+      "cầu tre",
+      "thuyền buồm",
+      "tàu ngầm",
+      "nhạc cụ",
+      "hát chèo",
+      "kịch nói",
+      "sân khấu",
+      "trường học",
+      "lớp học",
+      "bảng đen",
+      "phấn trắng",
+      "gương soi",
+      "kính mát",
+      "dao kéo",
+      "thớt gỗ",
+      "nồi đất",
+      "chảo gang",
+      "giày da",
+      "dép lê",
+      "quần dài",
+      "tất chân",
+      "áo khoác",
+      "mũ bảo hiểm",
+      "nón lá",
+      "dây thừng",
+      "thắt lưng",
+      "điện thoại",
+      "máy tính",
+      "bàn phím",
+      "chuột máy",
+      "màn hình",
+      "ti vi",
+      "tủ lạnh",
+      "bếp ga",
+      "quạt máy",
+    ],
+    normal: [
+      "thư",
+      "gi��o",
+      "pháp",
+      "kế",
+      "nghĩa",
+      "danh",
+      "phẩm",
+      "lịch",
+      "sử",
+      "quốc",
+      "giá",
+      "văn",
+      "hóa",
+      "chính",
+      "trị",
+      "kinh",
+      "tế",
+      "xã",
+      "hội",
+      "khoa",
+      "học",
+      "triết",
+      "lý",
+      "ngữ",
+      "pháp",
+      "đạo",
+      "phật",
+      "giá",
+      "trị",
+      "tài",
+      "năng",
+      "quản",
+      "lý",
+      "phát",
+      "triển",
+      "dân",
+      "chủ",
+      "giáo",
+      "dục",
+      "bệnh",
+      "viện",
+      "hành",
+      "chính",
+      "công",
+      "trình",
+      "môi",
+      "trường",
+      "nguyên",
+      "tắc",
+      "năng",
+      "lượng",
+      "hệ",
+      "thống",
+      "giáo",
+      "trình",
+      "luận",
+      "văn",
+      "hội",
+      "thảo",
+      "văn",
+      "nghệ",
+      "kỹ",
+      "thuật",
+      "công",
+      "nghệ",
+      "ngân",
+      "hàng",
+      "thương",
+      "mại",
+      "dịch",
+      "vụ",
+      "lập",
+      "trình",
+      "bản",
+      "quyền",
+      "quảng",
+      "cáo",
+      "nhân",
+      "sự",
+      "tâm",
+      "lý",
+      "tài",
+      "chính",
+    ],
+    normals: [
+      "hữu nghị",
+      "chính xác",
+      "xây dựng",
+      "phát minh",
+      "tích cực",
+      "tiến bộ",
+      "hiệu quả",
+      "cân nhắc",
+      "chấp nhận",
+      "từ chối",
+      "lập luận",
+      "thiết kế",
+      "kỹ thuật",
+      "nhận thức",
+      "xu hướng",
+      "trách nhiệm",
+      "điều chỉnh",
+      "giải quyết",
+      "phổ biến",
+      "tác động",
+    ],
+    hards: [
+      "triết học",
+      "siêu hình",
+      "phản biện",
+      "thực tiễn",
+      "nhận thức",
+      "ngữ nghĩa",
+      "khoa học",
+      "tư duy",
+      "khái niệm",
+      "hữu ích",
+      "triển khai",
+      "phân tích",
+      "lý thuyết",
+      "tâm lý",
+      "nghiên cứu",
+      "chuyển đổi",
+      "triển vọng",
+      "mô hình",
+      "đối tượng",
+      "phương pháp",
+      "triết lý",
+      "phân loại",
+      "siêu âm",
+      "đối nghịch",
+      "khuynh hướng",
+      "nghiên cứu",
+      "tương tác",
+      "thực hành",
+      "giải pháp",
+      "phức hợp",
+      "cơ bản",
+      "thành tựu",
+      "phát triển",
+      "bảo đảm",
+      "hài hòa",
+      "cảm nhận",
+      "phân tích",
+      "nguy cơ",
+      "trực giác",
+      "khách quan",
+    ],
+    extreme: [
+      "hệ thống",
+      "phức tạp",
+      "triển vọng",
+      "phương pháp",
+      "biến đổi",
+      "tương tác",
+      "phát triển",
+      "bảo mật",
+      "tích hợp",
+      "đột biến",
+      "cơ sở",
+      "khuynh hướng",
+      "định hướng",
+      "phản biện",
+      "phân tích",
+      "thực hiện",
+      "phản ứng",
+      "tư duy",
+      "khái niệm",
+      "nghiên cứu",
+      "khái quát",
+      "định nghĩa",
+      "phân quyền",
+      "tính năng",
+      "chuyển hoá",
+      "biên dịch",
+      "cân đối",
+      "phân hoá",
+      "tăng cường",
+      "hệ trọng",
+      "tương đồng",
+      "siêu nhiên",
+      "triển khai",
+      "tích luỹ",
+      "tối giản",
+      "bền vững",
+      "kế thừa",
+      "khả năng",
+      "thỏa thuận",
+    ],
+    baseSpe: [
+      "!",
+      "@",
+      "#",
+      "$",
+      "%",
+      "^",
+      "&",
+      "*",
+      "(",
+      ")",
+      "-",
+      "_",
+      "=",
+      "+",
+      "[",
+      "]",
+      "{",
+      "}",
+      ";",
+      ":",
+      "'",
+      '"',
+      ",",
+      ".",
+      "<",
+      ">",
+      "/",
+      "?",
+    ],
+    advanceSpe: [
+      "{",
+      "}",
+      "[",
+      "]",
+      "(",
+      ")",
+      "<",
+      ">",
+      "/",
+      "\\",
+      "|",
+      "~",
+      "`",
+      "@",
+      "#",
+      "$",
+      "%",
+      "^",
+      "&",
+      "*",
+      "_",
+      "-",
+      "+",
+      "=",
+      "!",
+    ],
+    number: [],
+  },
+};
+
+export const wordRate = {
+  basic: {
+    easys: 50,
+    easy: 70,
+    normals: 100,
+  },
+  normal: {
+    easy: 30,
+    normal: 60,
+    easys: 70,
+    normals: 90,
+    hards: 100,
+
+    uppercaseFirst: 5,
+    uppercase: 7,
+  },
+  extreme: {
+    easy: 5,
+    normal: 15,
+    easys: 20,
+    normals: 30,
+    hards: 50,
+    extreme: 70,
+    baseSpe: 90,
+    advanceSpe: 100,
+    uppercaseFirst: 10,
+    uppercase: 15,
+  },
+  master: {
+    normal: 20,
+    normals: 30,
+    hards: 40,
+    extreme: 65,
+    baseSpe: 85,
+    advanceSpe: 100,
+    uppercaseFirst: 20,
+    uppercase: 28,
+    freeUppercase: 33,
+  },
 };

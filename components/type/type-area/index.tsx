@@ -1,12 +1,20 @@
 // import { scrollTo, scrollToId } from "@/app/libs/utils";
 // import { useDebounce } from "@/hooks/useDebounce";
 import { useDebounce } from "@/hooks/useDebounce";
-import { KeyResultType, ResultType, ScoreType } from "@/interface/type/typing";
+import { ResultDetailType, ScoreType } from "@/interface/type/typing";
 import { mainLayoutStore } from "@/store/mainLayout.store";
 import * as React from "react";
-import { calcuResult } from "../util";
-import { addScore, addSpeedTestScore } from "@/services/type.service";
+import { calcuResult, getWord } from "../util";
+import {
+  addParagraphScore,
+  addSpeedTestScore,
+  addTrainingScore,
+} from "@/services/type.service";
 import { useMutation, UseQueryResult } from "@tanstack/react-query";
+import { scrollTo, scrollToId } from "@/lib/utils";
+import { GrPowerReset } from "react-icons/gr";
+import { WordList } from "./WordList";
+import { Header } from "./Header";
 // import { GrPowerReset } from "react-icons/gr";
 // import { caculScore, getWord, pushScore } from "./_utils";
 // import { Header } from "./Header";
@@ -21,12 +29,7 @@ export interface ITypeAreaProps {
   initPara?: string;
   timeType?: "countDown" | "countUp";
   rankQuery: UseQueryResult<unknown>;
-  setResult: (result: {
-    keyResult: KeyResultType[];
-    score: ScoreType;
-    typedResult: ResultType;
-  }) => void;
-  setKeyResult: React.Dispatch<React.SetStateAction<KeyResultType[]>>;
+  setResult: (result: ResultDetailType) => void;
   isFinish: boolean;
   setIsFinish: (value: boolean) => void;
   isReset: boolean;
@@ -39,7 +42,6 @@ export default function TypeArea({
   timeType,
   rankQuery,
   setResult,
-  setKeyResult,
   isFinish,
   setIsFinish,
   isReset,
@@ -74,15 +76,27 @@ export default function TypeArea({
   const inputRef = React.useRef<HTMLTextAreaElement | null>(null);
 
   const {
-    data: addScore,
-    error,
-    isLoading,
-  } = useMutation(addScore, {
-    onSuccess: (data) => {
-      onSucess;
+    mutate: addScoreMutation,
+    // error,
+    // isLoading,
+  } = useMutation({
+    mutationKey: ["addScore"],
+    mutationFn: async ({ score }: { score: ScoreType }) => {
+      if (page === "speed-test") {
+        const res = await addSpeedTestScore({ score });
+        return res.data;
+      }
+      if (page === "paragraph") {
+        const res = await addParagraphScore({ score });
+        return res.data;
+      }
+      // if (page === "training") {
+      const res = await addTrainingScore({ score });
+      return res.data;
+      // }
     },
-    onError: (error) => {
-      onError;
+    onSuccess: () => {
+      rankQuery.refetch();
     },
   });
 
@@ -132,18 +146,13 @@ export default function TypeArea({
     });
 
     setResult(result);
-    ///////////Ở đây aaaaaaaaaaaaaaaaaaaaaaaa
 
     //only push score when user is logged in change if need
     if (userInfo?.id && Number(userInfo?.id) && userInfo?.language?.id) {
-      console.log("clmm cái này ở đou");
-      await addSpeedTestScore({
-        score: result.score,
-      });
-      await rankQuery.refetch();
+      addScoreMutation({ score: result.score });
     }
     setIsFinish(true);
-    // scrollToId("type-result");
+    scrollToId("type-result");
   };
 
   const Reset = () => {
@@ -164,18 +173,18 @@ export default function TypeArea({
     inputRef.current?.focus();
   };
 
-  React.useEffect(() => {
-    if (initPara === undefined) {
-      return;
-    } else if (!initPara) {
-      inputRef.current?.setAttribute("disabled", "disabled");
-      return;
-    } else {
-      setParagraphs(initPara);
-      inputRef.current?.removeAttribute("disabled");
-      inputRef.current?.focus();
-    }
-  }, [initPara]);
+  // React.useEffect(() => {
+  //   if (initPara === undefined) {
+  //     return;
+  //   } else if (!initPara) {
+  //     inputRef.current?.setAttribute("disabled", "disabled");
+  //     return;
+  //   } else {
+  //     setParagraphs(initPara);
+  //     inputRef.current?.removeAttribute("disabled");
+  //     inputRef.current?.focus();
+  //   }
+  // }, [initPara]);
 
   React.useEffect(() => {
     if (isReset) {
@@ -185,12 +194,12 @@ export default function TypeArea({
   }, [isReset]);
 
   React.useEffect(() => {
-    if (timeType === "countDown") {
+    if (page === "speed-test") {
       if (isTyping && !time) {
         finishType();
       }
     }
-  }, [time, timeType]);
+  }, [time, timeType, page]);
 
   React.useEffect(() => {
     if (!isFinish) {
@@ -203,7 +212,7 @@ export default function TypeArea({
   }, [isFinish]);
 
   React.useEffect(() => {
-    if (initPara === undefined && paragraphsArray.length <= wordIndex + 100) {
+    if (page === "speed-test" && paragraphsArray.length <= wordIndex + 100) {
       const addText = getWord();
       setParagraphs((prev) => {
         if (prev) return prev + " " + addText;
@@ -218,7 +227,9 @@ export default function TypeArea({
     if (isTyping) {
       if (isNextWord) return setIsNextWord(false);
       if (prevDebounce.length > wordDebounce.length) {
-        setFailCount(failCount + (prevDebounce.length - wordDebounce.length));
+        setDeletedCount(
+          deletedCount + (prevDebounce.length - wordDebounce.length)
+        );
       }
     }
   }, [wordDebounce]);
@@ -233,16 +244,14 @@ export default function TypeArea({
 
   React.useEffect(() => {
     setTime(timeType === "countDown" ? initTime : 0);
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
     return () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
       }
     };
-  }, []);
-  React.useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.focus();
-    }
   }, []);
 
   return (
@@ -265,7 +274,7 @@ export default function TypeArea({
             >
               <div id="first-word"></div>
               <WordList
-                typedArray={userInputArray}
+                typedArray={userInputArr}
                 typingWord={wordDebounce}
                 wordIndex={wordIndex}
                 words={paragraphsArray}
