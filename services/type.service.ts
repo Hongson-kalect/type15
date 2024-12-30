@@ -5,8 +5,9 @@ import { toast } from "react-toastify";
 export const addSpeedTestScore = async ({ score }: { score: ScoreType }) => {
   try {
     const userId = mainLayoutStore.getState().userInfo?.id;
+    const languageId = mainLayoutStore.getState().userInfo?.languageId;
     // if(!userId) return //cái này là nếu ko muốn người chưa đăng nhập cùng có thể lưu lại kết quả
-    const paraScore = { ...score, type: "speed-test", userId: userId };
+    const paraScore = { ...score, type: "speed-test", userId, languageId };
     const res = await axios.post(`/api/score`, paraScore);
     return res.data;
   } catch (e) {
@@ -18,8 +19,9 @@ export const addSpeedTestScore = async ({ score }: { score: ScoreType }) => {
 export const addTrainingScore = async ({ score }: { score: ScoreType }) => {
   try {
     const userId = mainLayoutStore.getState().userInfo?.id;
+    const languageId = mainLayoutStore.getState().userInfo?.languageId;
     // if(!userId) return //cái này là nếu ko muốn người chưa đăng nhập cùng có thể lưu lại kết quả
-    const paraScore = { ...score, type: "training", userId: userId };
+    const paraScore = { ...score, type: "training", userId, languageId };
     const res = await axios.post(`/api/score`, paraScore);
     return res.data;
   } catch (e) {
@@ -31,8 +33,9 @@ export const addTrainingScore = async ({ score }: { score: ScoreType }) => {
 export const addParagraphScore = async ({ score }: { score: ScoreType }) => {
   try {
     const userId = mainLayoutStore.getState().userInfo?.id;
+    const languageId = mainLayoutStore.getState().userInfo?.languageId;
     // if(!userId) return //cái này là nếu ko muốn người chưa đăng nhập cùng có thể lưu lại kết quả
-    const paraScore = { ...score, type: "paragraph", userId: userId };
+    const paraScore = { ...score, type: "paragraph", userId, languageId };
     const res = await axios.post(`/api/score`, paraScore);
     return res.data;
   } catch (e) {

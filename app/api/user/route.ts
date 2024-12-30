@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { NextRequest } from "next";
 import { GetDTO } from "./dto";
 import { makeQuery } from "../utils";
+import { trimedAppUser } from "./utils";
 
 const prisma = new PrismaClient();
 
@@ -61,10 +62,14 @@ export async function POST(request: Request) {
     },
   });
 
-  console.log("appUser :>> ", appUser);
+  if (!appUser)
+    return NextResponse.json({ message: "User not found" }, { status: 404 });
 
-  if (appUser) {
-    return NextResponse.json(appUser);
+  const trimmedAppUser = trimedAppUser(appUser);
+  console.log("trimmedAppUser :>> ", trimmedAppUser);
+
+  if (trimmedAppUser) {
+    return NextResponse.json(trimmedAppUser);
     // prisma.appUser.update({ where: { id: appUser.id }, data: { userId } });
   } else {
     console.log(1);
@@ -72,7 +77,7 @@ export async function POST(request: Request) {
       data: { userId },
     });
     console.log(2);
-    return NextResponse.json(newAppUser);
+    return NextResponse.json(trimedAppUser(newAppUser));
   }
 }
 

@@ -25,6 +25,6 @@ export type ResultType = {
 
 export type ResultDetailType = {
   score?: ScoreType;
-  result?: ResultType;
+  typedResult?: ResultType;
   keyResult?: KeyResultType[];
 };

@@ -10,13 +10,13 @@ export interface IAppUser {
   refresh_token?: string;
   recoverEmail?: string;
   ban?: IBan;
-  favorite: IFavorite[];
-  novels: INovel[];
-  paragraph: IParagraph[];
-  score: IScore[];
+  favorite?: IFavorite[];
+  novels?: INovel[];
+  paragraph?: IParagraph[];
+  score?: IScore[];
   //   rank: IRank[];
   //   rate: IRate[];
-  report: Report[];
+  report?: Report[];
   userId: string;
   user: IUser;
   profileId?: number;
@@ -25,7 +25,8 @@ export interface IAppUser {
   setting?: ISetting;
   assetId?: number;
   asset?: IAsset;
-  devices: IDevice[];
+
+  devices?: IDevice[];
   createdAt: Date;
   updatedAt: Date;
 }

@@ -8,7 +8,7 @@ const prisma = new PrismaClient();
 
 export async function GET(req: NextRequest) {
   const {
-    orderColumn = "createdAt",
+    orderColumn = "score",
     orderType = "desc",
     limit = 10,
     skip = 0,
@@ -21,14 +21,22 @@ export async function GET(req: NextRequest) {
       where: {
         AND: [
           {
-            OR: [
-              { title: { contains: search, mode: "insensitive" } },
-              { content: { contains: search, mode: "insensitive" } },
-            ],
+            // OR: [
+            //   { title: { contains: search, mode: "insensitive" } },
+            //   { content: { contains: search, mode: "insensitive" } },
+            // ],
           },
           filters,
           { isDeleted: false },
         ],
+      },
+      include: {
+        user: {
+          select: {
+            username: true,
+            user: true,
+          },
+        },
       },
       orderBy: {
         [orderColumn]: orderType || "desc", // Default to 'desc' if orderType is undefined

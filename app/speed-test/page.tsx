@@ -15,7 +15,7 @@ const SpeedTest = () => {
     () => ({
       keyResult: [],
       score: undefined,
-      result: undefined,
+      typedResult: undefined,
     })
   );
 
@@ -34,6 +34,7 @@ const SpeedTest = () => {
         setResult={setResultDetail}
         isFinish={isShowScore}
         setIsFinish={setIsShowScore}
+        page="speed-test"
       />
 
       <div className="duration-200 pt-8" id="type-result">

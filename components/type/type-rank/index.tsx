@@ -39,7 +39,7 @@ type IRankProps = {
 
 export const TypeRank = ({ resultDetail, page, ranks }: IRankProps) => {
   // const { userInfo } = useMainStore();
-  const { result, score, keyResult } = useMemo(
+  const { typedResult, score, keyResult } = useMemo(
     () => resultDetail,
     [resultDetail]
   );

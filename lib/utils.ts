@@ -22,9 +22,6 @@ export function scrollTo(
   ) as HTMLElement;
   const element = document.querySelector(target) as HTMLElement;
 
-  console.log("container :>> ", container);
-  console.log("element :>> ", element);
-
   if (!container || !element) return;
   container.scrollTo({
     top: element.offsetTop - container.offsetTop,

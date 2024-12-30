@@ -6,6 +6,10 @@ import { CommonSideBar } from "./sidebar";
 import { getLanguages, getUser } from "@/services/mainLayout.service";
 import { useSession } from "next-auth/react";
 import { IAppUser } from "@/interface/schema/schema.interface";
+import { mainLayoutStore } from "@/store/mainLayout.store";
+import React from "react";
+import { setLocalStorage } from "@/lib/localStorage";
+import { storage } from "@/constant/localStorage";
 
 export interface ILayoutProps {
   children: React.ReactNode;
@@ -13,6 +17,7 @@ export interface ILayoutProps {
 
 export default function MainLayout(props: ILayoutProps) {
   const { data: session } = useSession();
+  const { setUserInfo } = mainLayoutStore();
 
   const user = useQuery<IAppUser>({
     queryKey: ["user", session],
@@ -23,8 +28,12 @@ export default function MainLayout(props: ILayoutProps) {
     queryFn: () => getLanguages(),
   });
 
-  console.log("user :>> ", user);
-  console.log("languages :>> ", languages);
+  React.useEffect(() => {
+    if (user.data) {
+      setLocalStorage(storage.user, user.data);
+      setUserInfo(user.data);
+    }
+  }, [user.data]);
 
   return (
     <div className="flex h-screen w-screen">

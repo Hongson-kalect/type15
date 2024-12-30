@@ -9,7 +9,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { IAppUser, ILanguage } from "@/interface/schema/schema.interface";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useMutation } from "@tanstack/react-query";
 import { changeLanguage } from "@/services/mainLayout.service";
@@ -25,16 +25,21 @@ export const Header = ({ languages, user }: HeaderProps) => {
 
   const userLanguage = useMemo(() => {
     if (!user?.languageId) return languages?.[0];
-    return languages.find((item) => item?.id === user?.languageId);
+    return languages?.find((item) => item?.id === user?.languageId);
   }, [languages, user?.languageId]);
 
   const { mutate: handleChangeLanguage } = useMutation({
     mutationKey: ["changeLanguage"],
-    mutationFn: (languageId: number) => changeLanguage(languageId, user?.id),
+    mutationFn: (languageId: number) => changeLanguage(languageId),
     onSuccess: (data) => {
       setUserInfo(data);
     },
   });
+
+  useEffect(() => {
+    if (user?.id && !user.languageId && languages[0].id)
+      handleChangeLanguage(languages[0].id);
+  }, [user, languages]);
 
   return (
     <div className="h-16  px-6 bg-white flex items-center justify-between w-full">
@@ -74,7 +79,7 @@ export const Header = ({ languages, user }: HeaderProps) => {
 
             <SelectContent>
               {languages?.map((item, index) => (
-                <SelectItem key={index} value={item.id.toString()}>
+                <SelectItem key={index} value={item?.id?.toString() || ""}>
                   {item.name}
                 </SelectItem>
               ))}

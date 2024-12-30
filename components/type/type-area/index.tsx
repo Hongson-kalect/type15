@@ -67,7 +67,7 @@ export default function TypeArea({
   const [prevDebounce, setPrevDebounce] = React.useState("");
 
   const [deletedCount, setDeletedCount] = React.useState(0);
-  const [initTime, setInitTime] = React.useState(60000);
+  const [initTime, setInitTime] = React.useState(10);
   const [time, setTime] = React.useState(
     timeType === "countDown" ? initTime : 0
   );
@@ -148,7 +148,8 @@ export default function TypeArea({
     setResult(result);
 
     //only push score when user is logged in change if need
-    if (userInfo?.id && Number(userInfo?.id) && userInfo?.language?.id) {
+    console.log("use inffo", userInfo);
+    if (userInfo?.id && Number(userInfo?.id) && userInfo?.languageId) {
       addScoreMutation({ score: result.score });
     }
     setIsFinish(true);

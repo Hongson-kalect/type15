@@ -51,7 +51,7 @@ export const Result = ({
   reset: () => void;
 }) => {
   const [showKeyStats, setShowKeyStats] = useState(false);
-  const { score, keyResult, result } = useMemo(() => {
+  const { score, keyResult, typedResult } = useMemo(() => {
     return resultDetail;
   }, [resultDetail]);
 
@@ -72,9 +72,9 @@ export const Result = ({
                 name="Số từ đã gõ"
                 result={
                   <>
-                    <span>{result?.totalWords || 0}</span>
+                    <span>{typedResult?.totalWords || 0}</span>
                     <span className="text-sm text-red-400">
-                      ({result?.failWords || 0})
+                      ({typedResult?.failWords || 0})
                     </span>
                   </>
                 }
@@ -91,9 +91,9 @@ export const Result = ({
                 name="Số ký tự đã gõ"
                 result={
                   <>
-                    <span>{result?.totalChars || 0}</span>
+                    <span>{typedResult?.totalChars || 0}</span>
                     <span className="text-sm text-red-400">
-                      ({result?.failChars || 0})
+                      ({typedResult?.failChars || 0})
                     </span>
                   </>
                 }

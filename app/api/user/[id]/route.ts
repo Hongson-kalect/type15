@@ -10,7 +10,7 @@ export async function GET(
 ) {
   const { id } = await params;
   try {
-    const item = await prisma.userInfo.findUnique({
+    const item = await prisma.appUser.findUnique({
       where: { id: Number(id) },
     });
 
@@ -35,7 +35,7 @@ export async function PUT(
   const { ...data } = await req.json();
 
   try {
-    const updatedPost = await prisma.userInfo.update({
+    const updatedPost = await prisma.appUser.update({
       where: { id: Number(id) },
       data: data,
     });
