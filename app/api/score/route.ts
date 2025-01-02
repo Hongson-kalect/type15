@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
-import { NextResponse } from "next/server";
-import { NextRequest } from "next";
+import { NextRequest, NextResponse } from "next/server";
+
 import { GetDTO } from "./dto";
 import { makeQuery } from "../utils";
 

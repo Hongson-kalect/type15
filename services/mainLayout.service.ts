@@ -1,5 +1,3 @@
-import axios from "axios";
-
 import { Session } from "next-auth";
 import { getLocalStorage, setLocalStorage } from "@/lib/localStorage";
 import { storage } from "@/constant/localStorage";
@@ -7,6 +5,7 @@ import appStore from "@/store/app.store";
 import { mainLayoutStore } from "@/store/mainLayout.store";
 import { toast } from "react-toastify";
 import { IAppUser } from "@/interface/schema/schema.interface";
+import api from "./axios.instance";
 
 export const getUser = async (userSession: Session | null) => {
   if (!getLocalStorage(storage.user))
@@ -22,7 +21,7 @@ export const getUser = async (userSession: Session | null) => {
     });
 
   if (!userSession) return getLocalStorage(storage.user);
-  const res = await axios.post("/api/user", userSession);
+  const res = await api.post("/api/user", userSession);
   if (res.data) {
     appStore.setState({ isLogin: true });
   }
@@ -30,7 +29,7 @@ export const getUser = async (userSession: Session | null) => {
 };
 
 export const getLanguages = async () => {
-  const res = await axios.get("/api/language");
+  const res = await api.get("/api/language");
   return res.data;
 };
 
@@ -43,6 +42,6 @@ export const changeLanguage = async (languageId: number) => {
   // setLocalStorage(storage.language, languageId);
   if (!appStore.getState().isLogin || !user.id) return localUser;
 
-  const res = await axios.put(`/api/user/${user.id}`, { languageId });
+  const res = await api.put(`/api/user/${user.id}`, { languageId });
   return res.data;
 };

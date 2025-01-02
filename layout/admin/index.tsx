@@ -23,9 +23,6 @@ export default function AdminLayout(props: ILayoutProps) {
     queryFn: () => getLanguages(),
   });
 
-  console.log("user :>> ", user);
-  console.log("languages :>> ", languages);
-
   return (
     <div className="flex h-screen w-screen">
       <div className="h-full">

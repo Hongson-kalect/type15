@@ -1,19 +1,19 @@
 import { AddLanguageDTO } from "@/interface/dto/language.dto";
 import { ILanguage } from "@/interface/schema/schema.interface";
-import axios from "axios";
+import api from "./axios.instance";
 
 export const addLanguage = async (language: AddLanguageDTO) => {
-  const res = await axios.post("/api/language", language);
+  const res = await api.post("/api/language", language);
   return res.data;
 };
 
 export const updateLanguage = async (language: ILanguage) => {
   const { id, createdAt, updatedAt, ...data } = language;
-  const res = await axios.put(`/api/language/${id}`, data);
+  const res = await api.put(`/api/language/${id}`, data);
   return res.data;
 };
 
 export const deleteLanguage = async (id: number) => {
-  const res = await axios.delete(`/api/language/${id}`);
+  const res = await api.delete(`/api/language/${id}`);
   return res.data;
 };

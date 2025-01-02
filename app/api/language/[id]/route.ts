@@ -34,8 +34,6 @@ export async function PUT(
   const { id } = await params;
   const { ...data } = await req.json();
 
-  console.log("id,data :>> ", id, data);
-
   try {
     const updatedPost = await prisma.language.update({
       where: { id: Number(id) },

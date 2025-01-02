@@ -18,10 +18,11 @@ export const FilterItem = (props: IFilterItemProps) => {
       <Tooltip>
         <TooltipTrigger asChild>
           <div
+            onClick={props.onClick}
             className={`duration-300 ${
               props.active
                 ? "bg-blue-500 text-white hover:bg-blue-700"
-                : "hover:bg-gray-200"
+                : "hover:bg-gray-200 text-gray-500"
             }  flex items-center justify-center gap-2 px-3 py-1 rounded cursor-pointer`}
           >
             {props.icon && props.icon}
@@ -30,7 +31,7 @@ export const FilterItem = (props: IFilterItemProps) => {
           </div>
         </TooltipTrigger>
         <TooltipContent>
-          <p>Add to library</p>
+          <p>{props.title}</p>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>

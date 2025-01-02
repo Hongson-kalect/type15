@@ -2,8 +2,8 @@ import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
 import { NextRequest } from "next";
 import { GetDTO } from "./dto";
-import { makeQuery } from "../utils";
-import { trimedAppUser } from "./utils";
+import { makeQuery, signToken, verifyToken, verifyUser } from "../utils";
+import { trimingAppUser } from "./utils";
 
 const prisma = new PrismaClient();
 
@@ -46,12 +46,12 @@ export async function GET(req: NextRequest) {
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   const requestBody = await request.json();
-  console.log("requestBody :>> ", requestBody);
+  verifyUser(request);
+
   const { user } = requestBody; //body từ request
   const { id: userId } = user;
-  console.log("userId :>> ", userId);
 
   const appUser = await prisma.appUser.findUnique({
     where: { userId },
@@ -65,19 +65,17 @@ export async function POST(request: Request) {
   if (!appUser)
     return NextResponse.json({ message: "User not found" }, { status: 404 });
 
-  const trimmedAppUser = trimedAppUser(appUser);
-  console.log("trimmedAppUser :>> ", trimmedAppUser);
+  const trimedAppUser = trimingAppUser(appUser);
 
-  if (trimmedAppUser) {
-    return NextResponse.json(trimmedAppUser);
-    // prisma.appUser.update({ where: { id: appUser.id }, data: { userId } });
+  if (trimedAppUser) {
+    const access_token = signToken({ userId: trimedAppUser.id });
+    return NextResponse.json({ ...trimedAppUser, access_token });
   } else {
-    console.log(1);
     const newAppUser = await prisma.appUser.create({
       data: { userId },
     });
-    console.log(2);
-    return NextResponse.json(trimedAppUser(newAppUser));
+    const access_token = signToken({ userId: newAppUser.id });
+    return NextResponse.json({ ...newAppUser, access_token });
   }
 }
 

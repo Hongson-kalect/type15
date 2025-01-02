@@ -1,4 +1,4 @@
-export const trimedAppUser = (appUser: any) => {
+export const trimingAppUser = (appUser: any) => {
   return {
     id: appUser.id,
     username: appUser.username,

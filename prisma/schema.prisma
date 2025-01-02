@@ -126,9 +126,14 @@ model Paragraph {
   id         Int       @id @default(autoincrement())
   languageId Int
   language   Language  @relation(fields: [languageId], references: [id])
-  header     String
+  title     String
   content    String
   desc       String    @default("")
+  scope      String  @default("public")
+  password   String  @default("")
+  price      Int  @default(0)
+  priceUnitId Int?
+  priceUnit  Currency? @relation(fields: [priceUnitId], references: [id])
   chapter    String?
   rate       Float     @default(0)
   rateTime   Int       @default(0)
@@ -147,6 +152,16 @@ model Paragraph {
   historys      History[]
   report Report[]
   comment Comment[] 
+}
+
+model Currency {
+  isDeleted   Boolean  @default(false)
+  id          Int      @id @default(autoincrement())
+  name        String
+  icon        String?
+  paragraphs Paragraph[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model Profile {

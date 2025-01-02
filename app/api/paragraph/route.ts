@@ -1,6 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { NextResponse } from "next/server";
-import { NextRequest } from "next";
+import { NextRequest, NextResponse } from "next/server";
 import { GetDTO } from "./dto";
 import { makeQuery } from "../utils";
 
@@ -10,11 +9,26 @@ export async function GET(req: NextRequest) {
   const {
     orderColumn = "createdAt",
     orderType = "desc",
+    page = 1,
     limit = 10,
-    skip = 0,
+    // skip = 0,
     search = "",
     ...filters
   }: GetDTO = makeQuery(req?.url || "");
+
+  if (filters.favorite) {
+    filters.favorite = {
+      some: filters.userId,
+    };
+  }
+  if (filters.history) {
+    filters.history = {
+      some: filters.userId,
+    };
+  }
+  if (!filters.self) {
+    delete filters.userId;
+  }
 
   try {
     const list = await prisma.paragraph.findMany({
@@ -31,10 +45,10 @@ export async function GET(req: NextRequest) {
         ],
       },
       orderBy: {
-        [orderColumn]: orderType || "desc", // Default to 'desc' if orderType is undefined
+        [orderColumn]: orderType,
       },
       take: Number(limit),
-      skip: Number(skip),
+      skip: Number(page) * (Number(limit) - 1),
     });
     return NextResponse.json(list);
   } catch (error) {

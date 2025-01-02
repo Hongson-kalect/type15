@@ -148,7 +148,6 @@ export default function TypeArea({
     setResult(result);
 
     //only push score when user is logged in change if need
-    console.log("use inffo", userInfo);
     if (userInfo?.id && Number(userInfo?.id) && userInfo?.languageId) {
       addScoreMutation({ score: result.score });
     }

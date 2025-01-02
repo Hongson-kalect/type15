@@ -1,8 +1,8 @@
-export function setCookie(name: string, value: string, hour: number) {
+export function setCookie(name: string, value: string, hour: number = 48) {
   let expires = "";
   if (hour) {
     const date = new Date();
-    date.setTime(date.getTime() + hour * 60 * 24 * 60 * 60 * 1000);
+    date.setTime(date.getTime() + hour * 60 * 60 * 1000);
     expires = "; expires=" + date.toUTCString();
   }
   document.cookie = name + "=" + (value || "") + expires + "; path=/";

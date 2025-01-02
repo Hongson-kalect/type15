@@ -10,6 +10,8 @@ import { mainLayoutStore } from "@/store/mainLayout.store";
 import React from "react";
 import { setLocalStorage } from "@/lib/localStorage";
 import { storage } from "@/constant/localStorage";
+import { setCookie } from "@/lib/cookies";
+import { cookie } from "@/constant/cookie";
 
 export interface ILayoutProps {
   children: React.ReactNode;
@@ -33,6 +35,9 @@ export default function MainLayout(props: ILayoutProps) {
       setLocalStorage(storage.user, user.data);
       setUserInfo(user.data);
     }
+
+    if (user.data?.access_token)
+      setCookie(cookie.access_token, user.data?.access_token);
   }, [user.data]);
 
   return (
