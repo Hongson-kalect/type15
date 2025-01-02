@@ -6,21 +6,26 @@ import CreateParaOptions from "./components/options";
 import { ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { AddParagraphOption, ParagraphFilterType } from "@/interface/type/paragraph";
+import {
+  AddParagraphOption,
+  ParagraphFilterType,
+} from "@/interface/type/paragraph";
+import { mainLayoutStore } from "@/store/mainLayout.store";
 
 export interface ICreateParagraphProps {}
 
 export default function CreateParagraph(props: ICreateParagraphProps) {
-  const [filter, setFilter] = React.useState<AddParagraphOption>({
-    languageId: number;
-    scope: "public" | "protected" | "private";
-    password: string;
-    price:number,
-    priceUnitId:number,
-    novelId:number,
-    chapter:string
-  });
+  const { userInfo } = mainLayoutStore();
 
+  const [options, setOptions] = React.useState<AddParagraphOption>({
+    languageId: userInfo?.languageId || 1,
+    scope: "public",
+    protectedType: "pass",
+    password: "",
+    price: 0,
+    novelId: 0,
+    chapter: "",
+  });
   return (
     <div className="para-create flex flex-col py-4 px-6">
       <div
@@ -33,7 +38,7 @@ export default function CreateParagraph(props: ICreateParagraphProps) {
       </div>
       <div className="flex gap-4">
         <CreateParaForm />
-        <CreateParaOptions />
+        <CreateParaOptions options={options} setOptions={setOptions} />
       </div>
     </div>
   );

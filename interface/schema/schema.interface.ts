@@ -189,6 +189,16 @@ export interface ILanguage {
   updatedAt?: Date;
 }
 
+export interface ICurrency {
+  isDeleted: boolean;
+  id: number;
+  name: string;
+  icon?: string;
+  paragraphs: IParagraph[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export interface INovel {
   isDeleted: boolean;
   id: number;

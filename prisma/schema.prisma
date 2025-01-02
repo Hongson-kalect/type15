@@ -130,6 +130,7 @@ model Paragraph {
   content    String
   desc       String    @default("")
   scope      String  @default("public")
+  protectedType String @default("pass")
   password   String  @default("")
   price      Int  @default(0)
   priceUnitId Int?

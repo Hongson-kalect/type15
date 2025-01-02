@@ -12,9 +12,10 @@ export type ParagraphFilterType = {
 export type AddParagraphOption = {
   languageId: number;
   scope: "public" | "protected" | "private";
-  password: string;
-  price: number;
-  priceUnitId: number;
-  novelId: number;
-  chapter: string;
+  protectedType?: "pass" | "sell";
+  password?: string;
+  price?: number;
+  priceUnitId?: number;
+  novelId?: number;
+  chapter?: string;
 };

@@ -37,7 +37,8 @@ export const Header = ({ languages, user }: HeaderProps) => {
   });
 
   useEffect(() => {
-    if (user?.id && !user.languageId && languages[0].id)
+    // if (user?.id && !user.languageId && languages[0].id)
+    if (!user?.languageId && languages?.[0]?.id)
       handleChangeLanguage(languages[0].id);
   }, [user, languages]);
 

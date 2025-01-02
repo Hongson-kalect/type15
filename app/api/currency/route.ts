@@ -1,8 +1,7 @@
 import { PrismaClient } from "@prisma/client";
-import { NextResponse } from "next/server";
-import { NextRequest } from "next";
+import { NextRequest, NextResponse } from "next/server";
 import { GetDTO } from "./dto";
-import { makeQuery } from "../utils";
+import { makeQuery } from "@/app/api/utils";
 
 const prisma = new PrismaClient();
 
@@ -17,14 +16,11 @@ export async function GET(req: NextRequest) {
   }: GetDTO = makeQuery(req?.url || "");
 
   try {
-    const list = await prisma.novel.findMany({
+    const list = await prisma.currency.findMany({
       where: {
         AND: [
           {
-            OR: [
-              { name: { contains: search, mode: "insensitive" } },
-              { desc: { contains: search, mode: "insensitive" } },
-            ],
+            OR: [{ name: { contains: search, mode: "insensitive" } }],
           },
           filters,
           { isDeleted: false },
@@ -48,7 +44,7 @@ export async function GET(req: NextRequest) {
 export async function POST(request: Request) {
   const requestBody = await request.json(); //body từ request
 
-  const newItem = await prisma.novel.create({
+  const newItem = await prisma.currency.create({
     data: requestBody,
   });
   return NextResponse.json(newItem);
@@ -58,7 +54,7 @@ export async function DELETE(req: NextRequest) {
   const { id } = makeQuery(req?.url || "");
 
   try {
-    await prisma.novel.delete({
+    await prisma.currency.delete({
       where: { id: Number(id) },
     });
     return NextResponse.json({ message: "Post deleted successfully" });
