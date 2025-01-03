@@ -2,9 +2,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { AddParagraphValue } from "@/interface/type/paragraph";
+import { mainLayoutStore } from "@/store/mainLayout.store";
 import { UseMutateFunction } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
 import * as React from "react";
+import { toast } from "react-toastify";
 
 export interface ICreateParaFormProps {
   createParagraph: UseMutateFunction<
@@ -16,6 +18,7 @@ export interface ICreateParaFormProps {
 }
 
 export default function CreateParaForm(props: ICreateParaFormProps) {
+  const { userInfo } = mainLayoutStore();
   const [paraValue, setParaValue] = React.useState<AddParagraphValue>({
     title: "",
     content: "",
@@ -24,6 +27,7 @@ export default function CreateParaForm(props: ICreateParaFormProps) {
   });
 
   const handleCreate = () => {
+    if (!userInfo?.id) return toast.error("Please login to use this function");
     props.createParagraph(paraValue);
   };
   return (

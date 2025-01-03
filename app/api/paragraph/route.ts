@@ -11,7 +11,6 @@ export async function GET(req: NextRequest) {
     orderType = "desc",
     page = 1,
     limit = 10,
-    // skip = 0,
     search = "",
     ...filters
   }: GetDTO = makeQuery(req?.url || "");

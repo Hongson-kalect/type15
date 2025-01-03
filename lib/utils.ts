@@ -1,8 +1,8 @@
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
 
 export const scrollToId = (id: string, offset: number = 24) => {
@@ -42,19 +42,19 @@ export function relativeDate(date: Date) {
   const years = Math.floor(days / 365);
 
   if (seconds < 60) {
-    return `${seconds} seconds ago`;
+    return `${seconds}s ago`;
   } else if (minutes < 60) {
-    return `${minutes} minutes ago`;
+    return `${minutes}m ago`;
   } else if (hours < 24) {
-    return `${hours} hours ago`;
+    return `${hours}h ago`;
   } else if (days < 7) {
-    return `${days} days ago`;
+    return `${days}d ago`;
   } else if (weeks < 4) {
-    return `${weeks} weeks ago`;
+    return `${weeks}w ago`;
   } else if (months < 12) {
-    return `${months} months ago`;
+    return `${months}m ago`;
   } else {
-    return `${years} years ago`;
+    return `${years}y ago`;
   }
 }
 
@@ -62,4 +62,3 @@ export function relativeDate(date: Date) {
 const date = new Date();
 date.setDate(date.getDate() - 400);
 console.log(relativeDate(date));
-

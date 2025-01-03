@@ -11,10 +11,13 @@ export async function GET(req: NextRequest) {
     orderColumn = "createdAt",
     orderType = "desc",
     limit = 10,
-    skip = 0,
+    page = 1,
     search = "",
     ...filters
   }: GetDTO = makeQuery(req?.url || "");
+  console.log(" makeQuery(req?.url)", makeQuery(req?.url), filters);
+
+  // if (filters.userId) filters.userId = Number(filters.userId);
 
   try {
     const list = await prisma.novel.findMany({
@@ -34,7 +37,7 @@ export async function GET(req: NextRequest) {
         [orderColumn]: orderType || "desc", // Default to 'desc' if orderType is undefined
       },
       take: Number(limit),
-      skip: Number(skip),
+      skip: Number(limit) * (Number(page) - 1),
     });
     return NextResponse.json(list);
   } catch (error) {

@@ -7,6 +7,7 @@ import { ParagraphFilterType } from "@/interface/type/paragraph";
 import { mainLayoutStore } from "@/store/mainLayout.store";
 import { getParagraphApi } from "@/services/paragraph.service";
 import { useQuery } from "@tanstack/react-query";
+import ParaPagination from "./components/list/pagination";
 
 export default function DefaultPage() {
   const { userInfo } = mainLayoutStore();
@@ -41,7 +42,15 @@ export default function DefaultPage() {
         Paragraph List
       </h2>
       <ParagraphHeader filter={filter} setFilter={setFilter} />
-      <ParaList paragraphs={paragraphs} />
+
+      <div>
+        <ParaPagination
+          page={filter.page}
+          setPage={(page) => setFilter((prev) => ({ ...prev, page }))}
+          totalPage={paragraphs?.totalPage}
+        />
+        <ParaList paragraphs={paragraphs} />
+      </div>
     </div>
   );
 }

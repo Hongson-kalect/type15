@@ -21,63 +21,38 @@ export default function ParaList({ paragraphs }: IParaListProps) {
   return (
     <div className="p-4 bg-white rounded-2xl mt-4">
       {/* <ParaListFilter /> */}
-      {
-        !paragraphs?.length ? (
-          <div className="text-gray-500 text-center">No paragraph found</div>
-        ) : (
-          <div>
-            <div
-              className="flex gap-2 items-center w-full h-12 shadow shadow-gray-300"
-              //   style={{ borderBottom: "1px solid #888" }}
-            >
-              <div className="scope w-12 flex justify-center">
-                <Lock className="text-gray-500" />
-              </div>
-              <div className="favorite w-12 text-center">
-                <Star className={"text-gray-500"} />
-              </div>
-              <div className="scope w-12 text-center">
-                <CheckCheck className={"text-gray-500"} />
-              </div>
-              <div className="scope w-12 text-center">
-                <PencilRuler className={"text-gray-500"} />
-              </div>
-              <div className="scope flex-1 text-center">
-                <BookText className={"text-gray-500"} />
-              </div>
-              <div className="scope w-12 text-center">
-                <Upload className="text-gray-500" />
-              </div>
+      {!paragraphs?.length ? (
+        <div className="text-gray-500 text-center">No paragraph found</div>
+      ) : (
+        <div>
+          <div
+            className="flex gap-2 items-center w-full h-12 shadow shadow-gray-300"
+            //   style={{ borderBottom: "1px solid #888" }}
+          >
+            <div className="scope w-12 flex justify-center">
+              <Lock size={20} className="text-gray-500" />
             </div>
-            {paragraphs?.map(
-              (para, index) => para && <ParaItem paragraph={para} key={index} />
-            )}
+            <div className="favorite w-12 flex justify-center">
+              <Star size={20} className={"text-gray-500"} />
+            </div>
+            <div className="completed w-12 flex justify-center">
+              <CheckCheck size={20} className={"text-gray-500"} />
+            </div>
+            <div className="length w-36 flex justify-center">
+              <PencilRuler size={20} className={"text-gray-500"} />
+            </div>
+            <div className="scope flex-1">
+              <BookText size={20} className={"text-gray-500"} />
+            </div>
+            <div className="scope w-20 flex justify-center">
+              <Upload size={20} className="text-gray-500" />
+            </div>
           </div>
-          // <table className="w-full">
-          //   <thead>
-          //     <tr className="mb-10">
-          //       <th className="flex justify-center w-12">
-          //         <Lock color="#666" className="" />
-          //       </th>
-          //       <th>
-          //         <Star className="w-12" color="#666" />
-          //       </th>
-          //       <th>
-          //         <CheckCheck />
-          //       </th>
-          //       <th>
-          //         <PencilRuler />
-          //       </th>
-          //       <th>Title</th>
-          //       <th>Uploaded</th>
-          //     </tr>
-          //   </thead>
-          //   <tbody>
-        )
-        //   </tbody>
-        // </table>
-      }
-      <ParaListTable />
+          {paragraphs?.map(
+            (para, index) => para && <ParaItem paragraph={para} key={index} />
+          )}
+        </div>
+      )}
     </div>
   );
 }

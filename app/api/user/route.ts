@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
     orderColumn = "createdAt",
     orderType = "desc",
     limit = 10,
-    skip = 0,
+    page = 1,
     search = "",
     ...filters
   }: GetDTO = makeQuery(req?.url || "");
@@ -35,7 +35,7 @@ export async function GET(req: NextRequest) {
         [orderColumn]: orderType || "desc", // Default to 'desc' if orderType is undefined
       },
       take: Number(limit),
-      skip: Number(skip),
+      skip: Number(limit) * (Number(page) - 1),
     });
     return NextResponse.json(list);
   } catch (error) {
@@ -62,7 +62,6 @@ export async function POST(request: NextRequest) {
     },
   });
 
-  
   if (!appUser)
     return NextResponse.json({ message: "User not found" }, { status: 404 });
 

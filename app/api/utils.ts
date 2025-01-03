@@ -2,11 +2,13 @@ import jwt from "jsonwebtoken";
 import { NextRequest } from "next/server";
 
 export function makeQuery(query: string) {
-
   const index = query.indexOf("?");
   if (index === -1) return {};
   const queryString = query.slice(index);
-  return Object.fromEntries(new URLSearchParams(queryString));
+  const queries = Object.fromEntries(new URLSearchParams(queryString));
+  console.log("queries", queries);
+  if (queries?.userId) queries.userId = Number(queries?.userId);
+  return queries;
 }
 
 const secret = process.env.JWT_SECRET || "your-secret-key";
