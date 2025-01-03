@@ -5,6 +5,8 @@ import ParagraphHeader from "./components/header";
 import ParaList from "./components/list";
 import { ParagraphFilterType } from "@/interface/type/paragraph";
 import { mainLayoutStore } from "@/store/mainLayout.store";
+import { getParagraphApi } from "@/services/paragraph.service";
+import { useQuery } from "@tanstack/react-query";
 
 export default function DefaultPage() {
   const { userInfo } = mainLayoutStore();
@@ -12,18 +14,34 @@ export default function DefaultPage() {
     orderColumn: "createdAt",
     orderType: "desc",
     search: "",
-    favorite: false,
-    history: false,
-    self: false,
+    favorite: "",
+    history: "",
+    self: "",
     page: 1,
     userId: userInfo?.id,
   });
 
-  React.useEffect(() => {}, [filter]);
+  console.log("userId :>> ", userInfo);
+
+  const {
+    data: paragraphs,
+    error,
+    isLoading,
+  } = useQuery({
+    queryKey: ["paragraphs", filter],
+    queryFn: async () => await getParagraphApi(filter),
+  });
+
+  React.useEffect(() => {
+    setFilter((prev) => ({ ...prev, userId: userInfo?.id }));
+  }, [userInfo]);
   return (
     <div className="py-4 flex-1 px-6 overflow-auto">
+      <h2 className="font-medium text-2xl text-gray-700 mb-6">
+        Paragraph List
+      </h2>
       <ParagraphHeader filter={filter} setFilter={setFilter} />
-      <ParaList />
+      <ParaList paragraphs={paragraphs} />
     </div>
   );
 }

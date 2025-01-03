@@ -225,9 +225,14 @@ export interface IParagraph {
   id: number;
   languageId: number;
   language: ILanguage;
-  header: string;
+  title: string;
   content: string;
-  desc: string;
+  desc?: string;
+  scope: string;
+  protectedType: string;
+  password?: string;
+  price?: number;
+  priceUnitId?: number;
   chapter?: string | number;
   rate: number;
   rateTime: number;

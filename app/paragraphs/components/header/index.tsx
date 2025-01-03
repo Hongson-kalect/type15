@@ -91,18 +91,24 @@ export default function ParagraphHeader({
         <div className="flex items-center gap-2">
           <FilterItem
             onClick={() => {
-              setFilter((prev) => ({ ...prev, favorite: !prev.favorite }));
+              setFilter((prev) => ({
+                ...prev,
+                favorite: prev.favorite ? "" : "1",
+              }));
             }}
-            active={filter.favorite}
+            active={!!filter.favorite}
             title="Favorited paragraphs"
             content=""
             icon={<Heart />}
           />
           <FilterItem
             onClick={() => {
-              setFilter((prev) => ({ ...prev, history: !prev.history }));
+              setFilter((prev) => ({
+                ...prev,
+                history: prev.history ? "" : "1",
+              }));
             }}
-            active={filter.history}
+            active={!!filter.history}
             title="Typed paragraphs"
             content=""
             icon={<Hand />}
@@ -112,10 +118,10 @@ export default function ParagraphHeader({
               onClick={() => {
                 setFilter((prev) => ({
                   ...prev,
-                  self: !prev.self,
+                  self: prev.self ? "" : "1",
                 }));
               }}
-              active={filter.self}
+              active={!!filter.self}
               title="Your paragraphs"
               content=""
               icon={<User2 />}

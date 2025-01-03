@@ -1,6 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { NextResponse } from "next/server";
-import { NextRequest } from "next";
+import { NextRequest, NextResponse } from "next/server";
 import { GetDTO } from "./dto";
 import { makeQuery } from "../utils";
 
@@ -16,6 +15,8 @@ export async function GET(req: NextRequest) {
     search = "",
     ...filters
   }: GetDTO = query;
+
+  console.log("query, filters :>> ", query, filters);
 
   try {
     const list = await prisma.language.findMany({

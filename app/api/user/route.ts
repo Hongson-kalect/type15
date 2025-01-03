@@ -62,17 +62,18 @@ export async function POST(request: NextRequest) {
     },
   });
 
+  
   if (!appUser)
     return NextResponse.json({ message: "User not found" }, { status: 404 });
 
   const trimedAppUser = trimingAppUser(appUser);
-
   if (trimedAppUser) {
     const access_token = signToken({ userId: trimedAppUser.id });
     return NextResponse.json({ ...trimedAppUser, access_token });
   } else {
+    const provider = await prisma.user.findUnique({ where: { id: userId } });
     const newAppUser = await prisma.appUser.create({
-      data: { userId },
+      data: { userId, username: provider?.name || "Guess" },
     });
     const access_token = signToken({ userId: newAppUser.id });
     return NextResponse.json({ ...newAppUser, access_token });

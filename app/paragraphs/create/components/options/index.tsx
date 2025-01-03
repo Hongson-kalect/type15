@@ -177,12 +177,17 @@ const AddParaOption = ({ options, setOptions }: AddParaOptionProps) => {
                   <SelectValue placeholder="Select a novel" />
                 </SelectTrigger>
                 <SelectContent>
-                  {novels?.length &&
+                  {novels?.length ? (
                     novels.map((nov) => (
                       <SelectItem key={nov.id} value={nov.id.toString()}>
                         <div className="line-clamp-2">{nov.name}</div>
                       </SelectItem>
-                    ))}
+                    ))
+                  ) : (
+                    <p className="text-gray-400 text-xs text-center">
+                      No novel found
+                    </p>
+                  )}
                 </SelectContent>
               </Select>
             </div>

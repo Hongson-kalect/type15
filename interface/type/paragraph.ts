@@ -4,9 +4,9 @@ export type ParagraphFilterType = {
   orderType: string;
   page: number;
   userId?: number;
-  favorite?: boolean;
-  history?: boolean;
-  self?: boolean;
+  favorite?: "1" | "";
+  history?: "1" | "";
+  self?: "1" | "";
 };
 
 export type AddParagraphOption = {
@@ -18,4 +18,11 @@ export type AddParagraphOption = {
   priceUnitId?: number;
   novelId?: number;
   chapter?: string;
+};
+
+export type AddParagraphValue = {
+  title: string;
+  content: string;
+  desc: string;
+  ps: string;
 };

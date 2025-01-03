@@ -16,19 +16,38 @@ export async function GET(req: NextRequest) {
     ...filters
   }: GetDTO = makeQuery(req?.url || "");
 
-  if (filters.favorite) {
+  console.log(
+    " makeQuery(req?.url ||), :>> ",
+    req?.url,
+    makeQuery(req?.url || "")
+  );
+
+  console.log("params", orderColumn, orderType, page, limit, search.toString());
+
+  if (filters.favorite && filters.userId) {
     filters.favorite = {
-      some: filters.userId,
+      some: {
+        id: Number(filters.userId),
+      },
     };
-  }
-  if (filters.history) {
+  } else delete filters.favorite;
+
+  if (filters.history && filters.userId) {
     filters.history = {
-      some: filters.userId,
+      some: {
+        id: Number(filters.userId),
+      },
     };
-  }
-  if (!filters.self) {
+  } else delete filters.history;
+
+  if (filters.self && filters.userId) {
+    filters.userId = Number(filters.userId);
+  } else {
     delete filters.userId;
   }
+  delete filters.self;
+
+  console.log("filters :>> ", filters);
 
   try {
     const list = await prisma.paragraph.findMany({
@@ -48,7 +67,15 @@ export async function GET(req: NextRequest) {
         [orderColumn]: orderType,
       },
       take: Number(limit),
-      skip: Number(page) * (Number(limit) - 1),
+      skip: Number(limit) * (Number(page) - 1),
+      include: {
+        user: {
+          select: { username: true },
+        },
+        language: {
+          select: { name: true },
+        },
+      },
     });
     return NextResponse.json(list);
   } catch (error) {
@@ -59,8 +86,10 @@ export async function GET(req: NextRequest) {
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   const requestBody = await request.json(); //body từ request
+
+  console.log("requestBody :>> ", JSON.stringify(requestBody), requestBody);
 
   const newItem = await prisma.paragraph.create({
     data: requestBody,

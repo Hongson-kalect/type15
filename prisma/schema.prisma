@@ -129,6 +129,7 @@ model Paragraph {
   title     String
   content    String
   desc       String    @default("")
+  ps       String    @default("")
   scope      String  @default("public")
   protectedType String @default("pass")
   password   String  @default("")
@@ -150,7 +151,7 @@ model Paragraph {
   updatedAt  DateTime  @updatedAt
   like Like[]
   favorite Favorite[]
-  historys      History[]
+  history      History[]
   report Report[]
   comment Comment[] 
 }

@@ -1,15 +1,40 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { AddParagraphValue } from "@/interface/type/paragraph";
+import { UseMutateFunction } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
 import * as React from "react";
 
-export interface ICreateParaFormProps {}
+export interface ICreateParaFormProps {
+  createParagraph: UseMutateFunction<
+    unknown,
+    Error,
+    AddParagraphValue,
+    unknown
+  >;
+}
 
 export default function CreateParaForm(props: ICreateParaFormProps) {
+  const [paraValue, setParaValue] = React.useState<AddParagraphValue>({
+    title: "",
+    content: "",
+    desc: "",
+    ps: "",
+  });
+
+  const handleCreate = () => {
+    props.createParagraph(paraValue);
+  };
   return (
     <div className="bg-white p-4 rounded-lg flex-1">
-      <form className="space-y-4">
+      <form
+        className="space-y-4"
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleCreate();
+        }}
+      >
         <div>
           <label
             className="block text-sm font-medium text-gray-700"
@@ -20,6 +45,10 @@ export default function CreateParaForm(props: ICreateParaFormProps) {
           <Input
             id="title"
             name="title"
+            value={paraValue.title}
+            onChange={(e) =>
+              setParaValue({ ...paraValue, title: e.target.value })
+            }
             className="mt-1 w-full rounded-md  sm:text-sm"
           />
         </div>
@@ -33,6 +62,10 @@ export default function CreateParaForm(props: ICreateParaFormProps) {
           <Textarea
             id="content"
             name="content"
+            value={paraValue.content}
+            onChange={(e) =>
+              setParaValue({ ...paraValue, content: e.target.value })
+            }
             rows={5}
             className="mt-1 rounded-md sm:text-sm"
           ></Textarea>
@@ -40,13 +73,17 @@ export default function CreateParaForm(props: ICreateParaFormProps) {
         <div>
           <label
             className="block text-sm font-medium text-gray-700"
-            htmlFor="description"
+            htmlFor="desc"
           >
             Description
           </label>
           <Textarea
-            id="description"
-            name="description"
+            id="desc"
+            name="desc"
+            value={paraValue.desc}
+            onChange={(e) =>
+              setParaValue({ ...paraValue, desc: e.target.value })
+            }
             rows={3}
             className="mt-1 w-full rounded-md sm:text-sm"
           ></Textarea>
@@ -62,6 +99,8 @@ export default function CreateParaForm(props: ICreateParaFormProps) {
             type="text"
             id="ps"
             name="ps"
+            value={paraValue.ps}
+            onChange={(e) => setParaValue({ ...paraValue, ps: e.target.value })}
             className="mt-1 w-full rounded-md sm:text-sm"
           />
         </div>
