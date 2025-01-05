@@ -1,25 +1,23 @@
 "use client";
 
-import * as React from "react";
-import CreateParaForm from "./components/form";
-import CreateParaOptions from "./components/options";
-import { ChevronLeft } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import {
   AddParagraphOption,
   AddParagraphValue,
-  ParagraphFilterType,
 } from "@/interface/type/paragraph";
-import { mainLayoutStore } from "@/store/mainLayout.store";
-import { useMutation } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
 import { createParagraphApi } from "@/services/paragraph.service";
+import { mainLayoutStore } from "@/store/mainLayout.store";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { ChevronLeft } from "lucide-react";
+import { useRouter } from "next/navigation";
+import * as React from "react";
 import { toast } from "react-toastify";
+import CreateParaForm from "./components/form";
+import CreateParaOptions from "./components/options";
 
 export interface ICreateParagraphProps {}
 
 export default function CreateParagraph(props: ICreateParagraphProps) {
+  const queryClient = useQueryClient();
   const { userInfo } = mainLayoutStore();
   const router = useRouter();
 
@@ -47,6 +45,7 @@ export default function CreateParagraph(props: ICreateParagraphProps) {
       }),
     onSuccess: (data) => {
       toast.success("Create paragraph success");
+      queryClient.refetchQueries({ queryKey: ["paragraphs", "paraCount"] });
       router.back();
     },
     onError: (error) => {

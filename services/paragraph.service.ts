@@ -8,7 +8,11 @@ export const createParagraphApi = async (data: CreateParagraphDTO) => {
 };
 
 export const getParagraphApi = async (filter: ParagraphFilterType) => {
-  console.log("filter :>> ", filter);
   const res = await api.get(`/api/paragraph`, { params: filter });
+  return res.data;
+};
+
+export const getParagraphCountApi = async (filter: ParagraphFilterType) => {
+  const res = await api.get(`/api/paragraph/count`, { params: filter });
   return res.data;
 };

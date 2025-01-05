@@ -17,16 +17,15 @@ export interface IParaListProps {
 }
 
 export default function ParaList({ paragraphs }: IParaListProps) {
-  console.log("paragraphs :>> ", paragraphs);
   return (
-    <div className="p-4 bg-white rounded-2xl mt-4">
+    <div className="overflow-auto">
       {/* <ParaListFilter /> */}
       {!paragraphs?.length ? (
         <div className="text-gray-500 text-center">No paragraph found</div>
       ) : (
         <div>
           <div
-            className="flex gap-2 items-center w-full h-12 shadow shadow-gray-300"
+            className="flex gap-2 items-center w-full h-12 shadow shadow-gray-300 bg-gray-100"
             //   style={{ borderBottom: "1px solid #888" }}
           >
             <div className="scope w-12 flex justify-center">

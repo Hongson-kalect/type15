@@ -68,3 +68,11 @@
 .no-arrow {
   -moz-appearance: textfield;
 }
+
+.hide-scroll {
+  overflow: auto; /* Allow scrolling */
+  scrollbar-width: none; /* For Firefox */
+}
+.hide-scroll::-webkit-scrollbar {
+  display: none; /* For Chrome, Safari, and Opera */
+}

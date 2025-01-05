@@ -1,7 +1,7 @@
 export type CreateParagraphDTO = {
   title: string;
   content: string;
-  description: string;
+  desc: string;
   ps: string;
   languageId: number;
   scope: "public" | "protected" | "private";

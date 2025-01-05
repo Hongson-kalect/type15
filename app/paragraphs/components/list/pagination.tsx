@@ -1,10 +1,18 @@
-import { Pagination, PaginationContent } from "@/components/ui/pagination";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 import * as React from "react";
 
 export interface IPaginationProps {
   page: number;
   setPage: (page: number) => void;
-  totalPage: number;
+  totalPage?: number;
   limit?: number;
 }
 
@@ -18,7 +26,7 @@ export default function ParaPagination({
     return Math.ceil(totalPage / limit);
   }, [totalPage, limit]);
 
-  console.log("lastPage", lastPage);
+  console.log("totalPage", totalPage);
 
   const renderPage = React.useMemo(() => {
     const arr = [];
@@ -45,6 +53,33 @@ export default function ParaPagination({
   return (
     <Pagination>
       <PaginationContent>
+        <PaginationItem onClick={() => page > 1 && setPage(page - 1)}>
+          <PaginationPrevious />
+        </PaginationItem>
+        {renderPage.map((item, index) => {
+          const PageNumber = (
+            <PaginationItem key={item}>
+              <PaginationLink
+                isActive={item === page}
+                onClick={() => setPage(item)}
+              >
+                {item}
+              </PaginationLink>
+            </PaginationItem>
+          );
+
+          if (renderPage[index] > renderPage[index - 1] + 1)
+            return (
+              <>
+                <PaginationItem>
+                  <PaginationEllipsis />
+                </PaginationItem>
+
+                {PageNumber}
+              </>
+            );
+          return PageNumber;
+        })}
         {/* <PaginationItem>
           <PaginationPrevious href="#" />
         </PaginationItem>
@@ -65,6 +100,9 @@ export default function ParaPagination({
         <PaginationItem>
           <PaginationNext href="#" />
         </PaginationItem> */}
+        <PaginationItem onClick={() => page <= lastPage && setPage(page + 1)}>
+          <PaginationNext />
+        </PaginationItem>
       </PaginationContent>
     </Pagination>
   );

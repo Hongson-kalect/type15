@@ -32,7 +32,7 @@ export default function ParaItem({ paragraph }: IParaItemProps) {
 
   return (
     <div
-      className="flex gap-2 items-center w-full h-16 shadow shadow-gray-200"
+      className="flex gap-2 items-center w-full h-16 shadow shadow-gray-100"
       //   style={{ borderBottom: "1px solid #888" }}
     >
       <div className="scope w-12 flex justify-center">
@@ -46,7 +46,7 @@ export default function ParaItem({ paragraph }: IParaItemProps) {
           }`}
         />
       </div>
-      <div className="completed w-12 text-gray-700 text-center text-center">
+      <div className="completed w-12 text-gray-700 flex justify-center text-center">
         {paragraph.completed || <p className="text-gray-300">0</p>}
       </div>
       <div className="length w-36 flex justify-center">
