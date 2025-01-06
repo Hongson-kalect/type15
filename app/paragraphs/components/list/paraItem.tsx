@@ -8,6 +8,7 @@ import {
   LockOpen,
   Star,
 } from "lucide-react";
+import Link from "next/link";
 import * as React from "react";
 
 export interface IParaItemProps {
@@ -31,7 +32,8 @@ export default function ParaItem({ paragraph }: IParaItemProps) {
   };
 
   return (
-    <div
+    <Link
+      href={`/paragraphs/${paragraph.id}`}
       className="flex gap-2 items-center w-full h-16 shadow shadow-gray-100"
       //   style={{ borderBottom: "1px solid #888" }}
     >
@@ -71,6 +73,6 @@ export default function ParaItem({ paragraph }: IParaItemProps) {
       <div className="scope w-20 flex justify-center text-gray-600 text-xs">
         {relativeDate(new Date(paragraph.createdAt))}
       </div>
-    </div>
+    </Link>
   );
 }

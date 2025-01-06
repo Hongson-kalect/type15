@@ -52,7 +52,7 @@ export default function DefaultPage() {
   }, [userInfo]);
   return (
     <div className="py-4 flex-1 flex flex-col px-6 gap-4 hide-scroll">
-      <h2 className="font-medium text-2xl text-gray-700">Paragraph List</h2>
+      {/* <h2 className="font-medium text-2xl text-gray-700">Paragraph List</h2> */}
       <ParagraphHeader filter={filter} setFilter={setFilter} />
 
       <div className="bg-white rounded-xl p-4 flex flex-1 flex-col gap-2">

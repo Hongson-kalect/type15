@@ -51,7 +51,7 @@ export default function ParaPagination({
 
   console.log("renderPage", renderPage);
   return (
-    <Pagination>
+    <Pagination className="justify-end">
       <PaginationContent>
         <PaginationItem onClick={() => page > 1 && setPage(page - 1)}>
           <PaginationPrevious />
@@ -100,7 +100,7 @@ export default function ParaPagination({
         <PaginationItem>
           <PaginationNext href="#" />
         </PaginationItem> */}
-        <PaginationItem onClick={() => page <= lastPage && setPage(page + 1)}>
+        <PaginationItem onClick={() => page < lastPage && setPage(page + 1)}>
           <PaginationNext />
         </PaginationItem>
       </PaginationContent>
