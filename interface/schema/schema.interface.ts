@@ -243,7 +243,8 @@ export interface IParagraph {
   userId: number;
   user: IAppUser;
   novelId: number;
-  novel: INovel;
+  novel?: INovel;
+  references?: IParagraph[];
   createdAt: Date;
   updatedAt: Date;
 }

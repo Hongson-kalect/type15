@@ -11,6 +11,9 @@ import {
 } from "@/services/paragraph.service";
 import { useQuery } from "@tanstack/react-query";
 import ParaPagination from "./components/list/pagination";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 
 export default function DefaultPage() {
   const { userInfo } = mainLayoutStore();
@@ -52,11 +55,16 @@ export default function DefaultPage() {
   }, [userInfo]);
   return (
     <div className="py-4 flex-1 flex flex-col px-6 gap-4 hide-scroll">
-      {/* <h2 className="font-medium text-2xl text-gray-700">Paragraph List</h2> */}
       <ParagraphHeader filter={filter} setFilter={setFilter} />
 
       <div className="bg-white rounded-xl p-4 flex flex-1 flex-col gap-2">
-        <div className="flex justify-center">
+        <div className="flex justify-between">
+          <Link href="/paragraphs/create">
+            <Button>
+              <Plus />
+              Create
+            </Button>
+          </Link>
           <ParaPagination
             page={filter.page}
             setPage={(page) => setFilter((prev) => ({ ...prev, page }))}

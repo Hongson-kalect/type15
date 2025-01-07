@@ -35,6 +35,7 @@ export interface ITypeAreaProps {
   isReset: boolean;
   setIsReset: (value: boolean) => void;
   page?: "training" | "speed-test" | "paragraph";
+  targetId?: number;
 }
 
 export default function TypeArea({
@@ -47,6 +48,7 @@ export default function TypeArea({
   isReset,
   setIsReset,
   page,
+  targetId,
 }: ITypeAreaProps) {
   const { userInfo } = mainLayoutStore();
 
@@ -68,9 +70,7 @@ export default function TypeArea({
 
   const [deletedCount, setDeletedCount] = React.useState(0);
   const [initTime, setInitTime] = React.useState(10);
-  const [time, setTime] = React.useState(
-    timeType === "countDown" ? initTime : 0
-  );
+  const [time, setTime] = React.useState(page === "speed-test" ? initTime : 0);
   const [isNextWord, setIsNextWord] = React.useState(false);
   const intervalRef = React.useRef<NodeJS.Timeout | null>(null);
   const inputRef = React.useRef<HTMLTextAreaElement | null>(null);
@@ -82,16 +82,17 @@ export default function TypeArea({
   } = useMutation({
     mutationKey: ["addScore"],
     mutationFn: async ({ score }: { score: ScoreType }) => {
+      // const targetId =
       if (page === "speed-test") {
-        const res = await addSpeedTestScore({ score });
+        const res = await addSpeedTestScore({ score, targetId });
         return res.data;
       }
       if (page === "paragraph") {
-        const res = await addParagraphScore({ score });
+        const res = await addParagraphScore({ score, targetId });
         return res.data;
       }
       // if (page === "training") {
-      const res = await addTrainingScore({ score });
+      const res = await addTrainingScore({ score, targetId });
       return res.data;
       // }
     },
@@ -102,14 +103,15 @@ export default function TypeArea({
 
   const startTyping = () => {
     setIsTyping(true);
+    setDeletedCount(0);
     if (intervalRef.current) clearInterval(intervalRef.current);
     intervalRef.current = setInterval(() => {
       setTime((prev) => {
-        if (timeType === "countDown" && !prev) {
+        if (page === "speed-test" && !prev) {
           if (intervalRef.current) clearInterval(intervalRef.current);
           return 0;
         } else {
-          return timeType === "countDown" ? prev - 1 : prev + 1;
+          return page === "speed-test" ? prev - 1 : prev + 1;
         }
       });
     }, 1000);
@@ -142,22 +144,28 @@ export default function TypeArea({
       correctArray: paragraphsArray.slice(0, wordIndex),
       userInputArray: userInputArr,
       failedCount: deletedCount,
-      time: timeType === "countDown" ? initTime : time,
+      time: page === "speed-test" ? initTime : time,
     });
 
     setResult(result);
 
     //only push score when user is logged in change if need
-    if (userInfo?.id && Number(userInfo?.id) && userInfo?.languageId) {
+    if (
+      result.score.time &&
+      result.score.score &&
+      userInfo?.id &&
+      Number(userInfo?.id) &&
+      userInfo?.languageId
+    ) {
       addScoreMutation({ score: result.score });
     }
     setIsFinish(true);
-    scrollToId("type-result");
+    // scrollToId("type-result");
   };
 
   const Reset = () => {
     if (intervalRef.current) clearInterval(intervalRef.current);
-    setTime(timeType === "countDown" ? initTime : 0);
+    setTime(page === "speed-test" ? initTime : 0);
     setTypingWord("");
     setParagraphs(initPara || "");
     setUserInputArr([]);
@@ -199,7 +207,7 @@ export default function TypeArea({
         finishType();
       }
     }
-  }, [time, timeType, page]);
+  }, [time, page]);
 
   React.useEffect(() => {
     if (!isFinish) {
@@ -243,7 +251,7 @@ export default function TypeArea({
   }, [wordIndex]);
 
   React.useEffect(() => {
-    setTime(timeType === "countDown" ? initTime : 0);
+    setTime(page === "speed-test" ? initTime : 0);
     if (inputRef.current) {
       inputRef.current.focus();
     }
@@ -256,20 +264,20 @@ export default function TypeArea({
 
   return (
     <div
-      className={`bg-white rounded-lg mt-4 flex gap-4 duration-500 overflow-hidden ${
-        isFinish ? "h-0 min-h-0 mt-0" : "h-[300px]"
+      className={`bg-white h-full rounded-lg flex flex-1 gap-4 duration-500 overflow-hidden ${
+        isFinish ? "" : ""
       }`}
     >
-      <div className={`w-2/3 px-6 py-5 shadow-sm shadow-gray-300`}>
+      <div className={`w-2/3 h-full flex flex-col`}>
         <Header time={time} />
         <div
-          className="relative bg-[#F5F6FA] px-4 py-3 rounded-lg shadow-sm shadow-gray-300 "
+          className="relative bg-[#F5F6FA] px-4 py-3 rounded-lg flex-1 shadow-sm shadow-gray-300 "
           style={{ border: "1px solid #d8d8d8" }}
         >
-          <div className="h-[120px] overflow-y-hidden words-wrapper">
+          <div className="h-[150px] overflow-y-hidden words-wrapper">
             {/* <div className=""> */}
             <div
-              className="text-2xl flex flex-wrap h-full"
+              className="text-2xl flex flex-wrap h-full text-gray-500"
               style={{ wordSpacing: "8px" }}
             >
               <div id="first-word"></div>
@@ -279,12 +287,13 @@ export default function TypeArea({
                 wordIndex={wordIndex}
                 words={paragraphsArray}
               />
+              <div className="h-[120px]"></div>
             </div>
             {/* </div> */}
           </div>
-          <div className="absolute top-12 left-1 right-1 h-[90px] bg-[#f6faffaa]"></div>
+          {/* <div className="absolute top-12 left-1 right-1 h-[120px] bg-[#f6faffaa]"></div> */}
         </div>
-        <div className="flex gap-8 items-center mt-6">
+        <div className="flex gap-8 items-center mt-6 justify-center">
           <textarea
             ref={inputRef}
             id="input-text"
@@ -301,11 +310,10 @@ export default function TypeArea({
           >
             <GrPowerReset size={20} />
             <p>Reset</p>
-
-            <p className="absolute text-xs -bottom-4 w-full left-0 text-center text-gray-400">
-              <span>( F5 )</span>
-            </p>
           </button>
+          <p className=" text-xs -bottom-4 left-0 text-center text-gray-400">
+            <span>( F5 )</span>
+          </p>
         </div>
       </div>
       <div className="flex-1 px-4" style={{ borderLeft: "1px solid #ddd" }}>

@@ -53,12 +53,6 @@ export default function ParagraphHeader({
         <div className="absolute"></div>
       </div>
       <div className="flex gap-4 filter">
-        <Link href="/paragraphs/create">
-          <Button>
-            <Plus />
-            Create
-          </Button>
-        </Link>
         <div className="sort">
           <Select
             value={sortValue}

@@ -68,7 +68,13 @@ export default function ParaItem({ paragraph }: IParaItemProps) {
         </div>
       </div>
       <div className="title flex-1 text-sm text-gray-700 line-clamp-1">
-        {paragraph.title}
+        <p className="text-gray-400">{paragraph.novel?.name || null}</p>
+        <div className="flex gap-2">
+          <span className="font-medium">
+            {paragraph.chapter ? `Chapter ${paragraph.chapter}: ` : null}
+          </span>
+          <span className="text-gray-800">{paragraph.title}</span>
+        </div>
       </div>
       <div className="scope w-20 flex justify-center text-gray-600 text-xs">
         {relativeDate(new Date(paragraph.createdAt))}

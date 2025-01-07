@@ -16,3 +16,8 @@ export const getParagraphCountApi = async (filter: ParagraphFilterType) => {
   const res = await api.get(`/api/paragraph/count`, { params: filter });
   return res.data;
 };
+
+export const getParagraphDetailApi = async (id: number) => {
+  const res = await api.get(`/api/paragraph/${id}`);
+  return res.data;
+};

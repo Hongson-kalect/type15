@@ -25,19 +25,27 @@ const SpeedTest = () => {
   });
 
   return (
-    <div className=" p-4 flex-1 px-6 overflow-auto" id="speed-test-page">
-      <TypeArea
-        timeType="countDown"
-        rankQuery={rankQuery}
-        isReset={resetType}
-        setIsReset={setResetType}
-        setResult={setResultDetail}
-        isFinish={isShowScore}
-        setIsFinish={setIsShowScore}
-        page="speed-test"
-      />
+    <div className=" p-4 pt-8 flex-1 px-6 overflow-auto" id="speed-test-page">
+      <div
+        className={`overflow-hidden duration-200 ${
+          isShowScore ? "h-0" : "h-[320px] mb-8"
+        }`}
+      >
+        <div className={`bg-white rounded-xl px-4 py-6 overflow-hidden `}>
+          <TypeArea
+            timeType="countDown"
+            rankQuery={rankQuery}
+            isReset={resetType}
+            setIsReset={setResetType}
+            setResult={setResultDetail}
+            isFinish={isShowScore}
+            setIsFinish={setIsShowScore}
+            page="speed-test"
+          />
+        </div>
+      </div>
 
-      <div className="duration-200 pt-8" id="type-result">
+      <div className="duration-200" id="type-result">
         {resultDetail.score !== null ? (
           <div
             className={` rounded-lg ${

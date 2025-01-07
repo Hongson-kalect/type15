@@ -12,10 +12,17 @@ export async function GET(
   try {
     const item = await prisma.paragraph.findUnique({
       where: { id: Number(id) },
+      include: {
+        novel: true,
+      },
     });
 
     if (item) {
-      return NextResponse.json(item, { status: 200 });
+      const references = await prisma.paragraph.findMany({
+        where: { novelId: item.novelId },
+      }); // Adjust this filter based on your actual logic }, orderBy: { createdAt: 'desc', }, take: 10,
+
+      return NextResponse.json({ ...item, references }, { status: 200 });
     } else {
       return NextResponse.json({ message: "Post not found" }, { status: 400 });
     }

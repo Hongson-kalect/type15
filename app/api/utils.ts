@@ -6,8 +6,9 @@ export function makeQuery(query: string) {
   if (index === -1) return {};
   const queryString = query.slice(index);
   const queries = Object.fromEntries(new URLSearchParams(queryString));
-  console.log("queries", queries);
+  if (queries?.targetId) queries.targetId = Number(queries.targetId);
   if (queries?.userId) queries.userId = Number(queries?.userId);
+  if (queries?.id) queries.id = Number(queries.id);
   return queries;
 }
 

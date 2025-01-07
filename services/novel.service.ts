@@ -8,3 +8,8 @@ export const getNovels = async () => {
   });
   return res.data;
 };
+
+export const getNovelDetailAPI = async (id: number) => {
+  const res = await api.get(`/api/novel/${id}`);
+  return res.data;
+};

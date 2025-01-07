@@ -46,12 +46,12 @@ export const TypeRank = ({ resultDetail, page, ranks }: IRankProps) => {
 
   return (
     <div
-      className="mt-8 bg-white rounded-lg px-6 py-4 flex gap-4"
+      className="mt-8 bg-white rounded-xl px-6 py-4 flex gap-4"
       style={{ border: "1px solid #d5d5d5" }}
     >
       <div className="w-full">
         <h2 className=" text-gray-700 font-bold text-">XẾP HẠNG</h2>
-        <table className="mt-6 min-w-[700px] w-5/6 text-center">
+        <table className="mt-6 min-w-[700px] w-full text-center">
           <tbody>
             <tr className="text-gray-700 [&_th]:py-3 bg-gray-200">
               <th>Rank</th>
