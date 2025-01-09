@@ -1,3 +1,4 @@
+import { MessageType } from "@/interface/socket/type";
 import { NextResponse } from "next/server";
 import type { Server as IOServer } from "socket.io";
 import { Server } from "socket.io";
@@ -30,9 +31,18 @@ export async function GET() {
       console.log("socket disconnect");
     });
 
-    socket.on("message", (msg) => {
+    socket.on("join", (room) => {
+      socket.join(room);
+      // io.to(room).emit("message", `User ${socket.id} joined room ${room}`); // send info that have someone just join room
+    });
+    socket.on("leave", (room) => {
+      socket.leave(room);
+      // io.to(room).emit("message", `User ${socket.id} left room ${room}`); // send info that have someone just leave room
+    });
+
+    socket.on("message", (room, msg: MessageType) => {
       console.log("what", msg);
-      io.emit("message", msg);
+      io.to(room).emit("message", msg);
     });
   });
 

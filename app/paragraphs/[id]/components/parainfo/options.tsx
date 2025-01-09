@@ -1,26 +1,48 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-// import { socket } from "@/lib/socket";
+import { MessageType } from "@/interface/socket/type";
+import { joinRoom, leaveRoom, socket } from "@/lib/socket";
+import { mainLayoutStore } from "@/store/mainLayout.store";
 import { Heart, ThumbsUp } from "lucide-react";
 import * as React from "react";
+import { data } from "react-router-dom";
+import { toast } from "react-toastify";
 import { io } from "socket.io-client";
 
-export interface IParaOptionsProps {}
+export interface IParaOptionsProps {
+  id: number;
+}
 
-export default function ParaOptions(props: IParaOptionsProps) {
+export default function ParaOptions({ id }: IParaOptionsProps) {
   const [message, setMessage] = React.useState<string>("");
-  const [messages, setMessages] = React.useState<string[]>([]);
-  const [socket] = React.useState(
-    io(`:3334`, {
-      path: "/api/socket",
-      addTrailingSlash: false,
-    })
-  );
+  const [messages, setMessages] = React.useState<MessageType[]>([]);
+  const { userInfo } = mainLayoutStore();
 
   const [transport, setTransport] = React.useState("N/A");
 
   const [isConnected, setIsConnected] = React.useState(socket.connected);
+
+  const handleComment = (e: React.FormEvent<HTMLFormElement>) => {
+    if (!userInfo.id || !socketRoom)
+      return toast.error("Login to use this function");
+    e.preventDefault();
+    const comment = {
+      message: message,
+      userId: userInfo.id,
+      targetField: "paragraphId",
+      targetColumn: id,
+    };
+
+    socket.emit("message", socketRoom, comment);
+    setMessages((prev) => [...prev, comment]);
+    setMessage("");
+  };
+
+  //Socket connection
+  const socketRoom = React.useMemo(() => {
+    return id ? "paragraph-" + id : "";
+  }, [id]);
   const socketInitializer = async () => {
     await fetch("/api/socket");
   };
@@ -46,7 +68,8 @@ export default function ParaOptions(props: IParaOptionsProps) {
       setTransport("N/A");
     }
 
-    function onMessage(msg: string) {
+    function onMessage(msg: MessageType) {
+      // if (msg.userId === userInfo.id) return;
       setMessages((prev) => [...prev, msg]);
     }
 
@@ -60,6 +83,13 @@ export default function ParaOptions(props: IParaOptionsProps) {
       socket.off("disconnect", onDisconnect);
     };
   }, []);
+
+  React.useEffect(() => {
+    if (socketRoom) joinRoom(socketRoom);
+    return () => {
+      leaveRoom(socketRoom);
+    };
+  }, [socketRoom]);
 
   return (
     <div className="bg-white rounded-xl p-4 overflow-auto">
@@ -78,23 +108,14 @@ export default function ParaOptions(props: IParaOptionsProps) {
       <p>Transport: {transport}</p>
       <p>message: {message}</p>
 
-      <div>
+      <form onSubmit={(e) => handleComment(e)}>
         <input
           type="text"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
         />
-        <Button
-          onClick={(e) => {
-            socket.emit("message", message);
-            console.log("message", message);
-            setMessages((prev) => [...prev, message]);
-            setMessage("");
-          }}
-        >
-          Send
-        </Button>
-      </div>
+        <Button type="submit">Send</Button>
+      </form>
       <p>messages: {JSON.stringify(messages)}</p>
 
       <div>Chuwa cos binhf luaanj</div>

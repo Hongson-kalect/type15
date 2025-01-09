@@ -97,7 +97,7 @@ export default function ParaInfo({ data }: IParaInfoProps) {
         />
 
         <div className="mt-6">
-          <ParaOptions />
+          <ParaOptions id={data.id} />
         </div>
       </div>
     </div>
