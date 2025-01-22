@@ -5,12 +5,17 @@ import { Button } from "@/components/ui/button";
 import { IComment } from "@/interface/schema/schema.interface";
 import { MessageType } from "@/interface/socket/type";
 import { AddCommentType } from "@/interface/type/comment";
+import { UserActionState } from "@/interface/type/paragraph";
 import { joinRoom, leaveRoom, socket } from "@/lib/socket";
 import { relativeDate } from "@/lib/utils";
-import { getParagraphComment } from "@/services/paragraph.service";
+import {
+  getParagraphComment,
+  getParagraphUserActionState,
+  paragraphUserAction,
+} from "@/services/paragraph.service";
 import { mainLayoutStore } from "@/store/mainLayout.store";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Heart, ThumbsUp } from "lucide-react";
+import { Heart, LoaderCircle, ThumbsUp } from "lucide-react";
 import * as React from "react";
 import { data } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -27,25 +32,85 @@ export default function ParaOptions({ id }: IParaOptionsProps) {
 
   const [message, setMessage] = React.useState<string>("");
   const [messages, setMessages] = React.useState<IComment[]>([]);
+  // const [userActionState, setUserActionState] = React.useState<UserActionState|null>(null);
 
   const {
     data: initComment,
-    error,
-    isLoading,
+    error: commentError,
+    isLoading: commentLoading,
   } = useQuery<IComment[]>({
     queryKey: ["initComment"],
     queryFn: () => getParagraphComment({ paragraphId: id }),
   });
 
-  // const { mutate: getUserActions, error, isLoading } = useMutation<>({
-  //  mutationKey:['getUserActions']
-  //  mutationFn:mutationFunction
-  //   onSuccess: (data) => {
-  //     onSucess
-  //   },
-  //   onError: (error) => {
-  //     onError
-  //   }})
+  const {
+    data: userActionState,
+    error: userActionError,
+    isLoading: userActionLoading,
+    refetch: refetchUserAction,
+  } = useQuery<UserActionState>({
+    queryKey: ["userActionState"],
+    queryFn: async () => await getParagraphUserActionState({ paragraphId: id }),
+  });
+
+  const {
+    mutate: userAction,
+    error,
+    isLoading,
+  } = useMutation<
+    { message: string },
+    Error,
+    {
+      action: "like" | "favorite" | "report";
+      state: boolean;
+      paragraphId: number;
+      userId: number;
+    }
+  >({
+    mutationKey: ["getUserActions"],
+    mutationFn: async ({
+      action,
+      state,
+    }: {
+      action: "like" | "favorite" | "report";
+      state: boolean;
+    }) =>
+      await paragraphUserAction({
+        paragraphId: id,
+        action,
+        state,
+        userId: userInfo.id,
+      }),
+    onSuccess: () => {
+      refetchUserAction();
+    },
+    onError: (error) => {
+      toast.error("Failed to get user action state");
+      console.log("get user action error", error);
+    },
+  });
+
+  const handleLike = () => {
+    if (isLoading) return toast.error("Please wait...");
+    if (!userInfo.id) return toast.error("Login to use this function");
+
+    userAction({
+      action: "like",
+      state: !userActionState?.isLiked,
+      paragraphId: id,
+      userId: userInfo.id,
+    });
+  };
+  const handleFavorite = () => {
+    if (isLoading) return toast.error("Please wait...");
+    if (!userInfo.id) return toast.error("Login to use this function");
+    userAction({
+      action: "favorite",
+      state: !userActionState?.isFavorited,
+      paragraphId: id,
+      userId: userInfo.id,
+    });
+  };
 
   React.useEffect(() => {
     if (initComment) {
@@ -91,7 +156,6 @@ export default function ParaOptions({ id }: IParaOptionsProps) {
     function onConnect() {
       setIsConnected(true);
       setTransport(socket.io.engine.transport.name);
-      console.log("connect soket");
 
       socket.io.engine.on("upgrade", (transport) => {
         setTransport(transport.name);
@@ -141,13 +205,11 @@ export default function ParaOptions({ id }: IParaOptionsProps) {
     };
   }, [socketRoom]);
 
-  console.log("userInfo :>> ", userInfo);
-
   return (
     <div className="bg-white rounded-xl p-4 overflow-auto">
       <div className="flex gap-4 justify-between items-center">
         <div className="flex items-center gap-2">
-          <p className="font-medium text-xl">Comment</p>
+          <div className="font-medium text-xl">Comment</div>
           <div
             className={`connection ${
               isConnected ? "bg-green-500" : "bg-red-500"
@@ -155,11 +217,36 @@ export default function ParaOptions({ id }: IParaOptionsProps) {
           ></div>
         </div>
         <div className="flex justify-between items-center gap-4">
-          <Button>
-            <ThumbsUp /> 10k
+          <Button
+            onClick={handleLike}
+            variant={userActionState?.isLiked ? "default" : "ghost"}
+          >
+            <ThumbsUp />
+            <div className="w-4">
+              {!userActionLoading ? (
+                userActionState?.like
+              ) : (
+                <div className="animate-spin">
+                  <LoaderCircle />
+                </div>
+              )}
+            </div>
           </Button>
-          <Button className="!bg-red-500 hover:!bg-red-600 duration-200">
-            <Heart /> 20k
+          <Button
+            onClick={handleFavorite}
+            // className="!bg-red-500 hover:!bg-red-600 duration-200"
+            variant={userActionState?.isFavorited ? "destructive" : "ghost"}
+          >
+            <Heart />
+            <div className="w-4">
+              {!userActionLoading ? (
+                userActionState?.favorite
+              ) : (
+                <div className="animate-spin">
+                  <LoaderCircle />
+                </div>
+              )}
+            </div>
           </Button>
         </div>
       </div>
@@ -169,7 +256,7 @@ export default function ParaOptions({ id }: IParaOptionsProps) {
           <CommentItem key={index} comment={msg} />
         ))}
       </div>
-      <form onSubmit={(e) => handleComment(e)} className="mt-4">
+      <form onSubmit={(e) => handleComment(e)} className="mt-8">
         <input
           type="text"
           value={message}

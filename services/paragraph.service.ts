@@ -1,6 +1,7 @@
 import { CreateParagraphDTO } from "@/interface/dto/paragraph.dto";
 import api from "./axios.instance";
-import { ParagraphFilterType } from "@/interface/type/paragraph";
+import { ParagraphFilterType, UserAction } from "@/interface/type/paragraph";
+import { mainLayoutStore } from "@/store/mainLayout.store";
 
 export const createParagraphApi = async (data: CreateParagraphDTO) => {
   const res = await api.post(`/api/paragraph`, data);
@@ -35,7 +36,7 @@ export const getParagraphComment = async ({
   return res.data;
 };
 
-export const getParagraphUserAction = async ({
+export const getParagraphUserActionState = async ({
   paragraphId,
 }: {
   paragraphId: number;
@@ -43,22 +44,13 @@ export const getParagraphUserAction = async ({
   const res = await api.get(`/api/paragraph/user-action`, {
     params: {
       paragraphId,
+      userId: mainLayoutStore.getState().userInfo?.id,
     },
   });
   return res.data;
 };
 
-export const paragraphActionAction = async (body: { action: "like"| "favorite"|'report'; state: boolean; paragraphId: number }) => {
+export const paragraphUserAction = async (body: UserAction) => {
   const res = await api.post(`/api/paragraph/user-action`, body);
   return res.data;
 };
-
-// export const favoriteParagraph = async ({ paragraphId }: { paragraphId: number }) => {
-//   const res = await api.post(`/api/paragraph/like`, { paragraphId });
-//   return res.data;
-// };
-
-// export const reportParagraph = async ({ paragraphId }: { paragraphId: number }) => {
-//   const res = await api.post(`/api/paragraph/like`, { paragraphId });
-//   return res.data;
-// };

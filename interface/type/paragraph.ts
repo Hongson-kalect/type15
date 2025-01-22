@@ -35,3 +35,11 @@ export type UserActionState = {
   report: number;
   isReported: boolean;
 };
+export type UserAction = {
+  action: "like" | "favorite" | "report";
+  state: boolean;
+  paragraphId: number;
+  userId: number;
+  reportType?: string;
+  desc?: string;
+};
