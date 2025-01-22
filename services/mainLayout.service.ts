@@ -35,6 +35,8 @@ export const getLanguages = async () => {
 
 export const changeLanguage = async (languageId: number) => {
   const user = mainLayoutStore.getState().userInfo;
+
+  console.log("user :>> ", user);
   if (!user) return toast.error("User info not found");
   const localUser = getLocalStorage(storage.user) as IAppUser;
   localUser.languageId = languageId;
@@ -43,5 +45,7 @@ export const changeLanguage = async (languageId: number) => {
   if (!appStore.getState().isLogin || !user.id) return localUser;
 
   const res = await api.put(`/api/user/${user.id}`, { languageId });
+
+  console.log("res :>> ", res);
   return res.data;
 };

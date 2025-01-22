@@ -28,16 +28,23 @@ export const Header = ({ languages, user }: HeaderProps) => {
     return languages?.find((item) => item?.id === user?.languageId);
   }, [languages, user?.languageId]);
 
-  const { mutate: handleChangeLanguage } = useMutation({
-    mutationKey: ["changeLanguage"],
-    mutationFn: (languageId: number) => changeLanguage(languageId),
-    onSuccess: (data) => {
-      setUserInfo(data);
-    },
-  });
+  const { mutate: handleChangeLanguage } = useMutation<IAppUser, Error, number>(
+    {
+      mutationKey: ["changeLanguage"],
+      mutationFn: (languageId: number) => changeLanguage(languageId),
+      onSuccess: (data) => {
+        setUserInfo({ ...user, ...data });
+      },
+    }
+  );
 
   useEffect(() => {
-    // if (user?.id && !user.languageId && languages[0].id)
+    console.log(
+      "!user?.languageId && languages?.[0]?.id :>> ",
+      !user?.languageId,
+      languages?.[0]?.id
+    );
+
     if (!user?.languageId && languages?.[0]?.id)
       handleChangeLanguage(languages[0].id);
   }, [user, languages]);

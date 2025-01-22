@@ -30,7 +30,7 @@ export const Header = ({ languages, user }: HeaderProps) => {
 
   const { mutate: handleChangeLanguage } = useMutation({
     mutationKey: ["changeLanguage"],
-    mutationFn: (languageId: number) => changeLanguage(languageId, user?.id),
+    mutationFn: (languageId: number) => changeLanguage(languageId),
     onSuccess: (data) => {
       setUserInfo(data);
     },

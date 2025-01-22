@@ -1,4 +1,5 @@
 import { MessageType } from "@/interface/socket/type";
+import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
 import type { Server as IOServer } from "socket.io";
 import { Server } from "socket.io";
@@ -6,6 +7,8 @@ import { Server } from "socket.io";
 declare global {
   var _io: IOServer | undefined;
 }
+
+const prisma = new PrismaClient();
 
 export async function GET() {
   if (global._io) {
@@ -40,9 +43,17 @@ export async function GET() {
       // io.to(room).emit("message", `User ${socket.id} left room ${room}`); // send info that have someone just leave room
     });
 
-    socket.on("message", (room, msg: MessageType) => {
-      console.log("what", msg);
-      io.to(room).emit("message", msg);
+    socket.on("message", async (room, msg: MessageType) => {
+      const comment = await prisma.comment.create({
+        data: {
+          userId: msg.userId,
+          content: msg.content,
+          [msg.targetField]: msg.targetColumn,
+          createdAt: msg.createdAt,
+        },
+      });
+
+      io.to(room).emit("message", comment);
     });
   });
 

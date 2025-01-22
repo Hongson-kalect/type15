@@ -1,4 +1,6 @@
 export const trimingAppUser = (appUser: any) => {
+  if (!appUser) return null;
+  
   return {
     id: appUser.id,
     username: appUser.username,

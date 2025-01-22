@@ -392,7 +392,7 @@ model AppUser {
   setting       Setting?  @relation(fields: [settingId], references: [id])
   assetId       Int?      @unique
   asset         Asset?    @relation(fields: [assetId], references: [id])
-  languageId    Int?      @unique
+  languageId    Int?      
   language      Language? @relation(fields: [languageId], references: [id])
   devices       Device[]
   historys      History[]
@@ -445,8 +445,8 @@ model Comment {
   themeId      Int?
   theme      Theme? @relation(fields:[themeId], references: [id])
 
-  title String
-  content String?
+  title String?
+  content String
   qill Json?
   index String?
   parentId  Int?     // Đây là khóa ngoại tham chiếu đến chính bảng Item

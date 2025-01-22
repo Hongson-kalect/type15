@@ -6,10 +6,18 @@ export function makeQuery(query: string) {
   if (index === -1) return {};
   const queryString = query.slice(index);
   const queries = Object.fromEntries(new URLSearchParams(queryString));
-  if (queries?.targetId) queries.targetId = Number(queries.targetId);
-  if (queries?.userId) queries.userId = Number(queries?.userId);
-  if (queries?.id) queries.id = Number(queries.id);
-  return queries;
+
+  //Change all field that have "id" keyword to number
+  const queryArr = Object.entries(queries).map(([key, val]) => {
+    if (key.toUpperCase().includes("ID")) return [key, Number(val)];
+    return [key, val];
+  });
+
+  return Object.fromEntries(queryArr);
+  // if (queries?.targetId) queries.targetId = Number(queries.targetId);
+  // if (queries?.userId) queries.userId = Number(queries?.userId);
+  // if (queries?.id) queries.id = Number(queries.id);
+  // return queries;
 }
 
 const secret = process.env.JWT_SECRET || "your-secret-key";

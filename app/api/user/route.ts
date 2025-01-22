@@ -62,8 +62,8 @@ export async function POST(request: NextRequest) {
     },
   });
 
-  if (!appUser)
-    return NextResponse.json({ message: "User not found" }, { status: 404 });
+  // if (!appUser)
+  //   return NextResponse.json({ message: "User not found" }, { status: 404 });
 
   const trimedAppUser = trimingAppUser(appUser);
   if (trimedAppUser) {

@@ -31,6 +31,33 @@ export interface IAppUser {
   updatedAt: Date;
 }
 
+export interface IComment {
+  isDeleted?: boolean;
+  id?: number;
+  userId: number;
+  user?: IAppUser;
+  paragraphId?: number;
+  paragraph?: IParagraph;
+  novelId?: number;
+  novel?: INovel;
+  themeId?: number;
+  theme?: ITheme;
+
+  title?: string;
+  content: string;
+  qill?: string;
+  index?: string;
+  parentId?: number; // Đây là khóa ngoại tham chiếu đến chính bảng Item
+  parent?: IComment;
+  children?: IComment[];
+  createdAt?: Date;
+  updatedAt?: Date;
+
+  state?: "sending" | "success" | "error";
+  targetField: "paragraphId" | "themeId" | "novelId";
+  targetColumn: number;
+}
+
 export interface IUser {
   id: string;
   name?: string;

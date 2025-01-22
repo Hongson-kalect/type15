@@ -26,3 +26,12 @@ export type AddParagraphValue = {
   desc: string;
   ps: string;
 };
+
+export type UserActionState = {
+  like: number;
+  isLiked: boolean;
+  favorite: number;
+  isFavorited: boolean;
+  report: number;
+  isReported: boolean;
+};

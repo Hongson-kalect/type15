@@ -31,6 +31,8 @@ export default function MainLayout(props: ILayoutProps) {
   });
 
   React.useEffect(() => {
+    console.log("user.data :>> ", user.data);
+    console.log("session :>> ", session);
     if (user.data) {
       setLocalStorage(storage.user, user.data);
       setUserInfo(user.data);

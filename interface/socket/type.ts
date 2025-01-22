@@ -1,7 +1,8 @@
 export type MessageType = {
-  message: string;
+  content: string;
   userId: number;
-  targetField?: string;
-  targetColumn?: number;
+  targetField: "paragraphId" | "themeId" | "novelId";
+  targetColumn: number;
   createdAt?: Date;
+  state?: "sending" | "success" | "error";
 };

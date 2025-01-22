@@ -30,6 +30,19 @@ export async function GET(req: NextRequest) {
           { isDeleted: false },
         ],
       },
+      include: {
+        children: true,
+        user: {
+          select: {
+            username: true,
+            user: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+      },
       orderBy: {
         [orderColumn]: orderType || "desc", // Default to 'desc' if orderType is undefined
       },

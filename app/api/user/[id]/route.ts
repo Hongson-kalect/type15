@@ -12,6 +12,14 @@ export async function GET(
   try {
     const item = await prisma.appUser.findUnique({
       where: { id: Number(id) },
+      include: {
+        user: {
+          select: {
+            image: true,
+            name: true,
+          },
+        },
+      },
     });
 
     if (item) {
@@ -34,6 +42,8 @@ export async function PUT(
   const { id } = await params;
   const { ...data } = await req.json();
 
+  console.log("data :>> ", data);
+
   try {
     const updatedPost = await prisma.appUser.update({
       where: { id: Number(id) },
@@ -43,7 +53,7 @@ export async function PUT(
   } catch (error) {
     return NextResponse.json(
       { message: "Failed to update Post", error },
-      { status: 200 }
+      { status: 400 }
     );
   }
 }
