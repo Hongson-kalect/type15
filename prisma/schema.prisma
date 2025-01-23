@@ -98,25 +98,32 @@ model Language {
 model Novel {
   isDeleted         Boolean    @default(false)
   id                Int        @id @default(autoincrement())
-  defaultLanguageId Int
-  defaultLanguage   Language   @relation(fields: [defaultLanguageId], references: [id])
+  languageId Int
+  language   Language   @relation(fields: [languageId], references: [id])
   userId            Int
   user              AppUser    @relation(fields: [userId], references: [id])
   level             String?
   name              String?
   rate              Float?
   rateTime          Int?
-  price             String?
   unit              String?
   status            String     @default("On going")
   isPrivate         Boolean    @default(false)
   tag               String?
   desc              String?
+  image              String?
+  scope      String  @default("public")
+protectedType String @default("pass")
+password   String  @default("")
+price      Int  @default(0)
+priceUnitId Int?
+priceUnit  Currency? @relation(fields: [priceUnitId], references: [id])
   paragraphs        Paragraph[]
   createdAt         DateTime   @default(now())
   updatedAt         DateTime   @updatedAt
   like Like[]
   favorite Favorite[]
+  history History[]
   report Report[]
   comment Comment[]
 }
@@ -129,6 +136,7 @@ model Paragraph {
   title     String
   content    String
   desc       String    @default("")
+  image   String?
   ps       String    @default("")
   scope      String  @default("public")
   protectedType String @default("pass")
@@ -162,6 +170,7 @@ model Currency {
   name        String
   icon        String?
   paragraphs Paragraph[]
+  novels Novel[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
@@ -189,6 +198,8 @@ model History {
   user         AppUser  @relation(fields: [userId], references: [id])
   paragraphId       Int?
   paragraph         Paragraph?  @relation(fields: [paragraphId], references: [id])
+  novelId       Int?
+  novel         Novel?  @relation(fields: [novelId], references: [id])
   trainingId       Int?
   training         Training?  @relation(fields: [trainingId], references: [id])
   time DateTime[]
@@ -321,6 +332,7 @@ model Theme {
   src       String
   style     String
   desc      String
+  image String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   like Like[]

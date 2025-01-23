@@ -1,6 +1,5 @@
 "use client";
 
-import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -10,26 +9,21 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import {
-  ICurrency,
-  ILanguage,
-  INovel,
-} from "@/interface/schema/schema.interface";
-import { AddParagraphOption } from "@/interface/type/paragraph";
+import { ICurrency, ILanguage } from "@/interface/schema/schema.interface";
+import { AddNovelOption } from "@/interface/type/novel";
 import { getCurrencies } from "@/services/currency.service";
 import { getLanguages } from "@/services/mainLayout.service";
-import { getNovels } from "@/services/novel.service";
 import { useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
 
-type AddParaOptionProps = {
+type AddNovOptionProps = {
   // languages:ILanguage[],
-  options: AddParagraphOption;
-  setOptions: React.Dispatch<React.SetStateAction<AddParagraphOption>>;
+  options: AddNovelOption;
+  setOptions: React.Dispatch<React.SetStateAction<AddNovelOption>>;
 };
 
-const AddParaOption = ({ options, setOptions }: AddParaOptionProps) => {
-  const [isAssociated, setIsAssociated] = useState(false);
+const AddNovOption = ({ options, setOptions }: AddNovOptionProps) => {
+  const [currency, setCurrency] = useState("VND");
 
   const { data: languages } = useQuery<ILanguage[]>({
     queryKey: ["languages"],
@@ -38,10 +32,6 @@ const AddParaOption = ({ options, setOptions }: AddParaOptionProps) => {
   const { data: currencies } = useQuery<ICurrency[]>({
     queryKey: ["currencies"],
     queryFn: getCurrencies,
-  });
-  const { data: novels } = useQuery<INovel[]>({
-    queryKey: ["novels"],
-    queryFn: getNovels,
   });
 
   return (
@@ -147,53 +137,8 @@ const AddParaOption = ({ options, setOptions }: AddParaOptionProps) => {
           )}
         </div>
       )}
-      <div>
-        <div className="mb-4 flex gap-4 items-center justify-between">
-          <p className="font-semibold">Association</p>
-          <Switch
-            checked={isAssociated}
-            onCheckedChange={(e) => setIsAssociated(e)}
-          />
-        </div>
-        {isAssociated && (
-          <div className="mt-4 shadow-md shadow-gray-600 p-3 ml-4 rounded-lg mb-8">
-            <div className="flex gap-2 items-center mb-2">
-              <p className="text-xs font-bold text-gray-600 text-nowrap">
-                Select Novel
-              </p>
-              <Select
-                value={options.novelId?.toString()}
-                onValueChange={(e) =>
-                  setOptions((prev) => ({ ...prev, novelId: Number(e) }))
-                }
-              >
-                <SelectTrigger className="h-8">
-                  <SelectValue placeholder="Select a novel" />
-                </SelectTrigger>
-                <SelectContent>
-                  {novels?.length ? (
-                    novels.map((nov) => (
-                      <SelectItem key={nov.id} value={nov.id.toString()}>
-                        <div className="line-clamp-2">{nov.name}</div>
-                      </SelectItem>
-                    ))
-                  ) : (
-                    <p className="text-gray-400 text-xs text-center">
-                      No novel found
-                    </p>
-                  )}
-                </SelectContent>
-              </Select>
-            </div>
-            <p className="text-sm font-medium text-gray-800 text-nowrap">
-              Chapter
-            </p>
-            <Input required />
-          </div>
-        )}
-      </div>
     </div>
   );
 };
 
-export default AddParaOption;
+export default AddNovOption;

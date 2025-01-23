@@ -54,7 +54,30 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(request: Request) {
-  const requestBody = await request.json(); //body từ request
+  const requestBody = await request.json();
+
+  if (requestBody.type === "paragraph") {
+    //body từ request
+    //if server really fast, may use this to validate that paragraph exist
+    // const paragraph = await prisma.paragraph.findUnique({
+    //   where: { id: requestBody.targetId },
+    // });
+
+    if (!requestBody.targetId)
+      return NextResponse.json(
+        { message: "Paragraph not found" },
+        { status: 404 }
+      );
+
+    await prisma.paragraph.update({
+      where: { id: requestBody.targetId },
+      data: {
+        completed: {
+          increment: 1,
+        },
+      },
+    });
+  }
 
   const newItem = await prisma.score.create({
     data: requestBody,

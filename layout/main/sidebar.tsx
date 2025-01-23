@@ -59,7 +59,7 @@ export const CommonSideBar = () => {
         <SideBarItem
           icon={<BiBook size={22} />}
           title="Novel list"
-          href="/novel"
+          href="/novels"
         />
         <SideBarItem
           icon={<BiTrendingUp size={22} />}
