@@ -1,4 +1,7 @@
 export interface IAppUser {
+  _count: {
+    [key: string]: number;
+  };
   isDeleted: boolean;
   id: number;
   language?: ILanguage;
@@ -32,6 +35,9 @@ export interface IAppUser {
 }
 
 export interface IComment {
+  _count: {
+    [key: string]: number;
+  };
   isDeleted?: boolean;
   id?: number;
   userId: number;
@@ -59,6 +65,9 @@ export interface IComment {
 }
 
 export interface IUser {
+  _count: {
+    [key: string]: number;
+  };
   id: string;
   name?: string;
   email?: string;
@@ -74,6 +83,9 @@ export interface IUser {
 }
 
 export interface IAccount {
+  _count: {
+    [key: string]: number;
+  };
   id: string;
   userId: string;
   type: string;
@@ -92,6 +104,9 @@ export interface IAccount {
 }
 
 export interface ISession {
+  _count: {
+    [key: string]: number;
+  };
   id: string;
   sessionToken: string;
   userId: string;
@@ -102,6 +117,9 @@ export interface ISession {
 }
 
 export interface IVerificationToken {
+  _count: {
+    [key: string]: number;
+  };
   id: string;
   identifier: string;
   token: string;
@@ -109,6 +127,9 @@ export interface IVerificationToken {
 }
 
 export interface IAuthenticator {
+  _count: {
+    [key: string]: number;
+  };
   credentialID: string;
   userId: string;
   providerAccountId: string;
@@ -121,6 +142,9 @@ export interface IAuthenticator {
 }
 
 export interface IAsset {
+  _count: {
+    [key: string]: number;
+  };
   isDeleted: boolean;
   id: number;
   gold: number;
@@ -132,6 +156,9 @@ export interface IAsset {
 }
 
 export interface IBan {
+  _count: {
+    [key: string]: number;
+  };
   isDeleted: boolean;
   id: number;
   userId: string;
@@ -144,6 +171,9 @@ export interface IBan {
 }
 
 export interface IDevice {
+  _count: {
+    [key: string]: number;
+  };
   isDeleted: boolean;
   id: number;
   userId: string;
@@ -156,6 +186,9 @@ export interface IDevice {
 }
 
 export interface IFavorite {
+  _count: {
+    [key: string]: number;
+  };
   isDeleted: boolean;
   id: number;
   userId: string;
@@ -167,6 +200,9 @@ export interface IFavorite {
 }
 
 export interface IGame {
+  _count: {
+    [key: string]: number;
+  };
   isDeleted: boolean;
   id: number;
   name: string;
@@ -180,6 +216,9 @@ export interface IGame {
 }
 
 export interface IGameInfo {
+  _count: {
+    [key: string]: number;
+  };
   isDeleted: boolean;
   id: number;
   played: number;
@@ -198,6 +237,9 @@ export interface IGameInfo {
 }
 
 export interface ILanguage {
+  _count: {
+    [key: string]: number;
+  };
   isDeleted?: boolean;
   id?: number;
   name: string;
@@ -217,6 +259,9 @@ export interface ILanguage {
 }
 
 export interface ICurrency {
+  _count: {
+    [key: string]: number;
+  };
   isDeleted: boolean;
   id: number;
   name: string;
@@ -227,6 +272,9 @@ export interface ICurrency {
 }
 
 export interface INovel {
+  _count: {
+    [key: string]: number;
+  };
   isDeleted: boolean;
   id: number;
   defaultLanguageId: string;
@@ -243,11 +291,17 @@ export interface INovel {
   tag?: string;
   desc?: string;
   paragraphs: IParagraph[];
+  like: ILike[];
+  favorite: IFavorite[];
+  report: IReport[];
   createdAt: Date;
   updatedAt: Date;
 }
 
 export interface IParagraph {
+  _count: {
+    [key: string]: number;
+  };
   isDeleted: boolean;
   id: number;
   languageId: number;
@@ -276,7 +330,26 @@ export interface IParagraph {
   updatedAt: Date;
 }
 
+export interface ILike {
+  isDeleted: boolean;
+  id: number;
+  userId: number;
+  user: IAppUser;
+  createdAt: Date;
+  updatedAt: Date;
+
+  novelId?: number;
+  novel?: INovel;
+  paragraphId?: number;
+  paragraph?: IParagraph;
+  themeId?: number;
+  theme?: ITheme;
+}
+
 export interface IProfile {
+  _count: {
+    [key: string]: number;
+  };
   isDeleted: boolean;
   id: string;
   born: number;
@@ -293,6 +366,9 @@ export interface IProfile {
 }
 
 export interface IReport {
+  _count: {
+    [key: string]: number;
+  };
   isDeleted: boolean;
   id: string;
   userId: number;
@@ -311,6 +387,9 @@ export interface IReport {
 }
 
 export interface IScore {
+  _count: {
+    [key: string]: number;
+  };
   isDeleted: boolean;
   id: string;
   userId: number;
@@ -328,6 +407,9 @@ export interface IScore {
 }
 
 export interface ISetting {
+  _count: {
+    [key: string]: number;
+  };
   isDeleted: boolean;
   id: number;
   user: IAppUser;
@@ -341,6 +423,9 @@ export interface ISetting {
 }
 
 export interface IStore {
+  _count: {
+    [key: string]: number;
+  };
   isDeleted: boolean;
   id: number;
   themeId: number;
@@ -354,6 +439,9 @@ export interface IStore {
 }
 
 export interface ITheme {
+  _count: {
+    [key: string]: number;
+  };
   isDeleted: boolean;
   id: number;
   type: string;
@@ -365,6 +453,9 @@ export interface ITheme {
 }
 
 export interface ITypeStyle {
+  _count: {
+    [key: string]: number;
+  };
   isDeleted: boolean;
   id: number;
   languageId: number;
@@ -377,6 +468,9 @@ export interface ITypeStyle {
 }
 
 export interface ISpecialRule {
+  _count: {
+    [key: string]: number;
+  };
   isDeleted: boolean;
   id: number;
   typeStyleId: number;
@@ -388,6 +482,9 @@ export interface ISpecialRule {
 }
 
 export interface IWord {
+  _count: {
+    [key: string]: number;
+  };
   isDeleted: boolean;
   id: number;
   languageId: number;
@@ -401,6 +498,9 @@ export interface IWord {
 }
 
 export interface IWordRate {
+  _count: {
+    [key: string]: number;
+  };
   isDeleted: boolean;
   id: number;
   languageId: number;

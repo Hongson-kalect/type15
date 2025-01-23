@@ -68,8 +68,54 @@ export async function GET(req: NextRequest) {
         language: {
           select: { name: true },
         },
+        _count: {
+          select: {
+            favorite: { where: { isDeleted: false, novelId: filters.novelId } },
+            like: { where: { isDeleted: false, novelId: filters.novelId } },
+            report: { where: { isDeleted: false, novelId: filters.novelId } },
+          },
+        },
+        like: {
+          where: {
+            isDeleted: false,
+            paragraphId: filters.paragraphId,
+            userId: filters.userId,
+          },
+        },
+        favorite: {
+          where: {
+            isDeleted: false,
+            paragraphId: filters.paragraphId,
+            userId: filters.userId,
+          },
+        },
+        report: {
+          where: {
+            isDeleted: false,
+            paragraphId: filters.paragraphId,
+            userId: filters.userId,
+          },
+        },
       },
     });
+
+    // const res = list.map((item)=>{
+    //   let novel = {...item};
+
+    //   const count = {
+    //     like: item._count.like,
+    //     favorite: item._count.favorite,
+    //     report: item._count.report
+    //   }
+    //   novel={
+    //     ...novel,
+    //     ...count
+    //   }
+
+    //   delete novel._count;
+    //   return novel
+    // })
+
     return NextResponse.json(list);
   } catch (error) {
     return NextResponse.json(
