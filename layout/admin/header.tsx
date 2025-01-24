@@ -24,7 +24,7 @@ export const Header = ({ languages, user }: HeaderProps) => {
   const { setUserInfo } = mainLayoutStore();
 
   const userLanguage = useMemo(() => {
-    if (!user?.languageId) return languages?.[0];
+    if (!user?.languageId || !languages) return languages?.[0];
     return languages.find((item) => item?.id === user?.languageId);
   }, [languages, user?.languageId]);
 

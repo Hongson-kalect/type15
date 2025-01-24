@@ -49,6 +49,7 @@ export const getNovelUserActionStateService = async ({
 }: {
   novelId: number;
 }) => {
+  console.log("novelId :>> ", novelId);
   const res = await api.get(`/api/novel/user-action`, {
     params: {
       novelId,

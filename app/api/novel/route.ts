@@ -73,6 +73,9 @@ export async function GET(req: NextRequest) {
             favorite: { where: { isDeleted: false, novelId: filters.novelId } },
             like: { where: { isDeleted: false, novelId: filters.novelId } },
             report: { where: { isDeleted: false, novelId: filters.novelId } },
+            paragraphs: {
+              where: { isDeleted: false, novelId: filters.novelId },
+            },
           },
         },
         like: {

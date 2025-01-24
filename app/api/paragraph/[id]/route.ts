@@ -1,6 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { NextRequest } from "next";
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 
 const prisma = new PrismaClient();
 
@@ -20,6 +19,8 @@ export async function GET(
     if (item) {
       const references = await prisma.paragraph.findMany({
         where: { novelId: item.novelId },
+        orderBy: { createdAt: "desc" },
+        take: 10,
       }); // Adjust this filter based on your actual logic }, orderBy: { createdAt: 'desc', }, take: 10,
 
       return NextResponse.json({ ...item, references }, { status: 200 });

@@ -36,7 +36,7 @@ export type UserActionState = {
 export type UserAction = {
   action: "like" | "favorite" | "report";
   state: boolean;
-  paragraphId: number;
+  novelId: number;
   userId: number;
   reportType?: string;
   desc?: string;

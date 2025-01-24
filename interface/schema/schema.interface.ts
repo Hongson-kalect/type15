@@ -1,5 +1,5 @@
 export interface IAppUser {
-  _count: {
+  _count?: {
     [key: string]: number;
   };
   isDeleted: boolean;
@@ -35,7 +35,7 @@ export interface IAppUser {
 }
 
 export interface IComment {
-  _count: {
+  _count?: {
     [key: string]: number;
   };
   isDeleted?: boolean;
@@ -65,7 +65,7 @@ export interface IComment {
 }
 
 export interface IUser {
-  _count: {
+  _count?: {
     [key: string]: number;
   };
   id: string;
@@ -83,7 +83,7 @@ export interface IUser {
 }
 
 export interface IAccount {
-  _count: {
+  _count?: {
     [key: string]: number;
   };
   id: string;
@@ -104,7 +104,7 @@ export interface IAccount {
 }
 
 export interface ISession {
-  _count: {
+  _count?: {
     [key: string]: number;
   };
   id: string;
@@ -117,7 +117,7 @@ export interface ISession {
 }
 
 export interface IVerificationToken {
-  _count: {
+  _count?: {
     [key: string]: number;
   };
   id: string;
@@ -127,7 +127,7 @@ export interface IVerificationToken {
 }
 
 export interface IAuthenticator {
-  _count: {
+  _count?: {
     [key: string]: number;
   };
   credentialID: string;
@@ -142,7 +142,7 @@ export interface IAuthenticator {
 }
 
 export interface IAsset {
-  _count: {
+  _count?: {
     [key: string]: number;
   };
   isDeleted: boolean;
@@ -156,7 +156,7 @@ export interface IAsset {
 }
 
 export interface IBan {
-  _count: {
+  _count?: {
     [key: string]: number;
   };
   isDeleted: boolean;
@@ -171,7 +171,7 @@ export interface IBan {
 }
 
 export interface IDevice {
-  _count: {
+  _count?: {
     [key: string]: number;
   };
   isDeleted: boolean;
@@ -186,7 +186,7 @@ export interface IDevice {
 }
 
 export interface IFavorite {
-  _count: {
+  _count?: {
     [key: string]: number;
   };
   isDeleted: boolean;
@@ -200,7 +200,7 @@ export interface IFavorite {
 }
 
 export interface IGame {
-  _count: {
+  _count?: {
     [key: string]: number;
   };
   isDeleted: boolean;
@@ -216,7 +216,7 @@ export interface IGame {
 }
 
 export interface IGameInfo {
-  _count: {
+  _count?: {
     [key: string]: number;
   };
   isDeleted: boolean;
@@ -237,7 +237,7 @@ export interface IGameInfo {
 }
 
 export interface ILanguage {
-  _count: {
+  _count?: {
     [key: string]: number;
   };
   isDeleted?: boolean;
@@ -259,7 +259,7 @@ export interface ILanguage {
 }
 
 export interface ICurrency {
-  _count: {
+  _count?: {
     [key: string]: number;
   };
   isDeleted: boolean;
@@ -272,7 +272,7 @@ export interface ICurrency {
 }
 
 export interface INovel {
-  _count: {
+  _count?: {
     [key: string]: number;
   };
   isDeleted: boolean;
@@ -291,6 +291,7 @@ export interface INovel {
   tag?: string;
   desc?: string;
   paragraphs: IParagraph[];
+  references?: INovel[];
   like: ILike[];
   favorite: IFavorite[];
   report: IReport[];
@@ -299,7 +300,7 @@ export interface INovel {
 }
 
 export interface IParagraph {
-  _count: {
+  _count?: {
     [key: string]: number;
   };
   isDeleted: boolean;
@@ -347,7 +348,7 @@ export interface ILike {
 }
 
 export interface IProfile {
-  _count: {
+  _count?: {
     [key: string]: number;
   };
   isDeleted: boolean;
@@ -366,7 +367,7 @@ export interface IProfile {
 }
 
 export interface IReport {
-  _count: {
+  _count?: {
     [key: string]: number;
   };
   isDeleted: boolean;
@@ -387,7 +388,7 @@ export interface IReport {
 }
 
 export interface IScore {
-  _count: {
+  _count?: {
     [key: string]: number;
   };
   isDeleted: boolean;
@@ -407,7 +408,7 @@ export interface IScore {
 }
 
 export interface ISetting {
-  _count: {
+  _count?: {
     [key: string]: number;
   };
   isDeleted: boolean;
@@ -423,7 +424,7 @@ export interface ISetting {
 }
 
 export interface IStore {
-  _count: {
+  _count?: {
     [key: string]: number;
   };
   isDeleted: boolean;
@@ -439,7 +440,7 @@ export interface IStore {
 }
 
 export interface ITheme {
-  _count: {
+  _count?: {
     [key: string]: number;
   };
   isDeleted: boolean;
@@ -453,7 +454,7 @@ export interface ITheme {
 }
 
 export interface ITypeStyle {
-  _count: {
+  _count?: {
     [key: string]: number;
   };
   isDeleted: boolean;
@@ -468,7 +469,7 @@ export interface ITypeStyle {
 }
 
 export interface ISpecialRule {
-  _count: {
+  _count?: {
     [key: string]: number;
   };
   isDeleted: boolean;
@@ -482,7 +483,7 @@ export interface ISpecialRule {
 }
 
 export interface IWord {
-  _count: {
+  _count?: {
     [key: string]: number;
   };
   isDeleted: boolean;
@@ -498,7 +499,7 @@ export interface IWord {
 }
 
 export interface IWordRate {
-  _count: {
+  _count?: {
     [key: string]: number;
   };
   isDeleted: boolean;

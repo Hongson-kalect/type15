@@ -4,30 +4,25 @@ import CommentItem from "@/components/comment/commentItem";
 import { Button } from "@/components/ui/button";
 import { IComment } from "@/interface/schema/schema.interface";
 import { MessageType } from "@/interface/socket/type";
-import { AddCommentType } from "@/interface/type/comment";
-import { UserActionState } from "@/interface/type/paragraph";
+import { UserActionState } from "@/interface/type/novel";
 import { joinRoom, leaveRoom, socket } from "@/lib/socket";
-import { relativeDate } from "@/lib/utils";
 import {
-  getParagraphComment,
-  getParagraphUserActionState,
-  paragraphUserAction,
-} from "@/services/paragraph.service";
+  getNovelCommentService,
+  getNovelUserActionStateService,
+  setNovelUserActionService,
+} from "@/services/novel.service";
 import { mainLayoutStore } from "@/store/mainLayout.store";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Heart, LoaderCircle, ThumbsUp } from "lucide-react";
 import * as React from "react";
-import { data } from "react-router-dom";
 import { toast } from "react-toastify";
-import { io } from "socket.io-client";
 
-export interface IParaOptionsProps {
+export interface INovelOptionsProps {
   id: number;
 }
 
-export default function ParaOptions({ id }: IParaOptionsProps) {
+export default function NovelOptions({ id }: INovelOptionsProps) {
   const { userInfo } = mainLayoutStore();
-  const [transport, setTransport] = React.useState("N/A");
   const [isConnected, setIsConnected] = React.useState(socket.connected);
 
   const [message, setMessage] = React.useState<string>("");
@@ -40,7 +35,7 @@ export default function ParaOptions({ id }: IParaOptionsProps) {
     isLoading: commentLoading,
   } = useQuery<IComment[]>({
     queryKey: ["initComment"],
-    queryFn: () => getParagraphComment({ paragraphId: id }),
+    queryFn: () => getNovelCommentService({ novelId: id }),
   });
 
   const {
@@ -49,8 +44,8 @@ export default function ParaOptions({ id }: IParaOptionsProps) {
     isLoading: userActionLoading,
     refetch: refetchUserAction,
   } = useQuery<UserActionState>({
-    queryKey: ["userActionState"],
-    queryFn: async () => await getParagraphUserActionState({ paragraphId: id }),
+    queryKey: ["userNovelActionState"],
+    queryFn: async () => await getNovelUserActionStateService({ novelId: id }),
   });
 
   const {
@@ -63,7 +58,7 @@ export default function ParaOptions({ id }: IParaOptionsProps) {
     {
       action: "like" | "favorite" | "report";
       state: boolean;
-      paragraphId: number;
+      novelId: number;
       userId: number;
     }
   >({
@@ -75,8 +70,8 @@ export default function ParaOptions({ id }: IParaOptionsProps) {
       action: "like" | "favorite" | "report";
       state: boolean;
     }) =>
-      await paragraphUserAction({
-        paragraphId: id,
+      await setNovelUserActionService({
+        novelId: id,
         action,
         state,
         userId: userInfo.id,
@@ -97,7 +92,7 @@ export default function ParaOptions({ id }: IParaOptionsProps) {
     userAction({
       action: "like",
       state: !userActionState?.isLiked,
-      paragraphId: id,
+      novelId: id,
       userId: userInfo.id,
     });
   };
@@ -107,7 +102,7 @@ export default function ParaOptions({ id }: IParaOptionsProps) {
     userAction({
       action: "favorite",
       state: !userActionState?.isFavorited,
-      paragraphId: id,
+      novelId: id,
       userId: userInfo.id,
     });
   };
@@ -127,7 +122,7 @@ export default function ParaOptions({ id }: IParaOptionsProps) {
     const comment: MessageType = {
       content: message,
       userId: userInfo.id,
-      targetField: "paragraphId",
+      targetField: "novelId",
       targetColumn: id,
       createdAt: new Date(),
       state: "sending",
@@ -140,7 +135,7 @@ export default function ParaOptions({ id }: IParaOptionsProps) {
 
   //Socket connection
   const socketRoom = React.useMemo(() => {
-    return id ? "paragraphId-" + id : "";
+    return id ? "novelId-" + id : "";
   }, [id]);
   const socketInitializer = async () => {
     await fetch("/api/socket");
@@ -155,16 +150,15 @@ export default function ParaOptions({ id }: IParaOptionsProps) {
 
     function onConnect() {
       setIsConnected(true);
-      setTransport(socket.io.engine.transport.name);
 
-      socket.io.engine.on("upgrade", (transport) => {
-        setTransport(transport.name);
-      });
+      // socket.io.engine.on("upgrade", (transport) => {
+      //   setTransport(transport.name);
+      // });
     }
 
     function onDisconnect() {
       setIsConnected(false);
-      setTransport("N/A");
+      // setTransport("N/A");
     }
 
     function onMessage(msg: IComment) {

@@ -43,48 +43,50 @@ export default function NovelItem({ novel }: INovelItemProps) {
   return (
     <div className="p-4">
       <div className="rounded max-w-44 mx-auto shadow px-2 py-2 shadow-gray-400 cursor-pointer hover:scale-105 duration-300 hover:shadow-md hover:shadow-gray-500">
-        <div>
-          <Image
-            src={
-              "https://img5.thuthuatphanmem.vn/uploads/2022/01/06/anh-tuyet-dep-anime-nu-ngau-lanh-lung_085606116.jpg"
-            }
-            alt="Book Image"
-            className="w-full object-cover"
-            width={240}
-            height={320}
-          />
-        </div>
-        <div>
-          <h2 className="text mt-2 line-clamp-2 text-sm font-medium text-gray-600">
-            {/* {"Alibaba và 40 tên cướp, chuyển sinh thành con óc chó gì đó"} */}
-            {novel.name}
-          </h2>
-          <div className="flex justify-between mt-2 opacity-80 gap-1 ">
-            <div className="flex">
-              <div
-                className={`${
-                  novel.like.length ? "text-blue-700" : ""
-                } flex gap-1  items-end mr-2`}
-              >
-                <ThumbsUp size={16} />
-                <p className="text-xs">{novel._count?.like}</p>
-              </div>
-              <div
-                className={`${
-                  novel.favorite.length ? "text-pink-500" : ""
-                } flex gap-1  items-end mr-2`}
-              >
-                <Heart size={16} />
-                <p className="text-xs">{novel._count?.favorite}</p>
-              </div>
-            </div>
-            {userInfo.id && novel?.userId === userInfo.id && (
-              <div className="text-red-700">
-                <UserRound size={16} />
-              </div>
-            )}
+        <Link href={`/novels/${novel.id}`}>
+          <div>
+            <Image
+              src={
+                "https://img5.thuthuatphanmem.vn/uploads/2022/01/06/anh-tuyet-dep-anime-nu-ngau-lanh-lung_085606116.jpg"
+              }
+              alt="Book Image"
+              className="w-full object-cover"
+              width={240}
+              height={320}
+            />
           </div>
-        </div>
+          <div>
+            <h2 className="text mt-2 line-clamp-2 text-sm font-medium text-gray-600">
+              {/* {"Alibaba và 40 tên cướp, chuyển sinh thành con óc chó gì đó"} */}
+              {novel.name}
+            </h2>
+            <div className="flex justify-between mt-2 opacity-80 gap-1 ">
+              <div className="flex">
+                <div
+                  className={`${
+                    novel.like.length ? "text-blue-700" : ""
+                  } flex gap-1  items-end mr-2`}
+                >
+                  <ThumbsUp size={16} />
+                  <p className="text-xs">{novel._count?.like}</p>
+                </div>
+                <div
+                  className={`${
+                    novel.favorite.length ? "text-pink-500" : ""
+                  } flex gap-1  items-end mr-2`}
+                >
+                  <Heart size={16} />
+                  <p className="text-xs">{novel._count?.favorite}</p>
+                </div>
+              </div>
+              {userInfo.id && novel?.userId === userInfo.id && (
+                <div className="text-red-700">
+                  <UserRound size={16} />
+                </div>
+              )}
+            </div>
+          </div>
+        </Link>
       </div>
     </div>
   );

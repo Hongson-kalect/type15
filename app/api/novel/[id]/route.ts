@@ -1,6 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { NextRequest } from "next";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
 
@@ -12,10 +11,72 @@ export async function GET(
   try {
     const item = await prisma.novel.findUnique({
       where: { id: Number(id) },
+      select: {
+        id: true,
+        desc: true,
+        createdAt: true,
+        scope: true,
+        languageId: true,
+        status: true,
+        tag: true,
+        name: true,
+        price: true,
+        priceUnitId: true,
+        user: {
+          select: {
+            profile: {
+              select: {
+                avatar: true,
+                displayName: true,
+                firstName: true,
+                lastName: true,
+              },
+            },
+            user: {
+              select: {
+                image: true,
+                name: true,
+              },
+            },
+          },
+        },
+        paragraphs: true,
+      },
     });
 
     if (item) {
-      return NextResponse.json(item, { status: 200 });
+      const references = await prisma.novel.findMany({
+        where: { id: { not: Number(id) }, languageId: item.languageId },
+        orderBy: { createdAt: "desc" },
+        select: {
+          id: true,
+          name: true,
+          desc: true,
+          user: {
+            select: {
+              user: {
+                select: { name: true },
+              },
+              profile: {
+                select: {
+                  displayName: true,
+                  firstName: true,
+                  lastName: true,
+                },
+              },
+            },
+          },
+
+          _count: {
+            select: {
+              paragraphs: true,
+            },
+          },
+        },
+        take: 10,
+      });
+
+      return NextResponse.json({ ...item, references }, { status: 200 });
     } else {
       return NextResponse.json({ message: "Post not found" }, { status: 400 });
     }
