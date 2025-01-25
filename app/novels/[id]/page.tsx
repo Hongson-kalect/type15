@@ -21,7 +21,7 @@ export default function NovelDetail({
 
   return (
     <div className="py-4 h-full flex px-6 gap-8 hide-scroll">
-      <div className="flex-1">
+      <div className="flex-1 overflow-auto hide-scroll">
         <NovelInfo novelInfo={novelDetailQuery.data} />
       </div>
       <div className="flex flex-col gap-4 h-full">

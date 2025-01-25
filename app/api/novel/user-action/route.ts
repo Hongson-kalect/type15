@@ -81,6 +81,17 @@ export async function POST(request: NextRequest) {
       });
       return NextResponse.json({ message: "unliked" });
     } else {
+      const liked = await prisma.like.findFirst({
+        where: {
+          novelId: requestBody.novelId,
+          userId: requestBody.userId,
+        },
+      });
+
+      console.log("liked :>> ", liked);
+
+      if (liked) return NextResponse.json({ message: "liked" });
+
       await prisma.like.create({
         data: {
           novelId: requestBody.novelId,
@@ -101,6 +112,15 @@ export async function POST(request: NextRequest) {
       });
       return NextResponse.json({ message: "unfavorited" });
     } else {
+      const favorited = await prisma.favorite.findFirst({
+        where: {
+          novelId: requestBody.novelId,
+          userId: requestBody.userId,
+        },
+      });
+
+      if (favorited) return NextResponse.json({ message: "liked" });
+
       await prisma.favorite.create({
         data: {
           novelId: requestBody.novelId,
@@ -121,6 +141,15 @@ export async function POST(request: NextRequest) {
       });
       return NextResponse.json({ message: "unreported" });
     } else {
+      const reported = await prisma.report.findFirst({
+        where: {
+          novelId: requestBody.novelId,
+          userId: requestBody.userId,
+        },
+      });
+
+      if (reported) return NextResponse.json({ message: "reported" });
+
       await prisma.report.create({
         data: {
           novelId: requestBody.novelId,

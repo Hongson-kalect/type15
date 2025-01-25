@@ -24,6 +24,7 @@ export async function GET(
         priceUnitId: true,
         user: {
           select: {
+            id: true,
             profile: {
               select: {
                 avatar: true,
@@ -52,6 +53,8 @@ export async function GET(
           id: true,
           name: true,
           desc: true,
+          createdAt: true,
+          image: true,
           user: {
             select: {
               user: {

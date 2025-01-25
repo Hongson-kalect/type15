@@ -19,8 +19,19 @@ export type AddNovelOption = {
   novelId?: number;
   chapter?: string;
 };
+export type EditNovelOption = {
+  languageId: number;
+  scope: "public" | "protected" | "private";
+  protectedType?: "pass" | "sell";
+  password?: string;
+  price?: number;
+  priceUnitId?: number;
+  novelId?: number;
+  chapter?: string;
+};
 
 export type AddNovelValue = {
+  image: string;
   name: string;
   desc: string;
 };

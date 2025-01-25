@@ -11,21 +11,21 @@ import { toast } from "react-toastify";
 
 import defaultBackground from "@/assets/images/default-background.jpg";
 
-export interface ICreateParaFormProps {
-  createNovel: UseMutateFunction<unknown, Error, AddNovelValue, unknown>;
+export interface IEditNovelFormProps {
+  editNovel: UseMutateFunction<unknown, Error, AddNovelValue, unknown>;
 }
 
-export default function CreateParaForm(props: ICreateParaFormProps) {
+export default function EditNovelForm(props: IEditNovelFormProps) {
   const { userInfo } = mainLayoutStore();
-  const [novelValue, setParaValue] = React.useState<AddNovelValue>({
+  const [novelValue, setNovelValue] = React.useState<AddNovelValue>({
     image: "",
     name: "",
     desc: "",
   });
 
-  const handleCreate = () => {
+  const handleEdit = () => {
     if (!userInfo?.id) return toast.error("Please login to use this function");
-    props.createNovel(novelValue);
+    props.editNovel(novelValue);
   };
   return (
     <div className="bg-white p-4 rounded-lg flex-1">
@@ -33,7 +33,7 @@ export default function CreateParaForm(props: ICreateParaFormProps) {
         className="space-y-4"
         onSubmit={(e) => {
           e.preventDefault();
-          handleCreate();
+          handleEdit();
         }}
       >
         <div className="flex gap-4">
@@ -50,7 +50,7 @@ export default function CreateParaForm(props: ICreateParaFormProps) {
                 name="image"
                 value={novelValue.image}
                 onChange={(e) =>
-                  setParaValue({ ...novelValue, image: e.target.value })
+                  setNovelValue({ ...novelValue, image: e.target.value })
                 }
                 className="mt-1 w-full rounded-md  sm:text-sm"
               />
@@ -67,7 +67,7 @@ export default function CreateParaForm(props: ICreateParaFormProps) {
                 name="name"
                 value={novelValue.name}
                 onChange={(e) =>
-                  setParaValue({ ...novelValue, name: e.target.value })
+                  setNovelValue({ ...novelValue, name: e.target.value })
                 }
                 className="mt-1 w-full rounded-md  sm:text-sm"
               />
@@ -97,7 +97,7 @@ export default function CreateParaForm(props: ICreateParaFormProps) {
             name="desc"
             value={novelValue.desc}
             onChange={(e) =>
-              setParaValue({ ...novelValue, desc: e.target.value })
+              setNovelValue({ ...novelValue, desc: e.target.value })
             }
             rows={3}
             className="mt-1 w-full rounded-md sm:text-sm"

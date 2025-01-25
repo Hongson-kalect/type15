@@ -44,15 +44,16 @@ export default function NovelItem({ novel }: INovelItemProps) {
     <div className="p-4">
       <div className="rounded max-w-44 mx-auto shadow px-2 py-2 shadow-gray-400 cursor-pointer hover:scale-105 duration-300 hover:shadow-md hover:shadow-gray-500">
         <Link href={`/novels/${novel.id}`}>
-          <div>
+          <div className="w-[160px] h-[100px]">
             <Image
               src={
+                novel.image ||
                 "https://img5.thuthuatphanmem.vn/uploads/2022/01/06/anh-tuyet-dep-anime-nu-ngau-lanh-lung_085606116.jpg"
               }
               alt="Book Image"
               className="w-full object-cover"
-              width={240}
-              height={320}
+              width={168}
+              height={105}
             />
           </div>
           <div>

@@ -290,11 +290,13 @@ export interface INovel {
   isPrivate: boolean;
   tag?: string;
   desc?: string;
+  image?: string;
   paragraphs: IParagraph[];
   references?: INovel[];
   like: ILike[];
   favorite: IFavorite[];
   report: IReport[];
+  status: "ongoing" | "completed" | "cancelled";
   createdAt: Date;
   updatedAt: Date;
 }
