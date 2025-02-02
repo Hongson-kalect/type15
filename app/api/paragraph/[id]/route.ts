@@ -20,6 +20,9 @@ export async function GET(
       const references = await prisma.paragraph.findMany({
         where: { novelId: item.novelId },
         orderBy: { createdAt: "desc" },
+        include: {
+          novel: true,
+        },
         take: 10,
       }); // Adjust this filter based on your actual logic }, orderBy: { createdAt: 'desc', }, take: 10,
 

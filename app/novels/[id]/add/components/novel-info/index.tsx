@@ -1,11 +1,6 @@
-"use client";
-
 import { INovel } from "@/interface/schema/schema.interface";
 import { relativeDate } from "@/lib/utils";
-import { ArrowLeft } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 import * as React from "react";
 
 const ItemInfo = ({ label, value }: { label: string; value: string }) => {
@@ -16,18 +11,16 @@ const ItemInfo = ({ label, value }: { label: string; value: string }) => {
     </div>
   );
 };
+
 export interface INovelInfoProps {
-  novelInfo: INovel;
+  novelInfo?: INovel;
 }
 
 export default function NovelInfo({ novelInfo }: INovelInfoProps) {
   if (!novelInfo)
     return <div className="bg-white px-4 py-3 h-full rounded-xl">No data</div>;
   return (
-    <Link
-      href={`/novels/${novelInfo.id}`}
-      className="bg-white px-4 py-3 rounded-xl"
-    >
+    <div className="bg-white px-4 py-3 rounded-xl">
       <p className="text-gray-800 text-lg font-medium line-clamp-2">
         {novelInfo?.name}
       </p>
@@ -46,11 +39,7 @@ export default function NovelInfo({ novelInfo }: INovelInfoProps) {
       <ItemInfo label="Name" value={novelInfo.name} />
       <ItemInfo
         label="Author"
-        value={
-          novelInfo?.user?.user.name ||
-          novelInfo.user?.profile?.displayName ||
-          ""
-        }
+        value={novelInfo?.user?.user.name || novelInfo.user.profile.displayName}
       />
       <ItemInfo
         label="Publish"
@@ -61,6 +50,6 @@ export default function NovelInfo({ novelInfo }: INovelInfoProps) {
         label="Chapter"
         value={novelInfo._count?.paragraphs?.toString() || "0"}
       />
-    </Link>
+    </div>
   );
 }

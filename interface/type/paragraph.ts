@@ -27,6 +27,23 @@ export type AddParagraphValue = {
   ps: string;
 };
 
+export type AddNovelParagraph = {
+  novelId?: number;
+  chapter: string;
+  image: string;
+  title: string;
+  content: string;
+  desc: string;
+  ps: string;
+  scope: "public" | "protected" | "private";
+  protectedType: "pass" | "sell";
+  password?: string;
+  price?: number;
+  priceUnitId?: number;
+  languageId?: number;
+  userId: number;
+};
+
 export type UserActionState = {
   like: number;
   isLiked: boolean;

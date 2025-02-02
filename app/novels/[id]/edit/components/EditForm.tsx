@@ -10,9 +10,11 @@ import * as React from "react";
 import { toast } from "react-toastify";
 
 import defaultBackground from "@/assets/images/default-background.jpg";
+import { INovel } from "@/interface/schema/schema.interface";
 
 export interface IEditNovelFormProps {
   editNovel: UseMutateFunction<unknown, Error, AddNovelValue, unknown>;
+  novelValue: INovel;
 }
 
 export default function EditNovelForm(props: IEditNovelFormProps) {
@@ -27,6 +29,15 @@ export default function EditNovelForm(props: IEditNovelFormProps) {
     if (!userInfo?.id) return toast.error("Please login to use this function");
     props.editNovel(novelValue);
   };
+
+  React.useEffect(() => {
+    if (!props.novelValue) return;
+    setNovelValue({
+      image: props.novelValue.image,
+      name: props.novelValue.name,
+      desc: props.novelValue.desc,
+    });
+  }, [props.novelValue]);
   return (
     <div className="bg-white p-4 rounded-lg flex-1">
       <form
@@ -109,7 +120,7 @@ export default function EditNovelForm(props: IEditNovelFormProps) {
             className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
             <Plus />
-            Add Novel
+            Edit Novel
           </Button>
         </div>
       </form>

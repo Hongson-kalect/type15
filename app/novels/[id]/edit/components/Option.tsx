@@ -34,8 +34,11 @@ const EditNovOption = ({ options, setOptions }: EditNovOptionProps) => {
     queryFn: getCurrencies,
   });
 
+  console.log("options", options);
+
   return (
     <div className="w-[320px] bg-white p-4 rounded-lg shadow-md">
+      <div>Chưa làm chi tiết về sửa, vì có phần password, xác thực các thứ</div>
       <div className="mb-4 flex gap-4 items-center">
         <p className="font-semibold w-32">Language</p>
         <Select

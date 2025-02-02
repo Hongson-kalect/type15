@@ -69,7 +69,7 @@ export default function TypeArea({
   const [prevDebounce, setPrevDebounce] = React.useState("");
 
   const [deletedCount, setDeletedCount] = React.useState(0);
-  const [initTime, setInitTime] = React.useState(10);
+  const [initTime, setInitTime] = React.useState(100000);
   const [time, setTime] = React.useState(page === "speed-test" ? initTime : 0);
   const [isNextWord, setIsNextWord] = React.useState(false);
   const intervalRef = React.useRef<NodeJS.Timeout | null>(null);

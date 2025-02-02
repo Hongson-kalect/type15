@@ -13,13 +13,15 @@ export async function GET(
       where: { id: Number(id) },
       select: {
         id: true,
+        name: true,
         desc: true,
+        image: true,
         createdAt: true,
         scope: true,
+        protectedType: true,
         languageId: true,
         status: true,
         tag: true,
-        name: true,
         price: true,
         priceUnitId: true,
         user: {

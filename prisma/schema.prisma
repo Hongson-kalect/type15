@@ -113,11 +113,11 @@ model Novel {
   desc              String?
   image              String?
   scope      String  @default("public")
-protectedType String @default("pass")
-password   String  @default("")
-price      Int  @default(0)
-priceUnitId Int?
-priceUnit  Currency? @relation(fields: [priceUnitId], references: [id])
+  protectedType String @default("pass")
+  password   String  @default("")
+  price      Int  @default(0)
+  priceUnitId Int?
+  priceUnit  Currency? @relation(fields: [priceUnitId], references: [id])
   paragraphs        Paragraph[]
   createdAt         DateTime   @default(now())
   updatedAt         DateTime   @updatedAt

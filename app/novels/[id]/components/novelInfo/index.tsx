@@ -16,6 +16,7 @@ import Link from "next/link";
 import ParaItem from "@/app/paragraphs/components/list/paraItem";
 import ParagraphItem from "./ParagraphItem";
 import { mainLayoutStore } from "@/store/mainLayout.store";
+import ParaReferItem from "@/app/paragraphs/[id]/components/reference/paraReferItem";
 
 const ItemInfo = ({ label, value }: { label: string; value: string }) => {
   return (
@@ -62,7 +63,7 @@ export default function NovelInfo({ novelInfo }: INovelInfoProps) {
   return (
     <div>
       <div
-        onClick={() => router.back()}
+        onClick={() => router.push("/novels")}
         className="flex gap-2 items-center line-clamp-1 hover:w-full px-4 h-8 text-gray-500 italic hover:text-gray-800 hover:not-italic hover:-translate-x-4 duration-200"
       >
         <ArrowLeft />
@@ -90,17 +91,17 @@ export default function NovelInfo({ novelInfo }: INovelInfoProps) {
               height={150}
             />
             <div className="flex flex-col gap-2">
-              <Link href={`/novel/${novelInfo.id}/add`}>
+              <Link href={`/novels/${novelInfo.id}/add`}>
                 <Button size="sm">
                   <Plus /> Add Chapter
                 </Button>
               </Link>
-              <Link href={`/novel/${novelInfo.id}/edit`}>
+              <Link href={`/novels/${novelInfo.id}/edit`}>
                 <Button size="sm" className="bg-orange-600 hover:bg-orange-700">
                   <Pencil /> Edit Novel
                 </Button>
               </Link>
-              <Link href={`/novel/${novelInfo.id}/edit`}>
+              <Link href={`/novels/${novelInfo.id}/edit`}>
                 <Button size="sm" className="bg-red-600 hover:bg-red-700">
                   <Trash /> Remove
                 </Button>
@@ -127,10 +128,10 @@ export default function NovelInfo({ novelInfo }: INovelInfoProps) {
 
           {novelInfo.paragraphs?.[0]?.id ? (
             <div className="flex gap-2 my-4">
-              <Link href={`/paragraph/${novelInfo.paragraphs?.[0].id}`}>
+              <Link href={`/paragraphs/${novelInfo.paragraphs?.[0].id}`}>
                 <Button size="sm">Start first chapter</Button>
               </Link>
-              <Link href={`/paragraph/${novelInfo.paragraphs.at(-1).id}`}>
+              <Link href={`/paragraphs/${novelInfo.paragraphs.at(-1).id}`}>
                 <Button size="sm">Start last chapter</Button>
               </Link>
             </div>
@@ -150,59 +151,7 @@ export default function NovelInfo({ novelInfo }: INovelInfoProps) {
               className={` description overflow-auto duration-500 flex-1 
                mt-1 ml-2`}
             >
-              {novelInfo.desc} 1 cái mô tả dài vãi nhái, không thể đơn giản đọc
-              bằng lời hết cái đống của nợ này, nên mặc định sẽ chỉ để 3 dòng
-              cho người ta đọc chơi chơi, khi mà người ta rảnh quá thì bấm vào
-              xem thêm thì mới hiển thị toàn bộ nội dùng cho người đọc lac mắt
-              chơi. Con mọe nó, viết quá trời văn mà nó ra được có 2 dòng thì
-              thiên lý ở đou, tức là bổn tọa phải viết thêm 77 49 dòng như này
-              nữa thì mới thể hiện được là cái mô tả này dài vãi chưởng aaaaa,
-              cmwdsfj adlsjfh wldskjf lawjsdh flwajhdf lhalwhfo;wuej ư;jf;ljwa
-              hlkwherfklawue holwehrflk awhiklhwe lkawjhrol wheliwaeh lkawhfi
-              ehflaksj bwoejfhlsd bowiuryhawekbr ơeh bằng lời hết cái đống của
-              nợ này, nên mặc định sẽ chỉ để 3 dòng cho người ta đọc chơi chơi,
-              khi mà người ta rảnh quá thì bấm vào xem thêm thì mới hiển thị
-              toàn bộ nội dùng cho người đọc lac mắt chơi. Con mọe nó, viết quá
-              trời văn mà nó ra được có 2 dòng thì thiên lý ở đou, tức là bổn
-              tọa phải viết thêm 77 49 dòng như này nữa thì mới thể hiện được là
-              cái mô tả này dài vãi chưởng aaaaa, cmwdsfj adlsjfh wldskjf
-              lawjsdh flwajhdf lhalwhfo;wuej ư;jf;ljwa hlkwherfklawue holwehrflk
-              awhiklhwe lkawjhrol wheliwaeh lkawhfi ehflaksj bwoejfhlsd
-              bowiuryhawekbr ơeh bằng lời hết cái đống của nợ này, nên mặc định
-              sẽ chỉ để 3 dòng cho người ta đọc chơi chơi, khi mà người ta rảnh
-              quá thì bấm vào xem thêm thì mới hiển thị toàn bộ nội dùng cho
-              người đọc lac mắt chơi. Con mọe nó, viết quá trời văn mà nó ra
-              được có 2 dòng thì thiên lý ở đou, tức là bổn tọa phải viết thêm
-              77 49 dòng như này nữa thì mới thể hiện được là cái mô tả này dài
-              vãi chưởng aaaaa, cmwdsfj adlsjfh wldskjf lawjsdh flwajhdf
-              lhalwhfo;wuej ư;jf;ljwa hlkwherfklawue holwehrflk awhiklhwe
-              lkawjhrol wheliwaeh lkawhfi ehflaksj bwoejfhlsd bowiuryhawekbr ơeh
-              bằng lời hết cái đống của nợ này, nên mặc định sẽ chỉ để 3 dòng
-              cho người ta đọc chơi chơi, khi mà người ta rảnh quá thì bấm vào
-              xem thêm thì mới hiển thị toàn bộ nội dùng cho người đọc lac mắt
-              chơi. Con mọe nó, viết quá trời văn mà nó ra được có 2 dòng thì
-              thiên lý ở đou, tức là bổn tọa phải viết thêm 77 49 dòng như này
-              nữa thì mới thể hiện được là cái mô tả này dài vãi chưởng aaaaa,
-              cmwdsfj adlsjfh wldskjf lawjsdh flwajhdf lhalwhfo;wuej ư;jf;ljwa
-              hlkwherfklawue holwehrflk awhiklhwe lkawjhrol wheliwaeh lkawhfi
-              ehflaksj bwoejfhlsd bowiuryhawekbr ơeh bằng lời hết cái đống của
-              nợ này, nên mặc định sẽ chỉ để 3 dòng cho người ta đọc chơi chơi,
-              khi mà người ta rảnh quá thì bấm vào xem thêm thì mới hiển thị
-              toàn bộ nội dùng cho người đọc lac mắt chơi. Con mọe nó, viết quá
-              trời văn mà nó ra được có 2 dòng thì thiên lý ở đou, tức là bổn
-              tọa phải viết thêm 77 49 dòng như này nữa thì mới thể hiện được là
-              cái mô tả này dài vãi chưởng aaaaa, cmwdsfj adlsjfh wldskjf
-              lawjsdh flwajhdf lhalwhfo;wuej ư;jf;ljwa hlkwherfklawue holwehrflk
-              awhiklhwe lkawjhrol wheliwaeh lkawhfi ehflaksj bwoejfhlsd
-              bowiuryhawekbr ơeh bằng lời hết cái đống của nợ này, nên mặc định
-              sẽ chỉ để 3 dòng cho người ta đọc chơi chơi, khi mà người ta rảnh
-              quá thì bấm vào xem thêm thì mới hiển thị toàn bộ nội dùng cho
-              người đọc lac mắt chơi. Con mọe nó, viết quá trời văn mà nó ra
-              được có 2 dòng thì thiên lý ở đou, tức là bổn tọa phải viết thêm
-              77 49 dòng như này nữa thì mới thể hiện được là cái mô tả này dài
-              vãi chưởng aaaaa, cmwdsfj adlsjfh wldskjf lawjsdh flwajhdf
-              lhalwhfo;wuej ư;jf;ljwa hlkwherfklawue holwehrflk awhiklhwe
-              lkawjhrol wheliwaeh lkawhfi ehflaksj bwoejfhlsd bowiuryhawekbr ơeh
+              {novelInfo.desc}
             </div>
             {/* {isDescOverflowing ? (
               <div
@@ -227,9 +176,12 @@ export default function NovelInfo({ novelInfo }: INovelInfoProps) {
           <h3 className="underline text-lg font-medium text-gray-800">
             Chapter:
           </h3>
-          {novelInfo.paragraphs?.map((item, index) => (
-            <ParagraphItem paragraph={item} key={index} />
-          ))}
+          <div className="flex flex-col gap-2 mt-2">
+            {novelInfo.paragraphs?.map((item, index) => (
+              <ParaReferItem paraInfo={item} key={index} />
+              // <ParagraphItem paragraph={item} key={index} />
+            ))}
+          </div>
         </div>
       </div>
 

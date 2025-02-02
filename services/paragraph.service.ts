@@ -1,9 +1,18 @@
 import { CreateParagraphDTO } from "@/interface/dto/paragraph.dto";
 import api from "./axios.instance";
-import { ParagraphFilterType, UserAction } from "@/interface/type/paragraph";
+import {
+  AddNovelParagraph,
+  ParagraphFilterType,
+  UserAction,
+} from "@/interface/type/paragraph";
 import { mainLayoutStore } from "@/store/mainLayout.store";
 
 export const createParagraphApi = async (data: CreateParagraphDTO) => {
+  const res = await api.post(`/api/paragraph`, data);
+  return res.data;
+};
+
+export const createNovelParagraphService = async (data: AddNovelParagraph) => {
   const res = await api.post(`/api/paragraph`, data);
   return res.data;
 };

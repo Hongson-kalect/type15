@@ -21,6 +21,17 @@ export const createNovelService = async (data: CreateNovelDTO) => {
   return res.data;
 };
 
+export const editNovelService = async ({
+  id,
+  data,
+}: {
+  id: number;
+  data: CreateNovelDTO;
+}) => {
+  const res = await api.put(`/api/novel/${id}`, data);
+  return res.data;
+};
+
 export const getNovelService = async (filter: NovelFilterType) => {
   const res = await api.get(`/api/novel`, { params: filter });
   return res.data;

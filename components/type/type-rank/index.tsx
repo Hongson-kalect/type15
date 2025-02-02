@@ -19,7 +19,7 @@ const RankItem = ({ result, rank }: IRankItemProps) => {
           rank === 1 ? "font-medium text-lg" : "text-sm"
         } `}
       >
-        {result.user?.username || "Guest"}
+        {result.user?.username || result.user?.user?.name || "Guest"}
       </td>
       <td className="text-blue-600 font-medium">{result.wpm}</td>
       <td>{result.cpm}</td>

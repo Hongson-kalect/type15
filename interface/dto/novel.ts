@@ -1,6 +1,6 @@
 export type CreateNovelDTO = {
   name: string;
-  // content: string;
+  image?: string;
   desc: string;
   // ps: string;
   languageId: number;
