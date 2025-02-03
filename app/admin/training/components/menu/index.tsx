@@ -11,6 +11,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { createMenuList } from "../../utils";
+import { Plus, PlusCircle } from "lucide-react";
 
 export interface ITrainingMenuProps {
   trainingList: ITraining[];
@@ -18,7 +19,8 @@ export interface ITrainingMenuProps {
 
 export default function TrainingMenu({ trainingList }: ITrainingMenuProps) {
   //   const { selectedTraining, setSelectedTraining, setIsAdd, isAdd } =
-  const { selectedTraining, setSelectedTraining } = useTrainingStore();
+  const { selectedTraining, setSelectedTraining, setIsAdd, isAdd } =
+    useTrainingStore();
   const [menu, setMenu] = React.useState<ITraining[]>([]);
 
   const params = useAppParams();
@@ -26,8 +28,17 @@ export default function TrainingMenu({ trainingList }: ITrainingMenuProps) {
   // Get the 'id' parameter
   const id = params("id");
   const trainingId = params("trainingId");
-  console.log("Current ID:", id);
-  console.log("Current Training ID:", trainingId);
+
+  const handleAddTraining = (item?: ITraining) => {
+    setIsAdd(true);
+    setSelectedTraining(
+      item || {
+        title: "",
+        content: "",
+        qill: "",
+      }
+    );
+  };
 
   React.useEffect(() => {
     if (trainingList?.length) setMenu(createMenuList(trainingList));
@@ -56,6 +67,7 @@ export default function TrainingMenu({ trainingList }: ITrainingMenuProps) {
           onClick={(e) => {
             e.stopPropagation();
             params("trainingId", item?.id?.toString());
+            setIsAdd(false);
             setSelectedTraining(item);
           }}
           className={`px-2 !py-2  cursor-pointer ${
@@ -67,6 +79,16 @@ export default function TrainingMenu({ trainingList }: ITrainingMenuProps) {
           } ${selected ? "bg-blue-200 " : ""}`}
         >
           <p>{item.title}</p>
+          <div
+            className="hover:opacity-100 duration-200 cursor-pointer"
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsAdd(true);
+              setSelectedTraining(item);
+            }}
+          >
+            <PlusCircle className="opacity-70" />
+          </div>
         </div>
       );
     }
@@ -76,6 +98,7 @@ export default function TrainingMenu({ trainingList }: ITrainingMenuProps) {
         <AccordionTrigger
           onClick={(e) => {
             e.stopPropagation();
+            setIsAdd(false);
             params("trainingId", item?.id?.toString());
             setSelectedTraining(item);
           }}
@@ -101,6 +124,19 @@ export default function TrainingMenu({ trainingList }: ITrainingMenuProps) {
               </div>
             );
           })}
+          <div
+            onClick={() => handleAddTraining(item)}
+            className={`py-1 hover:opacity-100 duration-200 cursor-pointer italic pl-2 flex gap-2 items-center opacity-80 ${
+              navIndex === 0
+                ? " text-orange-600 hover:bg-orange-100 text-sm"
+                : navIndex === 1
+                ? " text-gray-600 hover:bg-gray-100 text-xs"
+                : " text-gray-400 hover:bg-slate-100 text-[10px]"
+            }`}
+          >
+            <Plus />
+            <p>Add menu</p>
+          </div>
         </AccordionContent>
       </AccordionItem>
     );
@@ -108,13 +144,39 @@ export default function TrainingMenu({ trainingList }: ITrainingMenuProps) {
 
   return (
     <div className="bg-white  px-2 py-1 overflow-auto w-[320px] rounded-lg h-full">
-      <div className="text-xl font-light">Training Menu</div>
+      {/* <div className="text-xl font-light">Training Menu</div> */}
 
-      <Accordion type="multiple" className="mt-3">
+      <Accordion
+        type="multiple"
+        // collapsible={true}
+        className=" bg-white px-4 py-3 rounded-lg h-full overflow-auto"
+      >
+        <h2 className="text-center border-b text-xl pb-2 mb-3">
+          Training menu
+        </h2>
+        {!menu ? (
+          <div>Loading...</div>
+        ) : (
+          menu?.map((item, index) => {
+            if (item?.parentId) return;
+            return <div key={index}>{renderItem(item, 0)}</div>;
+          })
+        )}
+
+        <div
+          onClick={() => handleAddTraining()}
+          className="text-blue-800 font-bold text-lg py-4 flex gap-2 items-center italic opacity-60 cursor-pointer hover:opacity-100 duration-200"
+        >
+          <PlusCircle />
+          <p>Add Training</p>
+        </div>
+      </Accordion>
+
+      {/* <Accordion type="multiple" className="mt-3">
         {menu.map((item) => {
           return renderItem(item);
         })}
-      </Accordion>
+      </Accordion> */}
     </div>
   );
 }

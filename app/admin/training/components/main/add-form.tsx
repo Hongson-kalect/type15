@@ -1,63 +1,90 @@
 "use client";
 
 import * as React from "react";
-import { useAdminTrainingStore } from "../_utils/store";
 import { Input } from "@/components/ui/input";
-import { TrainingType } from "../_utils/interface";
-// import Editor from "@/components/ui/quill";
 import { Button } from "@/components/ui/button";
 import { BiEdit, BiPlus } from "react-icons/bi";
-import axios from "axios";
 import { MdDelete } from "react-icons/md";
 import { toast } from "react-toastify";
-import { UseQueryResult } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useTrainingStore } from "@/store/training.store";
+import { ITraining } from "@/interface/schema/schema.interface";
+import {
+  createTrainingService,
+  deleteTrainingService,
+  updateTrainingService,
+} from "@/services/training.service";
 
-export interface ITrainingModifyProps {
-  query: UseQueryResult<TrainingType[], unknown>;
-}
-
-export default function TrainingModify(props: ITrainingModifyProps) {
+export default function TrainingModify() {
+  const queryClient = useQueryClient();
   const Editor = React.useMemo(
     () => React.lazy(() => import("@/components/ui/quill")),
     []
   );
   const { selectedTraining, isAdd, setIsAdd, setSelectedTraining } =
-    useAdminTrainingStore();
+    useTrainingStore();
 
   const [modifyTraining, setModifyTraining] = React.useState<
-    TrainingType | undefined
-  >(selectedTraining);
+    ITraining | undefined
+  >({
+    title: "",
+    content: "",
+    qill: "",
+    ...selectedTraining,
+  });
+
+  const refreshTraining = async () => {
+    await queryClient.refetchQueries({
+      queryKey: ["trainings"],
+    });
+  };
+
+  const deleteTrainingMutation = useMutation({
+    mutationFn: async () => deleteTrainingService({ id: selectedTraining?.id }),
+    mutationKey: ["deleteTraining"],
+    onSuccess: () => {
+      refreshTraining();
+      setIsAdd(false);
+      setSelectedTraining(undefined);
+    },
+  });
+
+  const createTrainingMutation = useMutation<ITraining>({
+    mutationFn: async () =>
+      createTrainingService({ trainingInfo: { ...modifyTraining } }),
+    mutationKey: ["createTraining"],
+    onSuccess: (data) => {
+      refreshTraining();
+      setIsAdd(false);
+      setSelectedTraining(data);
+      toast.success("Create training success");
+    },
+  });
+
+  const updateTrainingMutation = useMutation<ITraining>({
+    mutationFn: async () =>
+      updateTrainingService({ trainingInfo: { ...modifyTraining } }),
+    mutationKey: ["updateTraining"],
+    onSuccess: (data) => {
+      refreshTraining();
+      setSelectedTraining(data);
+      toast.success("Update training success");
+    },
+  });
 
   const handleModifyTraining = async () => {
     if (isAdd) {
-      const res = await axios.post("/api/training", {
-        ...modifyTraining,
-        parentId: selectedTraining?.id,
-      });
-      if (res.data) {
-        setIsAdd(false);
-        setSelectedTraining(res.data);
-        toast.success("Add training success");
-      }
+      createTrainingMutation.mutate();
     } else {
       if (!selectedTraining) return toast.error("Chưa chọn training");
-      const { id, children, ...rest } = modifyTraining;
-      const res = await axios.put("/api/training/" + selectedTraining.id, rest);
-      if (res.data){
-
-        setSelectedTraining(res.data);
-        toast.success("Edit training success");
-      }
+      updateTrainingMutation.mutate();
     }
-    props.query.refetch();
+    // refreshTraining()
   };
 
   const handleDeleteTraining = async () => {
     if (selectedTraining) {
-      await axios.delete("/api/training/" + selectedTraining.id);
-      props.query.refetch();
-      setIsAdd(false);
-      setSelectedTraining(undefined);
+      deleteTrainingMutation.mutate();
     }
   };
 
@@ -95,7 +122,7 @@ export default function TrainingModify(props: ITrainingModifyProps) {
           onChange={(e) =>
             setModifyTraining((prev) => {
               if (prev) return { ...prev, title: e.target.value };
-              return { title: e.target.value };
+              //   return { title: e.target.value };
             })
           }
         />
@@ -107,7 +134,7 @@ export default function TrainingModify(props: ITrainingModifyProps) {
           onChange={(e) =>
             setModifyTraining((prev) => {
               if (prev) return { ...prev, content: e.target.value };
-              return { content: e.target.value };
+              //   return { content: e.target.value };
             })
           }
         />
@@ -119,20 +146,10 @@ export default function TrainingModify(props: ITrainingModifyProps) {
           onChange={(value) =>
             setModifyTraining((prev) => {
               if (prev) return { ...prev, qill: value };
-              return { qill: value };
+              //   return { qill: value };
             })
           }
         />
-
-        {/* <Input
-          value={modifyTraining?.qill || ""}
-          onChange={(e) =>
-            setModifyTraining((prev) => {
-              if (prev) return { ...prev, qill: e.target.value };
-              return { qill: e.target.value };
-            })
-          }
-        /> */}
       </div>
       <div className="mt-4 flex items-center justify-center gap-2">
         <Button
@@ -149,7 +166,7 @@ export default function TrainingModify(props: ITrainingModifyProps) {
           onClick={handleDeleteTraining}
         >
           <MdDelete />
-          {/* {isAdd ? "Add training" : "Edit training"} */}
+          {isAdd ? "Add training" : "Edit training"}
         </Button>
       </div>
     </div>

@@ -521,7 +521,7 @@ export interface IWordRate {
 }
 
 export interface ITraining {
-  isDeleted: boolean;
+  isDeleted?: boolean;
   id?: number;
   title: string;
   content: string;

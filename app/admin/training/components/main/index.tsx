@@ -4,9 +4,10 @@ import TypeArea from "@/components/type/type-area";
 import { Result } from "@/components/type/type-result";
 import { ResultDetailType } from "@/interface/type/typing";
 import TrainingQuill from "./training-quill";
+import TrainingModify from "./add-form";
 
 export default function TrainingMain() {
-  const { selectedTraining } = useTrainingStore();
+  const { selectedTraining, isAdd } = useTrainingStore();
 
   const [isShowScore, setIsShowScore] = React.useState(false);
   const [resetType, setResetType] = React.useState(false);
@@ -17,6 +18,8 @@ export default function TrainingMain() {
       typedResult: undefined,
     })
   );
+
+  return <TrainingModify />;
 
   if (!selectedTraining)
     return (

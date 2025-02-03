@@ -11,6 +11,7 @@ export default function DefaultPage() {
     queryKey: ["trainings"],
     queryFn: async () => await getTrainingService(),
   });
+
   return (
     <div className="py-4 flex-1 flex px-6 gap-4">
       <TrainingMain />
