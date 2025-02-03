@@ -11,7 +11,7 @@ import {
   addTrainingScore,
 } from "@/services/type.service";
 import { useMutation, UseQueryResult } from "@tanstack/react-query";
-import { scrollTo, scrollToId } from "@/lib/utils";
+import { scrollTo } from "@/lib/utils";
 import { GrPowerReset } from "react-icons/gr";
 import { WordList } from "./WordList";
 import { Header } from "./Header";
@@ -27,8 +27,7 @@ import { Header } from "./Header";
 
 export interface ITypeAreaProps {
   initPara?: string;
-  timeType?: "countDown" | "countUp";
-  rankQuery: UseQueryResult<unknown>;
+  rankQuery?: UseQueryResult<unknown>;
   setResult: (result: ResultDetailType) => void;
   isFinish: boolean;
   setIsFinish: (value: boolean) => void;
@@ -40,7 +39,6 @@ export interface ITypeAreaProps {
 
 export default function TypeArea({
   initPara,
-  timeType,
   rankQuery,
   setResult,
   isFinish,
@@ -97,7 +95,7 @@ export default function TypeArea({
       // }
     },
     onSuccess: () => {
-      rankQuery.refetch();
+      if (rankQuery) rankQuery.refetch();
     },
   });
 

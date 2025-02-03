@@ -59,7 +59,6 @@ export default function ParaInfo({ data }: IParaInfoProps) {
             <TypeArea
               isFinish={isShowScore}
               setIsFinish={setIsShowScore}
-              // timeType="countDown"
               setResult={setResultDetail}
               isReset={resetType}
               setIsReset={setResetType}

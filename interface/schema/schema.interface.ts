@@ -519,3 +519,34 @@ export interface IWordRate {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface ITraining {
+  isDeleted: boolean;
+  id?: number;
+  title: string;
+  content: string;
+  qill: string;
+  index?: string;
+  parentId?: number; // Đây là khóa ngoại tham chiếu đến chính bảng Item
+  parent?: ITraining;
+  children?: ITraining[];
+  historys?: IHistory[];
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface IHistory {
+  isDeleted: boolean;
+  id: number;
+  userId: number;
+  user?: IAppUser;
+  paragraphId?: number;
+  paragraph?: IParagraph;
+  novelId?: number;
+  novel?: INovel;
+  trainingId?: number;
+  training?: ITraining;
+  time: Date[];
+  createdAt: Date;
+  updatedAt: Date;
+}

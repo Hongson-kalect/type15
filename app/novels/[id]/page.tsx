@@ -1,11 +1,11 @@
 "use client";
 
 import * as React from "react";
-import NovelInfo from "./components/novelInfo";
 import NovelRefer from "./components/reference";
 import { getNovelDetailService } from "@/services/novel.service";
 import { useQuery } from "@tanstack/react-query";
 import { INovel } from "@/interface/schema/schema.interface";
+import NovelInfo from "./components/novelinfo";
 
 export default function NovelDetail({
   params,

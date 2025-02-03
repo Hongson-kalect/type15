@@ -1,3 +1,4 @@
+import MainLayout from "@/layout/main";
 import * as React from "react";
 
 export interface IDefaultLayoutProps {
@@ -5,5 +6,5 @@ export interface IDefaultLayoutProps {
 }
 
 export default function DefaultLayout(props: IDefaultLayoutProps) {
-  return props.children;
+  return <MainLayout>{props.children}</MainLayout>;
 }

@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { ResultDetailType } from "@/interface/type/typing";
 import { ChevronDown, ChevronUp } from "lucide-react";

@@ -1,4 +1,5 @@
 "use client";
+
 import * as React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ResultDetailType } from "@/interface/type/typing";
@@ -33,7 +34,6 @@ const SpeedTest = () => {
       >
         <div className={`bg-white rounded-xl px-4 py-6 overflow-hidden `}>
           <TypeArea
-            timeType="countDown"
             rankQuery={rankQuery}
             isReset={resetType}
             setIsReset={setResetType}
