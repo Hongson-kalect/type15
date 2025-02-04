@@ -78,7 +78,7 @@ export default function CreateNovelParaForm({
   React.useEffect(() => {
     if (!novelDetail) return;
 
-    const lastPara = novelDetail?.paragraphs.at(-1);
+    const lastPara = novelDetail?.paragraphs[0];
     if (lastPara) {
       setLastChapter(lastPara?.chapter);
     }

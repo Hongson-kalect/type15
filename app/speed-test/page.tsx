@@ -29,10 +29,10 @@ const SpeedTest = () => {
     <div className=" p-4 pt-8 flex-1 px-6 overflow-auto" id="speed-test-page">
       <div
         className={`overflow-hidden duration-200 ${
-          isShowScore ? "h-0" : "h-[320px] mb-8"
+          isShowScore ? "h-0" : "h-[400px] mb-8"
         }`}
       >
-        <div className={`bg-white rounded-xl px-4 py-6 overflow-hidden `}>
+        <div className={`bg-white rounded-xl px-4 py-6 h-full`}>
           <TypeArea
             rankQuery={rankQuery}
             isReset={resetType}

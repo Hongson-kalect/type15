@@ -242,7 +242,7 @@ export default function TypeArea({
 
   React.useEffect(() => {
     setTypingWord("");
-    scrollTo("#char-" + wordIndex, ".words-wrapper");
+    scrollTo("#char-" + wordIndex, ".words-wrapper", 36);
     if (wordIndex >= paragraphsArray.length) {
       finishType();
     }
@@ -269,13 +269,16 @@ export default function TypeArea({
       <div className={`w-2/3 h-full flex flex-col`}>
         <Header time={time} />
         <div
-          className="relative bg-[#F5F6FA] px-4 py-3 rounded-lg flex-1 shadow-sm shadow-gray-300 "
+          className="relative bg-[#F5F6FA] px-4 py-3 rounded-lg flex-1 shadow-sm shadow-gray-300 overflow-auto hide-scroll h-full"
           style={{ border: "1px solid #d8d8d8" }}
         >
-          <div className="h-[150px] overflow-y-hidden words-wrapper">
-            {/* <div className=""> */}
+          <div
+            className={`${
+              isTyping ? "overflow-hidden" : ""
+            } words-wrapper h-full`}
+          >
             <div
-              className="text-2xl flex flex-wrap h-full text-gray-500"
+              className="co-khi-nao text-4xl pt-9 flex gap-y-1 flex-wrap h-full text-gray-500"
               style={{ wordSpacing: "8px" }}
             >
               <div id="first-word"></div>

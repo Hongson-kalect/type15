@@ -17,14 +17,15 @@ export function scrollTo(
   scrollContainer: string = "html",
   offset: number = 0
 ) {
-  const container = document.querySelector(
-    scrollContainer || "html"
-  ) as HTMLElement;
+  const container = document.querySelector(scrollContainer) as HTMLElement;
   const element = document.querySelector(target) as HTMLElement;
+
+  console.log("container", container);
+  console.log("element", element);
 
   if (!container || !element) return;
   container.scrollTo({
-    top: element.offsetTop - container.offsetTop,
+    top: element.offsetTop - container.offsetTop - offset,
     behavior: "smooth",
   });
 }
