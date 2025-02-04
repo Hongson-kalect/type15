@@ -12,7 +12,7 @@ export default function DefaultPage() {
     queryFn: async () => await getTrainingService(),
   });
   return (
-    <div className="py-4 flex-1 flex px-6 gap-4">
+    <div className="py-4 flex-1 flex px-6 gap-4 overflow-auto">
       <TrainingMain />
       <TrainingMenu trainingList={trainings} />
     </div>

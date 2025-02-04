@@ -26,49 +26,53 @@ export default function TrainingMain() {
     );
 
   return (
-    <div className="bg-gray-100 px-2 py-1 overflow-auto flex-1 rounded-lg h-full">
-      <div className="text-lg font-bold text-gray-800">
-        {"Training - "}
-        <span className="text-base text-gray-500">
-          {selectedTraining.title}
-        </span>
-      </div>
-      {!selectedTraining.content ? null : (
-        <TypeArea
-          // rankQuery={rankQuery}
-          isReset={resetType}
-          setIsReset={setResetType}
-          setResult={setResultDetail}
-          isFinish={isShowScore}
-          setIsFinish={setIsShowScore}
-          initPara={selectedTraining.content}
-          page="training"
-        />
-        // <TypeArea page="training" initPara={selectedTraining.content} />
-      )}
-
-      <div className="duration-200" id="type-result">
-        {resultDetail.score !== null ? (
-          <div
-            className={` rounded-lg ${
-              !isShowScore
-                ? "opacity-30"
-                : "shadow-xl border-blue-400 border-solid border-2 shadow-blue-500"
-            }`}
-          >
-            <Result
-              resultDetail={resultDetail}
-              reset={() => setResetType(true)}
-            />
+    <div className="flex-1 overflow-auto hide-scroll">
+      <div className="w-full flex flex-col overflow-auto gap-4">
+        <div className="bg-gray-100 px-2 py-1 overflow-auto flex-1 rounded-lg h-full">
+          <div className="text-lg font-bold text-gray-800">
+            {"Training - "}
+            <span className="text-base text-gray-500">
+              {selectedTraining.title}
+            </span>
           </div>
-        ) : null}
+
+          <div className="h-[300px] px-2 bg-white py-2 rounded-lg">
+            {!selectedTraining.content ? null : (
+              <TypeArea
+                // rankQuery={rankQuery}
+                isReset={resetType}
+                setIsReset={setResetType}
+                setResult={setResultDetail}
+                isFinish={isShowScore}
+                setIsFinish={setIsShowScore}
+                initPara={selectedTraining.content}
+                page="training"
+              />
+              // <TypeArea page="training" initPara={selectedTraining.content} />
+            )}
+          </div>
+        </div>
+        <div className="duration-200" id="type-result">
+          {resultDetail.score !== null ? (
+            <div
+              className={` rounded-lg ${
+                !isShowScore
+                  ? "opacity-30"
+                  : "shadow-xl border-blue-400 border-solid border-2 shadow-blue-500"
+              }`}
+            >
+              <Result
+                resultDetail={resultDetail}
+                reset={() => setResetType(true)}
+              />
+            </div>
+          ) : null}
+        </div>
+
+        {!selectedTraining?.qill ? null : (
+          <TrainingQuill quill={selectedTraining.qill} />
+        )}
       </div>
-
-      {!selectedTraining?.qill ? null : (
-        <TrainingQuill quill={selectedTraining.qill} />
-      )}
-
-      {/* <div>{JSON.stringify(selectedTraining, null, 2)}</div> */}
     </div>
   );
 }

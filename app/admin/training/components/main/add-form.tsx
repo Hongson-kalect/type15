@@ -30,7 +30,6 @@ export default function TrainingModify() {
     title: "",
     content: "",
     qill: "",
-    ...selectedTraining,
   });
 
   const refreshTraining = async () => {
@@ -50,8 +49,12 @@ export default function TrainingModify() {
   });
 
   const createTrainingMutation = useMutation<ITraining>({
-    mutationFn: async () =>
-      createTrainingService({ trainingInfo: { ...modifyTraining } }),
+    mutationFn: async () => {
+      const parentId = selectedTraining.id;
+      return createTrainingService({
+        trainingInfo: { ...modifyTraining, parentId },
+      });
+    },
     mutationKey: ["createTraining"],
     onSuccess: (data) => {
       refreshTraining();
@@ -101,6 +104,8 @@ export default function TrainingModify() {
     }
   }, [selectedTraining]);
 
+  console.log("selectedTraining :>> ", selectedTraining);
+
   if (!isAdd && !selectedTraining)
     return (
       <div className="flex-1 bg-white px-4 py-3 rounded-lg">
@@ -110,7 +115,7 @@ export default function TrainingModify() {
 
   return (
     <div className="flex-1 bg-white px-4 py-3 rounded-lg overflow-auto">
-      <h2 className="text-center border-b text-xl pb-2 mb-3">
+      <h2 className="text-center font-medium text-xl pb-2 mb-3">
         {isAdd ? "Add training" : "Edit training"}
       </h2>
 
@@ -153,21 +158,25 @@ export default function TrainingModify() {
       </div>
       <div className="mt-4 flex items-center justify-center gap-2">
         <Button
-          className={`${isAdd ? "bg-green-500" : "bg-orange-500"}`}
+          className={`${
+            isAdd
+              ? "bg-green-500 hover:bg-green-700"
+              : "bg-orange-500 hover:bg-orange-700"
+          }`}
           size={"lg"}
           onClick={handleModifyTraining}
         >
           {isAdd ? <BiPlus /> : <BiEdit />}
           {isAdd ? "Add training" : "Edit training"}
         </Button>
-        <Button
+        {/* <Button
           className={`bg-red-500`}
           size={"lg"}
           onClick={handleDeleteTraining}
         >
           <MdDelete />
           {isAdd ? "Add training" : "Edit training"}
-        </Button>
+        </Button> */}
       </div>
     </div>
   );
