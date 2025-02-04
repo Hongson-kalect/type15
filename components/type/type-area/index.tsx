@@ -51,6 +51,7 @@ export default function TypeArea({
   const { userInfo } = mainLayoutStore();
 
   const [paragraphs, setParagraphs] = React.useState(initPara || "");
+
   // const [userInput, setUserInput] = React.useState("");
   const [wordIndex, setWordIndex] = React.useState(0);
   const [isTyping, setIsTyping] = React.useState(false);
@@ -247,6 +248,10 @@ export default function TypeArea({
       finishType();
     }
   }, [wordIndex]);
+
+  React.useEffect(() => {
+    if (initPara) setParagraphs(initPara);
+  }, [initPara]);
 
   React.useEffect(() => {
     setTime(page === "speed-test" ? initTime : 0);

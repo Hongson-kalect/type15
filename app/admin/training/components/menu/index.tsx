@@ -70,7 +70,7 @@ export default function TrainingMenu({ trainingList }: ITrainingMenuProps) {
             setIsAdd(false);
             setSelectedTraining(item);
           }}
-          className={`px-2 !py-2  cursor-pointer ${
+          className={`px-2 !py-2  cursor-pointer flex ${
             navIndex === 0
               ? "text-blue-800  hover:bg-orange-100 font-bold text-lg py-4"
               : navIndex === 1
@@ -78,7 +78,7 @@ export default function TrainingMenu({ trainingList }: ITrainingMenuProps) {
               : "text-gray-600  hover:bg-slate-100 text-sm py-1"
           } ${selected ? "bg-blue-200 " : ""}`}
         >
-          <p>{item.title}</p>
+          <p className="flex-1 line-clamp-1">{item.title}</p>
           <div
             className="hover:opacity-100 duration-200 cursor-pointer"
             onClick={(e) => {
@@ -134,7 +134,7 @@ export default function TrainingMenu({ trainingList }: ITrainingMenuProps) {
                 : " text-gray-400 hover:bg-slate-100 text-[10px]"
             }`}
           >
-            <Plus />
+            <Plus size={16} />
             <p>Add menu</p>
           </div>
         </AccordionContent>
@@ -165,9 +165,9 @@ export default function TrainingMenu({ trainingList }: ITrainingMenuProps) {
 
         <div
           onClick={() => handleAddTraining()}
-          className="text-blue-800 font-bold text-lg py-4 flex gap-2 items-center italic opacity-60 cursor-pointer hover:opacity-100 duration-200"
+          className="text-blue-800 font-bold text-lg py-4 px-2 flex gap-2 items-center italic opacity-60 cursor-pointer hover:opacity-100 duration-200"
         >
-          <PlusCircle />
+          <PlusCircle size={24} />
           <p>Add Training</p>
         </div>
       </Accordion>

@@ -45,14 +45,17 @@ export default function TrainingMenu({ trainingList }: ITrainingMenuProps) {
     }
   }, [trainingId, trainingList]);
 
+  React.useEffect(() => {
+    const input = document.getElementById("input-text") as HTMLTextAreaElement;
+    if (input) input.focus();
+  }, [selectedTraining]);
+
   const renderItem = (item: ITraining, navIndex: number = 0) => {
     const selected = selectedTraining?.id === item?.id;
-    // let navIndex = 0;
-
-    // if (item.children?.length > 0) {
     if (!item.children || !item.children.length) {
       return (
         <div
+          key={item.id}
           onClick={(e) => {
             e.stopPropagation();
             params("trainingId", item?.id?.toString());
@@ -72,7 +75,7 @@ export default function TrainingMenu({ trainingList }: ITrainingMenuProps) {
     }
 
     return (
-      <AccordionItem value={`item-${item.id}`}>
+      <AccordionItem key={item.id} value={`item-${item.id}`}>
         <AccordionTrigger
           onClick={(e) => {
             e.stopPropagation();
@@ -111,6 +114,9 @@ export default function TrainingMenu({ trainingList }: ITrainingMenuProps) {
       <div className="text-xl font-light">Training Menu</div>
 
       <Accordion type="multiple" className="mt-3">
+        {/* {menu.map((item) => {
+          return renderItem(item);
+        })} */}
         {menu.map((item) => {
           return renderItem(item);
         })}
