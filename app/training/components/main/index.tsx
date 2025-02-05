@@ -4,6 +4,7 @@ import TypeArea from "@/components/type/type-area";
 import { Result } from "@/components/type/type-result";
 import { ResultDetailType } from "@/interface/type/typing";
 import TrainingQuill from "./training-quill";
+import SlateQuill from "@/components/ui/quill/slate-render";
 
 export default function TrainingMain() {
   const { selectedTraining } = useTrainingStore();
@@ -72,7 +73,10 @@ export default function TrainingMain() {
         </div>
 
         {!selectedTraining?.qill ? null : (
-          <TrainingQuill quill={selectedTraining.qill} />
+          // <TrainingQuill quill={selectedTraining.qill} />
+          <div className="bg-white">
+            <SlateQuill content={selectedTraining?.qill} />
+          </div>
         )}
       </div>
     </div>

@@ -1,3 +1,5 @@
+import { Descendant, Node } from "slate";
+
 export interface IAppUser {
   _count?: {
     [key: string]: number;
@@ -525,7 +527,7 @@ export interface ITraining {
   id?: number;
   title: string;
   content: string;
-  qill: string;
+  qill: Descendant[];
   index?: string;
   parentId?: number; // Đây là khóa ngoại tham chiếu đến chính bảng Item
   parent?: ITraining;

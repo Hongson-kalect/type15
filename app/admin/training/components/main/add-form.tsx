@@ -16,6 +16,7 @@ import {
 } from "@/services/training.service";
 import Editor from "@/components/ui/quill";
 import SlateEditor from "@/components/ui/quill/slate-quill";
+import SlateQuill from "@/components/ui/quill/slate-render";
 
 export default function TrainingModify() {
   const queryClient = useQueryClient();
@@ -31,7 +32,7 @@ export default function TrainingModify() {
   >({
     title: "",
     content: "",
-    qill: "",
+    qill: [{ type: "paragraph", children: [{ text: "Write something" }] }],
   });
 
   const refreshTraining = async () => {
@@ -99,14 +100,12 @@ export default function TrainingModify() {
         // ...modifyTraining,
         title: "",
         content: "",
-        qill: "",
+        qill: [{ type: "paragraph", children: [{ text: "Write something" }] }],
       });
     } else {
       setModifyTraining({ ...selectedTraining });
     }
   }, [selectedTraining]);
-
-  console.log("selectedTraining :>> ", selectedTraining);
 
   if (!isAdd && !selectedTraining)
     return (
@@ -157,8 +156,21 @@ export default function TrainingModify() {
             })
           }
         /> */}
-        <SlateEditor />
+        <SlateEditor
+          slate={
+            modifyTraining?.qill || [
+              { type: "paragraph", children: [{ text: "No content" }] },
+            ]
+          }
+          setSlate={(val) =>
+            setModifyTraining((prev) => {
+              if (prev) return { ...prev, qill: val };
+              //   return { qill: value };
+            })
+          }
+        />
       </div>
+
       <div className="mt-4 flex items-center justify-center gap-2">
         <Button
           className={`${
@@ -172,15 +184,15 @@ export default function TrainingModify() {
           {isAdd ? <BiPlus /> : <BiEdit />}
           {isAdd ? "Add training" : "Edit training"}
         </Button>
-        {/* <Button
-          className={`bg-red-500`}
-          size={"lg"}
-          onClick={handleDeleteTraining}
-        >
-          <MdDelete />
-          {isAdd ? "Add training" : "Edit training"}
-        </Button> */}
       </div>
+      <p className="text-2xl font-semibold underline italic mt-4">Preview:</p>
+      <SlateQuill
+        content={
+          modifyTraining?.qill || [
+            { type: "paragraph", children: [{ text: "No content" }] },
+          ]
+        }
+      />
     </div>
   );
 }

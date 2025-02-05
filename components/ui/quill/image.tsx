@@ -53,12 +53,22 @@ export const withImages = (editor) => {
 
 const insertImage = async (editor, url) => {
   const text = { text: "" };
-  const base64 = await urlToBase64(url);
-  const image: ImageElement = {
-    type: "image",
-    url: base64,
-    children: [text],
-  };
+  let image: ImageElement;
+
+  try {
+    const base64 = await urlToBase64(url);
+    image = {
+      type: "image",
+      url: base64,
+      children: [text],
+    };
+  } catch (error) {
+    image = {
+      type: "image",
+      url,
+      children: [text],
+    };
+  }
   Transforms.insertNodes(editor, image);
   Transforms.insertNodes(editor, {
     type: "paragraph",
@@ -149,7 +159,7 @@ export const InsertImageButton = () => {
         // };
         // reader.readAsDataURL(file);
         new Compressor(file, {
-          quality: 0.1, // Adjust the quality as needed
+          quality: 0.2, // Adjust the quality as needed
           success(result) {
             const reader = new FileReader();
             reader.onload = (e) => {

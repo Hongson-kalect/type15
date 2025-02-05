@@ -248,7 +248,7 @@ export default function TypeArea({
 
   React.useEffect(() => {
     if (page === "speed-test" && paragraphsArray.length <= wordIndex + 100) {
-      const addText = getWord();
+      const addText = getWord({});
       setParagraphs((prev) => {
         if (prev) return prev + " " + addText;
         else return addText;

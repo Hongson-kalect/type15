@@ -7,6 +7,7 @@ import {
   createEditor,
   Descendant,
   Element as SlateElement,
+  Node,
 } from "slate";
 import { withHistory } from "slate-history";
 import { Button, Icon, Toolbar } from "./components";
@@ -39,6 +40,7 @@ import {
   InsertImageLinkButton,
   withImages,
 } from "./image";
+import { ITraining } from "@/interface/schema/schema.interface";
 
 const HOTKEYS = {
   "mod+b": "bold",
@@ -50,22 +52,28 @@ const HOTKEYS = {
 const LIST_TYPES = ["numbered-list", "bulleted-list"];
 const TEXT_ALIGN_TYPES = ["left", "center", "right", "justify"];
 
-const RichTextExample = () => {
-  const renderElement = useCallback((props) => <Element {...props} />, []);
-  const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
+const RichTextExample = ({
+  slate,
+  setSlate,
+}: {
+  slate: Descendant[];
+  setSlate: (val: Descendant[]) => void;
+}) => {
+  const renderElement = useCallback(
+    (props) => <RenderElement {...props} />,
+    []
+  );
+  const renderLeaf = useCallback((props) => <RenderLeaf {...props} />, []);
   const [editor] = useState(() => {
     return withImages(withChecklists(withReact(createEditor())));
   });
-
-  console.log("editor :>> ", editor);
-  console.log("initialValue :>> ", initialValue);
 
   return (
     <div className="slate-quill my-2">
       <Slate
         editor={editor}
-        onValueChange={(value) => console.log(value)}
-        initialValue={initialValue}
+        onValueChange={(value) => setSlate(value)}
+        initialValue={slate}
       >
         <div className="px-2 pt-2 pb-4 bg-slate-300">
           <Toolbar>
@@ -114,7 +122,7 @@ const RichTextExample = () => {
             className="outline-gray-300 px-1 py-2"
             renderElement={renderElement}
             renderLeaf={renderLeaf}
-            placeholder="Enter some rich text…"
+            placeholder="What you want to say?"
             spellCheck
             autoFocus
             onKeyDown={(event) => {
@@ -212,7 +220,7 @@ const isMarkActive = (editor, format) => {
   return marks ? marks[format] === true : false;
 };
 
-const Element = (props) => {
+export const RenderElement = (props) => {
   const { attributes, children, element } = props;
   const style = { textAlign: element.align };
   switch (element.type) {
@@ -280,7 +288,7 @@ const Element = (props) => {
   }
 };
 
-const Leaf = ({ attributes, children, leaf }) => {
+export const RenderLeaf = ({ attributes, children, leaf }) => {
   if (leaf.bold) {
     children = <strong>{children}</strong>;
   }
