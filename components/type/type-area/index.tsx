@@ -15,6 +15,8 @@ import { scrollTo } from "@/lib/utils";
 import { GrPowerReset } from "react-icons/gr";
 import { WordList } from "./WordList";
 import { Header } from "./Header";
+import { createHistoryService } from "@/services/history.service";
+import { IHistory, ILanguage } from "@/interface/schema/schema.interface";
 // import { GrPowerReset } from "react-icons/gr";
 // import { caculScore, getWord, pushScore } from "./_utils";
 // import { Header } from "./Header";
@@ -35,6 +37,7 @@ export interface ITypeAreaProps {
   setIsReset: (value: boolean) => void;
   page?: "training" | "speed-test" | "paragraph";
   targetId?: number;
+  language?: string;
 }
 
 export default function TypeArea({
@@ -47,6 +50,7 @@ export default function TypeArea({
   setIsReset,
   page,
   targetId,
+  language,
 }: ITypeAreaProps) {
   const { userInfo } = mainLayoutStore();
 
@@ -74,6 +78,10 @@ export default function TypeArea({
   const intervalRef = React.useRef<NodeJS.Timeout | null>(null);
   const inputRef = React.useRef<HTMLTextAreaElement | null>(null);
 
+  const [typeLanguage, setLanguage] = React.useState<ILanguage | string>(
+    language || ""
+  );
+
   const {
     mutate: addScoreMutation,
     // error,
@@ -97,6 +105,25 @@ export default function TypeArea({
     },
     onSuccess: () => {
       if (rankQuery) rankQuery.refetch();
+    },
+  });
+
+  const {
+    mutate: createHistory,
+    error,
+    isLoading,
+  } = useMutation<IHistory>({
+    mutationKey: ["createHistory"],
+    mutationFn: () =>
+      createHistoryService({
+        paragraphId: page === "paragraph" ? targetId : null,
+        trainingId: page === "training" ? targetId : null,
+      }),
+    onSuccess: () => {
+      // onSucess
+    },
+    onError: () => {
+      // onError
     },
   });
 
@@ -157,6 +184,7 @@ export default function TypeArea({
       userInfo?.languageId
     ) {
       addScoreMutation({ score: result.score });
+      createHistory();
     }
     setIsFinish(true);
     // scrollToId("type-result");
@@ -272,18 +300,18 @@ export default function TypeArea({
       }`}
     >
       <div className={`w-2/3 h-full flex flex-col`}>
-        <Header time={time} />
+        <Header setLanguage={setLanguage} language={typeLanguage} time={time} />
         <div
           className="relative bg-[#F5F6FA] px-4 py-3 rounded-lg flex-1 shadow-sm shadow-gray-300 overflow-auto hide-scroll h-full"
           style={{ border: "1px solid #d8d8d8" }}
         >
           <div
-            className={`${
-              isTyping ? "overflow-hidden" : ""
+            className={`
+              overflow-hidden hover:overflow-auto hide-scroll
             } words-wrapper h-full`}
           >
             <div
-              className="co-khi-nao text-4xl pt-9 flex gap-y-1 flex-wrap h-full text-gray-500"
+              className="text-4xl pt-9 flex gap-y-1 flex-wrap h-full text-gray-500"
               style={{ wordSpacing: "8px" }}
             >
               <div id="first-word"></div>

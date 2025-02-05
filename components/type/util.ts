@@ -97,16 +97,22 @@ export const calcuResult = ({
 };
 
 
-export const getWord = () => {
-  const type = "basic"; //basic normal extreme master
-  //type này sẽ lấy từ settings
+export const getWord = ({
+  language,
+  level = "basic",
+}: {
+  language?: number;
+  level?: "basic" | "normal" | "hard" | "expert" | "master";
+  wordRate?: number;
+}) => {
+  //level này sẽ lấy từ settings
   // wordRate and words should be fetched from server
 
   let addWord = "";
   while (addWord.split(" ").length < 30) {
     const gacha = Math.floor(Math.random() * 100);
     let wordType = "";
-    const selectedWordType = Object.entries(wordRate[type]).find(
+    const selectedWordType = Object.entries(wordRate[level]).find(
       ([key, value]) => {
         return value >= gacha;
       }

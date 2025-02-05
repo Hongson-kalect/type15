@@ -14,13 +14,15 @@ import {
   deleteTrainingService,
   updateTrainingService,
 } from "@/services/training.service";
+import Editor from "@/components/ui/quill";
+import SlateEditor from "@/components/ui/quill/slate-quill";
 
 export default function TrainingModify() {
   const queryClient = useQueryClient();
-  const Editor = React.useMemo(
-    () => React.lazy(() => import("@/components/ui/quill")),
-    []
-  );
+  // const Editor = React.useMemo(
+  //   () => React.lazy(() => import("@/components/ui/quill")),
+  //   []
+  // );
   const { selectedTraining, isAdd, setIsAdd, setSelectedTraining } =
     useTrainingStore();
 
@@ -146,7 +148,7 @@ export default function TrainingModify() {
       </div>
       <div className="mt-3">
         <p>Training quill</p>
-        <Editor
+        {/* <Editor
           value={modifyTraining?.qill || ""}
           onChange={(value) =>
             setModifyTraining((prev) => {
@@ -154,7 +156,8 @@ export default function TrainingModify() {
               //   return { qill: value };
             })
           }
-        />
+        /> */}
+        <SlateEditor />
       </div>
       <div className="mt-4 flex items-center justify-center gap-2">
         <Button

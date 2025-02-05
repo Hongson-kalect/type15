@@ -4,6 +4,7 @@ import SessionProviderWrapper from "@/provider/session.provider";
 import { ToastContainer } from "react-toastify";
 import ReactQueryProvider from "@/provider/reactQuery.provider";
 import "./globals.css";
+import "../style/slate.css";
 import "react-quill-new/dist/quill.snow.css";
 
 const geistSans = Geist({

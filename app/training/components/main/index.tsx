@@ -47,6 +47,8 @@ export default function TrainingMain() {
                 setIsFinish={setIsShowScore}
                 initPara={selectedTraining.content}
                 page="training"
+                targetId={selectedTraining.id}
+                language="Training lang (anphabel, kanji,...)"
               />
               // <TypeArea page="training" initPara={selectedTraining.content} />
             )}

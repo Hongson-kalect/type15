@@ -2,10 +2,10 @@
 
 import * as React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getLanguages } from "@/services/mainLayout.service";
 import { ILanguage } from "@/interface/schema/schema.interface";
 import LanguageList from "./components/list";
 import LanguageHandler from "./components/handler";
+import { getLanguages } from "@/services/language.service";
 
 export default function DefaultPage() {
   const [selectedLanguage, setSelectedLanguage] = React.useState<

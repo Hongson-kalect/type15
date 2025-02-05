@@ -1,5 +1,6 @@
 "use client";
 
+import { Languages, WholeWord } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import * as React from "react";
@@ -46,7 +47,7 @@ export const CommonSideBar = () => {
       </h1>
 
       <div className="nav-list mt-5">
-        <SideBarItem
+        {/* <SideBarItem
           icon={<IoSearchOutline size={22} />}
           title="Speed test"
           href="/speed-test"
@@ -60,11 +61,26 @@ export const CommonSideBar = () => {
           icon={<BiBook size={22} />}
           title="Novel list"
           href="/novels"
+        /> */}
+        <SideBarItem
+          icon={<BiTrendingUp size={22} />}
+          title="Normal Layout"
+          href="/"
         />
         <SideBarItem
           icon={<BiTrendingUp size={22} />}
           title="Tranining"
-          href="/training"
+          href="/admin/training"
+        />
+        <SideBarItem
+          icon={<Languages size={22} />}
+          title="Languages"
+          href="/admin/language"
+        />
+        <SideBarItem
+          icon={<WholeWord size={22} />}
+          title="Words"
+          href="/admin/word"
         />
       </div>
     </div>

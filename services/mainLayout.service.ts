@@ -28,10 +28,6 @@ export const getUser = async (userSession: Session | null) => {
   return res.data;
 };
 
-export const getLanguages = async () => {
-  const res = await api.get("/api/language");
-  return res.data;
-};
 
 export const changeLanguage = async (languageId: number) => {
   const user = mainLayoutStore.getState().userInfo;

@@ -3,9 +3,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { Header } from "./header";
 import { CommonSideBar } from "./sidebar";
-import { getLanguages, getUser } from "@/services/mainLayout.service";
+import { getLanguages } from "@/services/language.service";
 import { useSession } from "next-auth/react";
 import { IAppUser } from "@/interface/schema/schema.interface";
+import { getUser } from "@/services/mainLayout.service";
 
 export interface ILayoutProps {
   children: React.ReactNode;

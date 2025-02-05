@@ -6,5 +6,5 @@ export interface IDefaultLayoutProps {
 }
 
 export default function DefaultLayout(props: IDefaultLayoutProps) {
-  return props.children;
+  return <div>{props.children}</div>;
 }

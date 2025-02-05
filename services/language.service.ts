@@ -2,6 +2,11 @@ import { AddLanguageDTO } from "@/interface/dto/language.dto";
 import { ILanguage } from "@/interface/schema/schema.interface";
 import api from "./axios.instance";
 
+export const getLanguages = async () => {
+  const res = await api.get("/api/language");
+  return res.data;
+};
+
 export const addLanguage = async (language: AddLanguageDTO) => {
   const res = await api.post("/api/language", language);
   return res.data;

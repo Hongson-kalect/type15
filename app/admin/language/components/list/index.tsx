@@ -1,20 +1,16 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import * as React from "react";
-import { FaPlus } from "react-icons/fa";
-import { ILanguageItem } from "../_utils/interface";
-import { useLanguageQuery } from "../_utils/query";
-import { useLanguageStore } from "../_utils/store";
+import { ILanguage } from "@/interface/schema/schema.interface";
+import { useMutation } from "@tanstack/react-query";
 import Image from "next/image";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { getLanguages } from "@/services/mainLayout.service";
+import { FaPlus } from "react-icons/fa";
 
 export interface ILanguageListProps {
-  languages: ILanguageItem[] | undefined;
-  setLanguage: (item: ILanguageItem) => void;
-  selectedLanguage: ILanguageItem | undefined;
-  setSelectedLanguage: (item: ILanguageItem) => void;
+  languages: ILanguage[] | undefined;
+  setLanguage: (item: ILanguage) => void;
+  selectedLanguage: ILanguage | undefined;
+  setSelectedLanguage: (item: ILanguage) => void;
 }
 
 export default function LanguageList({
@@ -35,7 +31,7 @@ export default function LanguageList({
     setSelectedLanguage(undefined);
   };
 
-  const handleSelectLanguage = (item: ILanguageItem) => {
+  const handleSelectLanguage = (item: ILanguage) => {
     setLanguage(item);
   };
 

@@ -17,7 +17,7 @@ import {
 } from "@/interface/schema/schema.interface";
 import { AddParagraphOption } from "@/interface/type/paragraph";
 import { getCurrencies } from "@/services/currency.service";
-import { getLanguages } from "@/services/mainLayout.service";
+import { getLanguages } from "@/services/language.service";
 import { getNovels } from "@/services/novel.service";
 import { useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";

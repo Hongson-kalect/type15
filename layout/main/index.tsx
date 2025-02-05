@@ -3,7 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Header } from "./header";
 import { CommonSideBar } from "./sidebar";
-import { getLanguages, getUser } from "@/services/mainLayout.service";
+import { getUser } from "@/services/mainLayout.service";
 import { useSession } from "next-auth/react";
 import { IAppUser } from "@/interface/schema/schema.interface";
 import { mainLayoutStore } from "@/store/mainLayout.store";
@@ -12,6 +12,7 @@ import { setLocalStorage } from "@/lib/localStorage";
 import { storage } from "@/constant/localStorage";
 import { setCookie } from "@/lib/cookies";
 import { cookie } from "@/constant/cookie";
+import { getLanguages } from "@/services/language.service";
 
 export interface ILayoutProps {
   children: React.ReactNode;

@@ -12,7 +12,7 @@ import { Switch } from "@/components/ui/switch";
 import { ICurrency, ILanguage } from "@/interface/schema/schema.interface";
 import { AddNovelOption } from "@/interface/type/novel";
 import { getCurrencies } from "@/services/currency.service";
-import { getLanguages } from "@/services/mainLayout.service";
+import { getLanguages } from "@/services/language.service";
 import { useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
 

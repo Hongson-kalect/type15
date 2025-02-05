@@ -13,6 +13,7 @@ export async function GET(
       where: { id: Number(id) },
       include: {
         novel: true,
+        language: true,
       },
     });
 

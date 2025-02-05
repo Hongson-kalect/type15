@@ -66,6 +66,7 @@ export default function ParaInfo({ data }: IParaInfoProps) {
               page="paragraph"
               rankQuery={rankQuery}
               targetId={data.id}
+              language={data.language.name || "Language"}
             />
           </div>
 

@@ -48,6 +48,11 @@ export const CommonSideBar = () => {
       <div className="nav-list mt-5">
         <SideBarItem
           icon={<IoSearchOutline size={22} />}
+          title="Admin layout"
+          href="/admin"
+        />
+        <SideBarItem
+          icon={<IoSearchOutline size={22} />}
           title="Speed test"
           href="/speed-test"
         />
