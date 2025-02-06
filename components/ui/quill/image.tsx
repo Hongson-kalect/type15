@@ -15,43 +15,17 @@ import { Delete, Images, ImageUp, Trash2Icon } from "lucide-react";
 import { useState } from "react";
 import Compressor from "compressorjs";
 
-export const withImages = (editor) => {
-  const { insertData, isVoid } = editor;
+// export const insertImage = (editor, url) => {
+//   const text = { text: "" };
+//   const image: ImageElement = { type: "image", url, children: [text] };
+//   Transforms.insertNodes(editor, image);
+//   Transforms.insertNodes(editor, {
+//     type: "paragraph",
+//     children: [{ text: "" }],
+//   });
+// };
 
-  editor.isVoid = (element) => {
-    return element.type === "image" ? true : isVoid(element);
-  };
-
-  editor.insertData = (data) => {
-    const text = data.getData("text/plain");
-    const { files } = data;
-
-    if (files && files.length > 0) {
-      for (const file of files) {
-        const reader = new FileReader();
-        const [mime] = file.type.split("/");
-
-        if (mime === "image") {
-          reader.addEventListener("load", () => {
-            const url = reader.result;
-            insertImage(editor, url);
-          });
-
-          reader.readAsDataURL(file);
-        }
-      }
-    } else if (isImageUrl(text)) {
-      insertImage(editor, urlToBase64(text));
-      //   insertImage(editor, text);
-    } else {
-      insertData(data);
-    }
-  };
-
-  return editor;
-};
-
-const insertImage = async (editor, url) => {
+export const insertImage = async (editor, url) => {
   const text = { text: "" };
   let image: ImageElement;
 

@@ -1,8 +1,7 @@
 import React, { useCallback, useState } from "react";
 import { createEditor } from "slate";
-import { RenderElement, RenderLeaf } from "./slate-quill";
+import { RenderElement, RenderLeaf, withImages } from "./slate-quill";
 import { Editable, Slate, withReact } from "slate-react";
-import { withImages } from "./image";
 import { withChecklists } from "./checkList";
 
 const SlateContentRenderer = ({ content }) => {

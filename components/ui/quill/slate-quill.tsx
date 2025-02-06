@@ -1,4 +1,26 @@
+import React, { useCallback, useMemo, useState } from "react";
+import imageExtensions from "image-extensions";
+import isUrl from "is-url";
 import isHotkey from "is-hotkey";
+import {
+  Transforms,
+  createEditor,
+  Descendant,
+  Editor,
+  Element as SlateElement,
+} from "slate";
+import {
+  Slate,
+  Editable,
+  useSlateStatic,
+  useSelected,
+  useFocused,
+  withReact,
+  ReactEditor,
+  useSlate,
+} from "slate-react";
+
+import { withHistory } from "slate-history";
 import {
   AArrowDown,
   AlignCenter,
@@ -20,25 +42,19 @@ import {
   SquareCheckBig,
   Underline,
 } from "lucide-react";
-import { useCallback, useState } from "react";
+
 import { FaBold } from "react-icons/fa";
-import {
-  createEditor,
-  Descendant,
-  Editor,
-  Element as SlateElement,
-  Transforms,
-} from "slate";
-import { Editable, Slate, useSlate, withReact } from "slate-react";
+
+import { css } from "@emotion/css";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "../tooltip";
-import { CheckListItemElement, withChecklists } from "./checkList";
+import { Button, Icon, Toolbar } from "./components";
+import { ImageElement } from "./customType";
 import { colors, fonts } from "./color";
-import { Button, Toolbar } from "./components";
 import { HoveringToolbar } from "./hoverToolbar";
 import {
   AddLinkButton,
@@ -48,13 +64,13 @@ import {
   RemoveLinkButton,
   withInlines,
 } from "./hyper-link";
+import { CheckListItemElement, withChecklists } from "./checkList";
 import {
   Image,
+  insertImage,
   InsertImageButton,
   InsertImageLinkButton,
-  withImages,
 } from "./image";
-
 const HOTKEYS = {
   "mod+b": "bold",
   "mod+i": "italic",
@@ -64,8 +80,7 @@ const HOTKEYS = {
 
 const LIST_TYPES = ["numbered-list", "bulleted-list"];
 const TEXT_ALIGN_TYPES = ["left", "center", "right", "justify"];
-
-const RichTextExample = ({
+const ImagesExample = ({
   slate,
   setSlate,
 }: {
@@ -88,8 +103,9 @@ const RichTextExample = ({
   });
 
   return (
-    <div className="slate-quill my-2">
+    <div className="slate-quill">
       <Slate
+        key={slate.length}
         editor={editor}
         onValueChange={(value) => setSlate(value)}
         initialValue={slate}
@@ -170,8 +186,8 @@ const RichTextExample = ({
               <Tooltip delayDuration={0}>
                 <TooltipTrigger asChild>
                   <div>
-                    <div className="!flex underline gap-1">
-                      <p className="text-xs   text-gray-500">
+                    <div className="!flex underline gap-1 ">
+                      <p className="text-xs w-16 text-ellipsis overflow-hidden text-nowrap   text-gray-500">
                         {selectionState.font}
                       </p>
 
@@ -180,7 +196,7 @@ const RichTextExample = ({
                   </div>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <div className="flex flex-wrap gap-2 w-[190px] justify-center">
+                  <div className="flex flex-col gap-2 justify-center">
                     {fonts.map((font) => (
                       <RadioButton
                         formats={fonts}
@@ -198,6 +214,8 @@ const RichTextExample = ({
             <BlockButton format="heading-1" icon={<Heading1 size={18} />} />
             <BlockButton format="heading-2" icon={<Heading2 size={18} />} />
             <BlockButton format="heading-3" icon={<Heading3 size={18} />} />
+            <BlockButton format="heading-4" icon={<Heading4 size={18} />} />
+            <BlockButton format="heading-4" icon={<Heading4 size={18} />} />
             <BlockButton format="heading-4" icon={<Heading4 size={18} />} />
             <BlockButton format="block-quote" icon={<Quote size={16} />} />
             <BlockButton
@@ -235,10 +253,10 @@ const RichTextExample = ({
           </Toolbar>
         </div>
         <div className="mt-2 p-2 border border-gray-300">
-          {/* <HoveringToolbar
+          <HoveringToolbar
             slate={slate}
             setSelectionState={setSelectionState}
-          /> */}
+          />
           <Editable
             className="outline-gray-300 px-1 py-2"
             renderElement={renderElement}
@@ -273,6 +291,41 @@ const RichTextExample = ({
       </Slate>
     </div>
   );
+};
+
+export const withImages = (editor) => {
+  const { insertData, isVoid } = editor;
+
+  editor.isVoid = (element) => {
+    return element.type === "image" ? true : isVoid(element);
+  };
+
+  editor.insertData = (data) => {
+    const text = data.getData("text/plain");
+    const { files } = data;
+
+    if (files && files.length > 0) {
+      for (const file of files) {
+        const reader = new FileReader();
+        const [mime] = file.type.split("/");
+
+        if (mime === "image") {
+          reader.addEventListener("load", () => {
+            const url = reader.result;
+            insertImage(editor, url);
+          });
+
+          reader.readAsDataURL(file);
+        }
+      }
+    } else if (isImageUrl(text)) {
+      insertImage(editor, text);
+    } else {
+      insertData(data);
+    }
+  };
+
+  return editor;
 };
 
 const toggleBlock = (editor, format) => {
@@ -335,6 +388,59 @@ const isBlockActive = (editor, format, blockType = "type") => {
 
   return !!match;
 };
+
+const Element = (props) => {
+  const { attributes, children, element } = props;
+
+  switch (element.type) {
+    case "image":
+      return <Image {...props} />;
+    default:
+      return <p {...attributes}>{children}</p>;
+  }
+};
+
+// const Image = ({ attributes, children, element }) => {
+//   const editor = useSlateStatic();
+//   const path = ReactEditor.findPath(editor, element);
+
+//   const selected = useSelected();
+//   const focused = useFocused();
+//   return (
+//     <div {...attributes}>
+//       {children}
+//       <div
+//         contentEditable={false}
+//         className={css`
+//           position: relative;
+//         `}
+//       >
+//         <img
+//           src={element.url}
+//           className={css`
+//             display: block;
+//             max-width: 100%;
+//             max-height: 20em;
+//             box-shadow: ${selected && focused ? "0 0 0 3px #B4D5FF" : "none"};
+//           `}
+//         />
+//         <Button
+//           active
+//           onClick={() => Transforms.removeNodes(editor, { at: path })}
+//           className={css`
+//             display: ${selected && focused ? "inline" : "none"};
+//             position: absolute;
+//             top: 0.5em;
+//             left: 0.5em;
+//             background-color: white;
+//           `}
+//         >
+//           <Icon>delete</Icon>
+//         </Button>
+//       </div>
+//     </div>
+//   );
+// };
 
 const isMarkActive = (editor, format) => {
   const marks = Editor.marks(editor);
@@ -478,6 +584,14 @@ export const RenderLeaf = ({ attributes, children, leaf }) => {
   return <span {...attributes}>{children}</span>;
 };
 
+const isImageUrl = (url) => {
+  if (!url) return false;
+  if (!isUrl(url)) return false;
+  const ext = new URL(url).pathname.split(".").pop();
+
+  return imageExtensions.includes(ext);
+};
+
 const BlockButton = ({ format, icon }) => {
   const editor = useSlate();
   return (
@@ -531,37 +645,11 @@ const RadioButton = ({ format, formats, icon, prefix = "" }) => {
 };
 
 const initialValue: Descendant[] = [
-  // {
-  //   type: "video",
-  //   url: "https://th.bing.com/th/id/OIP.yLf7kQVaLpxqCZX1VRHw-wHaEK?w=296&h=180&c=7&r=0&o=5&pid=1.7",
-  //   children: [{ text: "" }],
-  // },
-  {
-    type: "paragraph",
-    children: [
-      { text: "This is editable " },
-      { text: "rich", bold: true },
-      { text: " text, " },
-      { text: "much", italic: true },
-      { text: " better than a " },
-      { text: "<textarea>", code: true },
-      { text: "!" },
-    ],
-  },
-  {
-    type: "check-list-item",
-    checked: true,
-    children: [{ text: "Slide to the left." }],
-  },
   {
     type: "paragraph",
     children: [
       {
-        text: "Since it's rich text, you can do things like turn a selection of text ",
-      },
-      { text: "bold", bold: true },
-      {
-        text: ", or add a semantically rendered block quote in the middle of the page, like this:",
+        text: "In addition to nodes that contain editable text, you can also create other types of nodes, like images or videos.",
       },
     ],
   },
@@ -571,14 +659,26 @@ const initialValue: Descendant[] = [
     children: [{ text: "" }],
   },
   {
-    type: "block-quote",
-    children: [{ text: "A wise quote." }],
+    type: "paragraph",
+    children: [
+      {
+        text: "This example shows images in action. It features two ways to add images. You can either add an image via the toolbar icon above, or if you want in on a little secret, copy an image URL to your clipboard and paste it anywhere in the editor!",
+      },
+    ],
   },
   {
     type: "paragraph",
-    align: "center",
-    children: [{ text: "Try it out for yourself!" }],
+    children: [
+      {
+        text: "You can delete images with the cross in the top left. Try deleting this sheep:",
+      },
+    ],
+  },
+  {
+    type: "image",
+    url: "https://source.unsplash.com/zOwZKwZOZq8",
+    children: [{ text: "" }],
   },
 ];
 
-export default RichTextExample;
+export default ImagesExample;
