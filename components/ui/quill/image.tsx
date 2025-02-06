@@ -193,7 +193,7 @@ export const InsertImageButton = () => {
           openFileExplorer();
         }}
       >
-        <ImageUp size={20} color="blue" />
+        <ImageUp size={18} color="blue" />
       </Button>
     </div>
   );
@@ -213,7 +213,7 @@ export const InsertImageLinkButton = () => {
         url && insertImage(editor, url);
       }}
     >
-      <Images size={20} color="blue" />
+      <Images size={18} color="blue" />
     </Button>
   );
 };

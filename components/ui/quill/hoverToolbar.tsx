@@ -1,19 +1,89 @@
 import { css } from "@emotion/css";
-import { useEffect, useRef } from "react";
-import { Editor, Range } from "slate";
+import { Dispatch, SetStateAction, useEffect, useRef } from "react";
+import { Descendant, Editor, Range } from "slate";
 import { useFocused, useSlate } from "slate-react";
 
 import { Button, Icon, Menu, Portal } from "./components";
 import { Bold, Italic, Underline } from "lucide-react";
 
-export const HoveringToolbar = () => {
+export const HoveringToolbar = ({
+  slate,
+  setSelectionState,
+}: {
+  slate: Descendant[];
+  setSelectionState: Dispatch<
+    SetStateAction<{
+      color: string;
+      background: string;
+      align: string;
+      font: string;
+    }>
+  >;
+}) => {
   const ref = useRef<HTMLDivElement | null>(null);
   const editor = useSlate();
   const inFocus = useFocused();
+  const coloringIcon = (selection) => {
+    console.log("slate :>> ", slate);
+    if (!selection) return;
+
+    const startPointArray = slate[selection.anchor.path[0]];
+    const startPoint = startPointArray?.children?.[selection.anchor.path[1]];
+
+    if (startPoint) {
+      let color = "#000";
+      let bg = "#000";
+      let font = "system-ui";
+      let align = "left";
+      Object.entries(startPoint).map(([key]) => {
+        if (key.startsWith("color-")) {
+          color = key.split("-")[1];
+        }
+        if (key.startsWith("bg-")) {
+          bg = key.split("-")[1];
+        }
+        if (key.startsWith("font-")) {
+          font = key.split("-")[1];
+        }
+        if (key.startsWith("align-")) {
+          align = key.split("-")[1];
+        }
+      });
+
+      const obj = {
+        color,
+        background: bg,
+        font,
+        align,
+      };
+
+      setSelectionState((prev) => {
+        if (JSON.stringify(prev) === JSON.stringify(obj)) return prev;
+        return obj;
+      });
+      // Object.entries(startPoint).find(([key]) => {});
+      // const colorIcon = document.querySelector(
+      //   ".quill-text-color"
+      // ) as HTMLDivElement;
+      // const backgroundIcon = document.querySelector(
+      //   ".quill-background-color"
+      // ) as HTMLDivElement;
+
+      // if (colorIcon) {
+      //   colorIcon.style.color = color || "#000";
+      // }
+
+      // if (backgroundIcon) {
+      //   backgroundIcon.style.color = bg || "#000";
+      // }
+    }
+  };
 
   useEffect(() => {
     const el = ref.current;
     const { selection } = editor;
+
+    coloringIcon(selection);
 
     if (!el) {
       return;
@@ -54,6 +124,9 @@ export const HoveringToolbar = () => {
           background-color: #222;
           border-radius: 4px;
           transition: opacity 0.75s;
+          display: flex;
+          align-items: center;
+          gap: 8px;
         `}
         onMouseDown={(e) => {
           // prevent toolbar from taking focus away from editor

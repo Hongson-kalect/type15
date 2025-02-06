@@ -79,4 +79,10 @@
     blockquote q:after {
         content: close-quote;
     }
+    a{
+        font-style: italic;
+        color: blue;
+        text-decoration: underline;
+        cursor: pointer;
+    }
 }

@@ -1,23 +1,11 @@
-import React, { useCallback, useMemo, useState } from "react";
 import isHotkey from "is-hotkey";
-import { Editable, withReact, useSlate, Slate } from "slate-react";
 import {
-  Editor,
-  Transforms,
-  createEditor,
-  Descendant,
-  Element as SlateElement,
-  Node,
-} from "slate";
-import { withHistory } from "slate-history";
-import { Button, Icon, Toolbar } from "./components";
-import {
+  AArrowDown,
   AlignCenter,
   AlignJustify,
   AlignLeft,
   AlignRight,
-  Bold,
-  Check,
+  Baseline,
   Code,
   Heading1,
   Heading2,
@@ -26,21 +14,46 @@ import {
   Italic,
   List,
   ListOrdered,
+  PaintBucket,
   Quote,
   Square,
   SquareCheckBig,
   Underline,
 } from "lucide-react";
+import { useCallback, useState } from "react";
+import { FaBold } from "react-icons/fa";
+import {
+  createEditor,
+  Descendant,
+  Editor,
+  Element as SlateElement,
+  Transforms,
+} from "slate";
+import { Editable, Slate, useSlate, withReact } from "slate-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../tooltip";
 import { CheckListItemElement, withChecklists } from "./checkList";
-import { VideoElement } from "./withEmbeds";
+import { colors, fonts } from "./color";
+import { Button, Toolbar } from "./components";
 import { HoveringToolbar } from "./hoverToolbar";
+import {
+  AddLinkButton,
+  BadgeComponent,
+  EditableButtonComponent,
+  LinkComponent,
+  RemoveLinkButton,
+  withInlines,
+} from "./hyper-link";
 import {
   Image,
   InsertImageButton,
   InsertImageLinkButton,
   withImages,
 } from "./image";
-import { ITraining } from "@/interface/schema/schema.interface";
 
 const HOTKEYS = {
   "mod+b": "bold",
@@ -65,7 +78,13 @@ const RichTextExample = ({
   );
   const renderLeaf = useCallback((props) => <RenderLeaf {...props} />, []);
   const [editor] = useState(() => {
-    return withImages(withChecklists(withReact(createEditor())));
+    return withInlines(withImages(withChecklists(withReact(createEditor()))));
+  });
+  const [selectionState, setSelectionState] = useState({
+    color: "#000",
+    background: "#000",
+    align: "left",
+    font: "system-ui",
   });
 
   return (
@@ -75,33 +94,132 @@ const RichTextExample = ({
         onValueChange={(value) => setSlate(value)}
         initialValue={slate}
       >
-        <div className="px-2 pt-2 pb-4 bg-slate-300">
+        <div className="px-8 py-2 bg-white border border-gray-700 flex items-center">
           <Toolbar>
-            <MarkButton format="bold" icon={<Bold size={20} />} />
-            <MarkButton format="italic" icon={<Italic size={20} />} />
-            <MarkButton format="underline" icon={<Underline size={20} />} />
-            <MarkButton format="code" icon={<Code size={20} />} />
-            <BlockButton format="heading-1" icon={<Heading1 size={20} />} />
+            <MarkButton format="bold" icon={<FaBold size={14} />} />
+            <MarkButton format="italic" icon={<Italic size={14} />} />
+            <MarkButton format="underline" icon={<Underline size={16} />} />
+            <MarkButton format="code" icon={<Code size={16} />} />
+            <TooltipProvider>
+              <Tooltip delayDuration={0}>
+                <TooltipTrigger asChild>
+                  <div
+                    className="border"
+                    style={{ color: selectionState.color }}
+                  >
+                    <Baseline className="cursor-pointer" size={18} />
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <div className="flex flex-wrap gap-2 w-[190px] justify-center">
+                    {colors.map((color) => (
+                      <RadioButton
+                        formats={colors}
+                        key={color}
+                        prefix="color-"
+                        format={color}
+                        icon={
+                          <Square
+                            className="border"
+                            style={{ backgroundColor: color }}
+                            size={16}
+                            color={"transparent"}
+                          />
+                        }
+                      />
+                    ))}
+                  </div>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+
+            <TooltipProvider>
+              <Tooltip delayDuration={0}>
+                <TooltipTrigger asChild>
+                  <div
+                    className="border"
+                    style={{ color: selectionState.background }}
+                  >
+                    <PaintBucket className="cursor-pointer" size={18} />
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <div className="flex flex-wrap gap-2 w-[190px] justify-center">
+                    {colors.map((color) => (
+                      <RadioButton
+                        formats={colors}
+                        key={color}
+                        format={color}
+                        prefix="bg-"
+                        icon={
+                          <Square
+                            className="border"
+                            style={{ backgroundColor: color }}
+                            size={16}
+                            color={"transparent"}
+                          />
+                        }
+                      />
+                    ))}
+                  </div>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+
+            <TooltipProvider>
+              <Tooltip delayDuration={0}>
+                <TooltipTrigger asChild>
+                  <div>
+                    <div className="!flex underline gap-1">
+                      <p className="text-xs   text-gray-500">
+                        {selectionState.font}
+                      </p>
+
+                      <AArrowDown size={18} />
+                    </div>
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <div className="flex flex-wrap gap-2 w-[190px] justify-center">
+                    {fonts.map((font) => (
+                      <RadioButton
+                        formats={fonts}
+                        key={font}
+                        format={font}
+                        prefix="font-"
+                        icon={font}
+                      />
+                    ))}
+                  </div>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+
+            <BlockButton format="heading-1" icon={<Heading1 size={18} />} />
             <BlockButton format="heading-2" icon={<Heading2 size={18} />} />
-            <BlockButton format="heading-3" icon={<Heading3 size={16} />} />
-            <BlockButton format="heading-4" icon={<Heading4 size={14} />} />
-            <BlockButton format="block-quote" icon={<Quote size={20} />} />
+            <BlockButton format="heading-3" icon={<Heading3 size={18} />} />
+            <BlockButton format="heading-4" icon={<Heading4 size={18} />} />
+            <BlockButton format="block-quote" icon={<Quote size={16} />} />
             <BlockButton
               format="numbered-list"
-              icon={<ListOrdered size={20} />}
+              icon={<ListOrdered size={16} />}
             />
-            <BlockButton format="bulleted-list" icon={<List size={20} />} />
-            <BlockButton format="left" icon={<AlignLeft size={20} />} />
-            <BlockButton format="center" icon={<AlignCenter size={20} />} />
-            <BlockButton format="right" icon={<AlignRight size={20} />} />
-            <BlockButton format="justify" icon={<AlignJustify size={20} />} />
-            <BlockButton format="justify" icon={<AlignJustify size={20} />} />
+            <BlockButton format="bulleted-list" icon={<List size={18} />} />
+            <BlockButton format="left" icon={<AlignLeft size={18} />} />
+            <BlockButton format="center" icon={<AlignCenter size={18} />} />
+            <BlockButton format="right" icon={<AlignRight size={18} />} />
+            <BlockButton format="justify" icon={<AlignJustify size={18} />} />
             <BlockButton
               format="check-list-item"
-              icon={<SquareCheckBig size={20} />}
+              icon={<SquareCheckBig size={16} />}
             />
             <InsertImageButton />
             <InsertImageLinkButton />
+
+            <AddLinkButton />
+            <RemoveLinkButton />
+            {/* <ToggleEditableButtonButton /> thằng này thấy lỗi điêu lắm, lúc lỗi lúc ko*/}
+
             {/* <div
               onClick={() =>
                 editor.insertNode({
@@ -117,7 +235,10 @@ const RichTextExample = ({
           </Toolbar>
         </div>
         <div className="mt-2 p-2 border border-gray-300">
-          <HoveringToolbar />
+          {/* <HoveringToolbar
+            slate={slate}
+            setSelectionState={setSelectionState}
+          /> */}
           <Editable
             className="outline-gray-300 px-1 py-2"
             renderElement={renderElement}
@@ -279,6 +400,13 @@ export const RenderElement = (props) => {
           {children}
         </ol>
       );
+
+    case "link":
+      return <LinkComponent {...props} />;
+    case "button":
+      return <EditableButtonComponent {...props} />;
+    case "badge":
+      return <BadgeComponent {...props} />;
     default:
       return (
         <p style={style} {...attributes}>
@@ -289,6 +417,30 @@ export const RenderElement = (props) => {
 };
 
 export const RenderLeaf = ({ attributes, children, leaf }) => {
+  // Object.entries(leaf).map(([key]) => {
+  //   if (key === "bold") children = <strong>{children}</strong>;
+  //   if (key === "code") children = <code>{children}</code>;
+  //   if (key === "italic") children = <em>{children}</em>;
+  //   if (key.includes("color-"))
+  //     children = <span style={{ color: key.split("-")[1] }}>{children}</span>;
+  //   if (key.includes("bg-"))
+  //     children = (
+  //       <span style={{ backgroundColor: key.split("-")[1] }}>{children}</span>
+  //     );
+  //   if (key.includes("font-"))
+  //     children = (
+  //       <span style={{ fontFamily: key.split("-")[1] }}>{children}</span>
+  //     );
+  //   if (key === "underline") children = <u>{children}</u>;
+  //   switch (key) {
+  //     case "bold":
+  //       children = <strong>{children}</strong>;
+  //       break;
+  //   }
+  // });
+
+  // console.log('"leaf" :>> ', leaf);
+
   if (leaf.bold) {
     children = <strong>{children}</strong>;
   }
@@ -304,6 +456,24 @@ export const RenderLeaf = ({ attributes, children, leaf }) => {
   if (leaf.underline) {
     children = <u>{children}</u>;
   }
+
+  if (leaf)
+    fonts.forEach((fonts) => {
+      if (leaf?.["font-" + fonts]) {
+        children = <span style={{ fontFamily: fonts }}>{children}</span>;
+      }
+    });
+
+  colors.forEach((color) => {
+    if (leaf?.["color-" + color]) {
+      children = <span style={{ color }}>{children}</span>;
+    }
+  });
+  colors.forEach((color) => {
+    if (leaf?.["bg-" + color]) {
+      children = <span style={{ backgroundColor: color }}>{children}</span>;
+    }
+  });
 
   return <span {...attributes}>{children}</span>;
 };
@@ -335,6 +505,24 @@ const MarkButton = ({ format, icon }) => {
       onMouseDown={(event) => {
         event.preventDefault();
         toggleMark(editor, format);
+      }}
+    >
+      {icon}
+    </Button>
+  );
+};
+
+const RadioButton = ({ format, formats, icon, prefix = "" }) => {
+  const editor = useSlate();
+  return (
+    <Button
+      active={isMarkActive(editor, prefix + format)}
+      onMouseDown={(event) => {
+        event.preventDefault();
+        formats.map((f) => {
+          Editor.removeMark(editor, prefix + f);
+        });
+        toggleMark(editor, prefix + format);
       }}
     >
       {icon}

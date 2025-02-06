@@ -36,7 +36,7 @@ export const Button = React.forwardRef(
               : "#aaa"
             : active
             ? "black"
-            : "#818181"};
+            : "#adadad"};
         `
       )}
     />
@@ -163,7 +163,7 @@ export const Menu = React.forwardRef(
           }
 
           & > * + * {
-            margin-left: 15px;
+            /* margin-left: 15px; */
           }
         `
       )}
@@ -191,8 +191,11 @@ export const Toolbar = React.forwardRef(
         className,
         css`
           position: relative;
-          padding: 1px 18px 17px;
           margin: 0 -20px;
+          display: flex;
+          align-items: center;
+          flex-wrap: wrap;
+          gap: 16px;
         `
       )}
     />
