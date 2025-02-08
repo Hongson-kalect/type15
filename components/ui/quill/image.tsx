@@ -8,6 +8,7 @@ import {
   useSelected,
   useSlateStatic,
 } from "slate-react";
+import { Image } from "antd";
 
 import { Button, Icon } from "./components";
 import { ImageElement } from "./customType";
@@ -30,7 +31,7 @@ export const insertImage = async (editor, url) => {
   let image: ImageElement;
 
   try {
-    const base64 = await urlToBase64(url);
+    const base64 = await urlToBase64(url, editor);
     image = {
       type: "image",
       url: base64,
@@ -50,7 +51,7 @@ export const insertImage = async (editor, url) => {
   });
 };
 
-const urlToBase64 = async (url) => {
+const urlToBase64 = async (url, editor) => {
   const response = await fetch(url);
   const blob = await response.blob();
   const reader = new FileReader();
@@ -59,16 +60,53 @@ const urlToBase64 = async (url) => {
     reader.onerror = reject;
     reader.readAsDataURL(blob);
   });
+
+  // const response = await fetch(url);
+  // if (!response.ok) {
+  //   throw new Error("Failed to fetch image");
+  // }
+  // const blob = await response.blob();
+  // const file = new File([blob], "image.jpg", { type: blob.type });
+
+  // console.log("file :>> ", file);
+
+  // new Compressor(file, {
+  //   quality: 0.2, // Adjust the quality as needed
+  //   success(result) {
+  //     console.log("result :>> ", result);
+  //     const reader = new FileReader();
+  //     return new Promise((resolve, reject) => {
+  //       reader.onloadend = () => {
+  //         console.log("reader :>> ", reader);
+
+  //         return resolve(reader.result);
+  //       };
+  //       reader.onerror = reject;
+  //       reader.readAsDataURL(blob);
+  //     });
+  // reader.onload = (e) => {
+  //   const base64 = e.target.result;
+  //   insertImage(editor, base64);
+  // };
+  // reader.readAsDataURL(result);
+  //   },
+  //   error(err) {
+  //     console.error(err.message);
+  //   },
+  // });
 };
 
-export const Image = ({ attributes, children, element }) => {
+export const ImageQill = ({ attributes, children, element }) => {
   const editor = useSlateStatic();
   const path = ReactEditor.findPath(editor, element);
 
   const selected = useSelected();
   const focused = useFocused();
   return (
-    <div {...attributes}>
+    <div
+      className=" [&_.delete-button]:hover:inline [&_.delete-button]:hidden"
+      {...attributes}
+    >
       {children}
       <div
         contentEditable={false}
@@ -80,33 +118,35 @@ export const Image = ({ attributes, children, element }) => {
           justify-content: center;
         `}
       >
-        <img
+        <Image
           src={element.url}
-          className={css`
-            resize: both;
-            display: block;
-            max-width: 100%;
-            max-height: 20em;
-            box-shadow: ${selected && focused ? "0 0 0 3px #B4D5FF" : "none"};
-          `}
+          className="inline-block border shadow"
+          // className={css`
+          //   resize: both;
+          //   display: block;
+          //   max-width: 100%;
+          //   max-height: 20em;
+          //   box-shadow: ${selected && focused ? "0 0 0 3px #B4D5FF" : "none"};
+          // `}
         />
         <Button
           active
           onClick={() => Transforms.removeNodes(editor, { at: path })}
-          className={css`
-            display: ${selected && focused ? "inline" : "none"};
-            position: absolute;
-            top: 0.5em;
-            left: 50%;
-            trasform: translateX(-50%);
-            background-color: white;
-            padding: 6px;
-            border-radius: 50%;
-            border: 2px solid pink;
-          `}
+          className="absolute delete-button top-2 left-1/2 bg-red-500 border border-red-400 shadow-md shadow-red-400 rounded-full -translate-x-1/2 p-2"
+          // className={css`
+          //   display: ${selected && focused ? "inline" : "none"};
+          //   position: absolute;
+          //   top: 0.5em;
+          //   left: 50%;
+          //   trasform: translateX(-50%);
+          //   background-color: white;
+          //   padding: 6px;
+          //   border-radius: 50%;
+          //   border: 2px solid pink;
+          // `}
         >
           <Icon>
-            <Trash2Icon color="red" />
+            <Trash2Icon color="white" />
           </Icon>
         </Button>
       </div>

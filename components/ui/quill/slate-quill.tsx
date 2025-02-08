@@ -66,7 +66,7 @@ import {
 } from "./hyper-link";
 import { CheckListItemElement, withChecklists } from "./checkList";
 import {
-  Image,
+  ImageQill,
   insertImage,
   InsertImageButton,
   InsertImageLinkButton,
@@ -394,7 +394,7 @@ const Element = (props) => {
 
   switch (element.type) {
     case "image":
-      return <Image {...props} />;
+      return <ImageQill {...props} />;
     default:
       return <p {...attributes}>{children}</p>;
   }
@@ -454,7 +454,7 @@ export const RenderElement = (props) => {
     // case "video":
     //   return <VideoElement {...props} />;
     case "image":
-      return <Image {...props} />;
+      return <ImageQill {...props} />;
 
     case "check-list-item":
       return <CheckListItemElement {...props} />;
